@@ -1,21 +1,75 @@
+/* =========================================================
+   JOURNEY BEFORE DESTINATION — v2 design language token layer
+   Ported from Specs/Claude/design_handoff_design_system/source/jbd-v2.css.
+   The blue GLOW is the constant (stormlight); the Order ACCENT (--accent)
+   recolors only a short, fixed list of marks — set the three --accent* vars
+   on the page/layout root from the user's Order to reskin everything at once.
+   ========================================================= */
 :root {
-  --bg: #0c101d;
+  --bg: #0b0f1c;
   --bg-elevated: #141a2c;
-  --bg-card: #19203a;
+
   --border: rgba(124, 196, 232, 0.1);
-  --border-strong: rgba(124, 196, 232, 0.24);
+  --border-strong: rgba(124, 196, 232, 0.22);
+  --rim: rgba(255, 255, 255, 0.07);
+
   --stormlight: #7cc4e8;
+  --stormlight-deep: #4f93c4;
   --stormlight-soft: rgba(124, 196, 232, 0.14);
-  --radiant-gold: #d8b878;
+  --radiant-gold: #d8b878; /* RETIRED — reference only, do not use for progress */
+  --radiant-gold-soft: rgba(216, 184, 120, 0.13);
+
+  /* Order accent — overridden per Order on the layout root. Default Windrunner. */
+  --accent: #7cc4e8;
+  --accent-rgb: 124, 196, 232;
+  --accent-deep: #4f93c4;
+  --accent-soft: rgba(var(--accent-rgb), 0.14);
+
   --text: #e9e5d7;
   --text-muted: #8b95ad;
   --text-faint: #5b647d;
+
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-body: "Hanken Grotesk", system-ui, sans-serif;
-  --radius: 14px;
-  --radius-sm: 9px;
-  --maxw: 980px;
-  --section-gap: 30px;
+
+  /* type scale ---------------------------------------------------------- */
+  --fs-display: 40px;
+  --lh-display: 1.16; /* hero prompt (serif) */
+  --fs-title: 30px;
+  --lh-title: 1.2; /* page / Order name (serif) */
+  --fs-heading: 24px;
+  --lh-heading: 1.3; /* oath, section head (serif) */
+  --fs-quote: 20px;
+  --lh-quote: 1.35; /* callout, pull-quote (serif) */
+  --fs-body-lg: 15px; /* lead body (sans) */
+  --fs-body: 14px; /* default body (sans) */
+  --fs-body-sm: 13px; /* secondary / muted (sans) */
+  --fs-overline: 11.5px; /* uppercase labels + eyebrows */
+
+  /* spacing ------------------------------------------------------------- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --pad-card: 30px; /* inner padding — regular cards */
+  --pad-hero: 45px; /* inner padding — hero cards */
+  --gap-card: 30px; /* space between cards, everywhere */
+  --page-x: 40px;
+  --page-y: 30px;
+
+  /* app-level layout (NOT from the handoff artboard — the real-app shell) */
+  --maxw: 980px; /* centered content width */
+  --section-gap: 30px; /* TODO: collapse into --gap-card when Layout is reconciled */
+
+  /* motion -------------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-rise: 0.55s; /* entrance */
+  --dur-ui: 0.18s; /* hover / focus transitions */
+
+  --radius: 16px;
+  --radius-sm: 10px;
 
   color: var(--text);
   background: var(--bg);
@@ -29,8 +83,8 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   background-image:
-    radial-gradient(900px 520px at 50% -8%, rgba(124, 196, 232, 0.12), transparent 62%),
-    radial-gradient(1200px 900px at 50% 120%, rgba(216, 184, 120, 0.05), transparent 60%);
+    radial-gradient(900px 520px at 50% -10%, rgba(124, 196, 232, 0.1), transparent 60%),
+    radial-gradient(1100px 820px at 50% 118%, rgba(216, 184, 120, 0.045), transparent 60%);
   background-attachment: fixed;
 }
 
@@ -38,17 +92,24 @@ a {
   color: inherit;
 }
 
+/* ---------- entrance motion ----------
+   Transform-only on purpose: the resting state is fully visible, so content
+   still shows when a screenshot / print / reduced-motion freezes the timeline. */
 @keyframes rise {
   from {
-    opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(16px);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }
 
 .rise {
-  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: rise var(--dur-rise) var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
 }

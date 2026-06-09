@@ -332,6 +332,8 @@ Each feature lists behavior, the decisions made, acceptance criteria, and its em
 
 **Decisions:** Order is skippable. The first oath is **skippable** (`[CONFIRM]`, but recommended: forcing reflection before the user has seen the app fights "progress over perfection"). If skipped, the dashboard shows a CTA. The Wit quote screen is not skippable; it is brief and serves as a tonal transition -- the moment between swearing the oath and stepping into the world.
 
+**Order-selection flourish (v1):** When the user finishes choosing their Order, play a brief ceremonial reveal — the chosen Order's glyph (tinted in that Order's accent) animates in *large* on screen, accompanied by that Order's First Ideal text fading in, then both fade out before continuing. This is the "you have sworn" beat. It reuses the `OrderGlyph` component (so the same seal data drives dashboard watermark *and* this reveal). Keep it short and skippable-by-waiting (auto-dismiss); honor `prefers-reduced-motion` (show the glyph + ideal statically, no animation). Ties to product principles "scaffold, then personalize" and "ambient presence" — it makes the Order choice feel like it means something without adding a step the user must act on.
+
 **Acceptance:** A user can complete onboarding choosing an Order, or skipping it, see a Wit quote, and land on a dashboard that reflects their choices.
 
 **Empty state:** N/A (this is the entry point), but each step has a valid "nothing selected" path.

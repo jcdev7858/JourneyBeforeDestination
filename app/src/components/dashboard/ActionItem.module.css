@@ -21,18 +21,22 @@ input.check {
 
   &::before {
     content: "";
-    width: 10px;
-    height: 6px;
-    border-left: 2px solid var(--bg);
-    border-bottom: 2px solid var(--bg);
+    width: 8px;
+    height: 5px;
+    border-left: 2px solid #07202f;
+    border-bottom: 2px solid #07202f;
     transform: rotate(-45deg) scale(0);
     transition: transform 0.1s ease-in-out;
     margin-top: -2px;
   }
 }
+/* checked = infused stormlight gem (stays blue regardless of Order) */
 input.check:checked {
-  background: var(--radiant-gold);
-  border-color: var(--radiant-gold);
+  background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep));
+  border-color: rgba(174, 224, 251, 0.6);
+  box-shadow:
+    0 0 12px rgba(124, 196, 232, 0.7),
+    inset 0 0 5px rgba(255, 255, 255, 0.4);
 
   &::before {
     transform: rotate(-45deg) scale(1);
