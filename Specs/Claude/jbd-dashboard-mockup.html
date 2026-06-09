@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Journey Before Destination · Dashboard Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* =========================================================
+     DESIGN TOKENS  (this :root block is step 1: the design language)
+     Port this verbatim into your app's global stylesheet. Every
+     screen reads from these, the same way Elementor global classes
+     drive the whole site from one place.
+     ========================================================= */
+  :root {
+    /* surfaces, darkest to lightest */
+    --bg:            #0c101d;   /* night over Roshar */
+    --bg-elevated:   #141a2c;
+    --bg-card:       #19203a;
+
+    /* lines */
+    --border:        rgba(124, 196, 232, 0.10);
+    --border-strong: rgba(124, 196, 232, 0.24);
+
+    /* the one memorable thing: stormlight glow */
+    --stormlight:      #7cc4e8;
+    --stormlight-soft: rgba(124, 196, 232, 0.14);
+
+    /* warm secondary accent, used sparingly (ideals, oaths) */
+    --radiant-gold:  #d8b878;
+
+    /* text, parchment on slate */
+    --text:        #e9e5d7;
+    --text-muted:  #8b95ad;
+    --text-faint:  #5b647d;
+
+    /* type */
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body:    'Hanken Grotesk', system-ui, sans-serif;
+
+    /* shape + rhythm */
+    --radius:    14px;
+    --radius-sm: 9px;
+    --maxw:      980px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    min-height: 100vh;
+    /* atmosphere: one soft stormlight source top-center + a vignette */
+    background-image:
+      radial-gradient(900px 520px at 50% -8%, rgba(124,196,232,0.12), transparent 62%),
+      radial-gradient(1200px 900px at 50% 120%, rgba(216,184,120,0.05), transparent 60%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .shell { max-width: var(--maxw); margin: 0 auto; padding: 0 24px 80px; }
+
+  /* page-load: content rises and settles, like ideals surfacing */
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .rise { opacity: 0; animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+
+  /* =========================================================
+     Component: <TopBar />  (lives inside <Layout />)
+     ========================================================= */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 26px 0 30px;
+  }
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 500; font-size: 22px; letter-spacing: 0.3px;
+    color: var(--text);
+  }
+  .wordmark span { color: var(--stormlight); }
+  .nav { display: flex; gap: 26px; font-size: 14px; }
+  .nav a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+  .nav a:hover { color: var(--text); }
+  .nav a.active { color: var(--text); }
+  .nav a.active::after {
+    content: ""; display: block; height: 2px; margin-top: 5px;
+    background: var(--stormlight); border-radius: 2px;
+    box-shadow: 0 0 10px var(--stormlight);
+  }
+
+  /* =========================================================
+     Component: <PromptCard />  (today's reflection, the hero)
+     ========================================================= */
+  .prompt-card {
+    position: relative;
+    background: linear-gradient(180deg, var(--bg-card), var(--bg-elevated));
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 40px 44px 34px;
+    overflow: hidden;
+  }
+  /* the breathing glow behind the prompt */
+  .prompt-card::before {
+    content: ""; position: absolute; inset: -40% 30% auto;
+    height: 280px; border-radius: 50%;
+    background: var(--stormlight-soft);
+    filter: blur(46px);
+    animation: breathe 7s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes breathe { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+  .eyebrow {
+    position: relative; font-size: 12.5px; letter-spacing: 1.4px;
+    text-transform: uppercase; color: var(--stormlight); margin-bottom: 18px;
+    display: flex; align-items: center; gap: 9px;
+  }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--stormlight); box-shadow: 0 0 10px var(--stormlight); }
+  .prompt-text {
+    position: relative; font-family: var(--font-display);
+    font-weight: 400; font-size: 38px; line-height: 1.18;
+    color: var(--text); max-width: 24ch;
+  }
+  .prompt-actions { position: relative; display: flex; gap: 12px; margin-top: 30px; }
+  .btn {
+    font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 20px; border-radius: var(--radius-sm); cursor: pointer;
+    border: 1px solid var(--border-strong); background: transparent;
+    color: var(--text); transition: all 0.18s;
+  }
+  .btn:hover { border-color: var(--stormlight); }
+  .btn-primary {
+    background: var(--stormlight); color: #0b1120; border-color: var(--stormlight);
+    box-shadow: 0 0 24px rgba(124,196,232,0.3);
+  }
+  .btn-primary:hover { box-shadow: 0 0 34px rgba(124,196,232,0.5); }
+  .btn svg { width: 16px; height: 16px; }
+
+  /* =========================================================
+     Two-up row: <OrderCard /> + <ActiveOathCard />
+     ========================================================= */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1.25fr; gap: 22px; margin-top: 22px; }
+  .card {
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 26px 28px;
+  }
+  .card-label {
+    font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--text-faint); margin-bottom: 16px;
+  }
+
+  /* Order card */
+  .order-name { font-family: var(--font-display); font-size: 30px; font-weight: 500; }
+  .order-glyph {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--stormlight); flex-shrink: 0;
+  }
+  .order-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .themes { display: flex; flex-wrap: wrap; gap: 9px; }
+  .pill {
+    font-size: 13px; color: var(--text-muted);
+    border: 1px solid var(--border); border-radius: 100px;
+    padding: 6px 14px;
+  }
+
+  /* Active oath card */
+  .oath-text { font-family: var(--font-display); font-size: 23px; font-weight: 400; line-height: 1.3; color: var(--text); margin-bottom: 20px; }
+  .progress-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+  .progress-track { height: 6px; border-radius: 100px; background: rgba(255,255,255,0.06); overflow: hidden; }
+  .progress-fill { height: 100%; width: 40%; border-radius: 100px; background: var(--radiant-gold); box-shadow: 0 0 12px rgba(216,184,120,0.4); }
+  .actions { margin-top: 22px; display: flex; flex-direction: column; gap: 13px; }
+  .action { display: flex; align-items: center; gap: 12px; font-size: 14.5px; color: var(--text); }
+  .check {
+    width: 19px; height: 19px; border-radius: 6px; flex-shrink: 0;
+    border: 1px solid var(--border-strong);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .check.done { background: var(--radiant-gold); border-color: var(--radiant-gold); }
+  .check.done svg { width: 12px; height: 12px; color: #1a1407; }
+  .action.done span { color: var(--text-muted); text-decoration: line-through; text-decoration-color: var(--text-faint); }
+  .more { font-size: 13px; color: var(--text-faint); padding-left: 31px; }
+
+  /* =========================================================
+     Component: <ReadingProgress />
+     ========================================================= */
+  .reading { margin-top: 22px; }
+  .books { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+  .book {
+    display: flex; align-items: center; gap: 9px; font-size: 13.5px;
+    padding: 9px 15px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); color: var(--text-muted);
+  }
+  .book.read { color: var(--text); border-color: var(--border-strong); }
+  .book.read .gem { background: var(--stormlight); box-shadow: 0 0 9px var(--stormlight); }
+  .gem { width: 8px; height: 8px; border-radius: 2px; transform: rotate(45deg); background: var(--text-faint); }
+  .book.locked { opacity: 0.55; }
+
+  .footnote { margin-top: 40px; text-align: center; font-size: 12.5px; color: var(--text-faint); letter-spacing: 0.4px; }
+
+  @media (max-width: 720px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .prompt-text { font-size: 30px; }
+    .nav { display: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="shell">
+
+    <!-- Component: <TopBar /> inside <Layout /> -->
+    <header class="topbar rise" style="animation-delay: 0s">
+      <div class="wordmark">Journey <span>Before</span> Destination</div>
+      <nav class="nav">
+        <a class="active" href="#">Dashboard</a>
+        <a href="#">Oaths</a>
+        <a href="#">Journal</a>
+        <a href="#">RadiantDex</a>
+        <a href="#">Profile</a>
+      </nav>
+    </header>
+
+    <!-- Component: <PromptCard prompt={todaysPrompt} order={user.order} /> -->
+    <section class="prompt-card rise" style="animation-delay: 0.08s">
+      <div class="eyebrow"><span class="dot"></span> Today's reflection · Windrunner</div>
+      <h1 class="prompt-text">What responsibility are you avoiding right now?</h1>
+      <div class="prompt-actions">
+        <button class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          Respond
+        </button>
+        <button class="btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 17.3-5.6 3 1.1-6.3-4.5-4.4 6.3-.9L12 3l2.7 5.7 6.3.9-4.5 4.4 1.1 6.3z"/></svg>
+          Favorite
+        </button>
+      </div>
+    </section>
+
+    <div class="grid-2">
+      <!-- Component: <OrderCard order={user.order} /> -->
+      <section class="card rise" style="animation-delay: 0.16s">
+        <div class="card-label">Your Order</div>
+        <div class="order-head">
+          <div class="order-glyph">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 4 7v6c0 5 3.5 7.5 8 9 4.5-1.5 8-4 8-9V7Z"/></svg>
+          </div>
+          <div class="order-name">Windrunner</div>
+        </div>
+        <div class="themes">
+          <span class="pill">Protection</span>
+          <span class="pill">Leadership</span>
+          <span class="pill">Responsibility</span>
+          <span class="pill">Service</span>
+        </div>
+      </section>
+
+      <!-- Component: <ActiveOathCard oath={mostRecentActiveOath} /> -->
+      <section class="card rise" style="animation-delay: 0.24s">
+        <div class="card-label">Active Oath</div>
+        <div class="oath-text">I will be more present with my family.</div>
+        <div class="progress-row"><span>Progress</span><span>2 of 5 actions</span></div>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+        <div class="actions">
+          <div class="action done"><span class="check done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Put my phone away during dinner</span></div>
+          <div class="action done"><span class="check done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Plan one daddy-daughter date this month</span></div>
+          <div class="action"><span class="check"></span><span>Spend one hour outside this week</span></div>
+        </div>
+        <div class="more">2 more actions</div>
+      </section>
+    </div>
+
+    <!-- Component: <ReadingProgress booksRead={user.booksRead} /> -->
+    <section class="card reading rise" style="animation-delay: 0.32s">
+      <div class="card-label">Reading Progress</div>
+      <div class="books">
+        <span class="book read"><span class="gem"></span> The Way of Kings</span>
+        <span class="book read"><span class="gem"></span> Words of Radiance</span>
+        <span class="book locked"><span class="gem"></span> Oathbringer</span>
+        <span class="book locked"><span class="gem"></span> Rhythm of War</span>
+        <span class="book locked"><span class="gem"></span> Wind and Truth</span>
+      </div>
+    </section>
+
+    <p class="footnote rise" style="animation-delay: 0.4s">Static mockup. No data is wired. Life before death, strength before weakness, journey before destination.</p>
+
+  </div>
+</body>
+</html>

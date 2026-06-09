@@ -1,0 +1,28 @@
+.book {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13.5px;
+  padding: 9px 15px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.book.read {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+.book.read .gem {
+  background: var(--stormlight);
+  box-shadow: 0 0 9px var(--stormlight);
+}
+.gem {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  transform: rotate(45deg);
+  background: var(--text-faint);
+}
+.book.locked {
+  opacity: 0.55;
+}

@@ -1,0 +1,54 @@
+:root {
+  --bg: #0c101d;
+  --bg-elevated: #141a2c;
+  --bg-card: #19203a;
+  --border: rgba(124, 196, 232, 0.1);
+  --border-strong: rgba(124, 196, 232, 0.24);
+  --stormlight: #7cc4e8;
+  --stormlight-soft: rgba(124, 196, 232, 0.14);
+  --radiant-gold: #d8b878;
+  --text: #e9e5d7;
+  --text-muted: #8b95ad;
+  --text-faint: #5b647d;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Hanken Grotesk", system-ui, sans-serif;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --maxw: 980px;
+  --section-gap: 30px;
+
+  color: var(--text);
+  background: var(--bg);
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(900px 520px at 50% -8%, rgba(124, 196, 232, 0.12), transparent 62%),
+    radial-gradient(1200px 900px at 50% 120%, rgba(216, 184, 120, 0.05), transparent 60%);
+  background-attachment: fixed;
+}
+
+a {
+  color: inherit;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}

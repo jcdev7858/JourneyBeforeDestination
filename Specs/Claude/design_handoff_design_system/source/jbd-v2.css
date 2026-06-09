@@ -1,0 +1,274 @@
+/* =========================================================
+   JOURNEY BEFORE DESTINATION — v2 design language (Option A)
+   Keeps the heart: stormlight blue, the breathing glow, the button glow,
+   clean glass cards. The blue GLOW is constant (it's the stormlight); the
+   Order ACCENT (--accent) recolors only the interactive marks — eyebrow,
+   glyph, primary button, nav — so the dashboard can wear any Order's color.
+   ========================================================= */
+:root {
+  --bg:            #0b0f1c;
+  --bg-elevated:   #141a2c;
+
+  --border:        rgba(124, 196, 232, 0.10);
+  --border-strong: rgba(124, 196, 232, 0.22);
+  --rim:           rgba(255, 255, 255, 0.07);
+
+  --stormlight:      #7cc4e8;
+  --stormlight-deep: #4f93c4;
+  --stormlight-soft: rgba(124, 196, 232, 0.14);
+  --radiant-gold:  #d8b878;
+  --radiant-gold-soft: rgba(216, 184, 120, 0.13);
+
+  /* Order accent — overridden per Order on the .jbd root. Default Windrunner. */
+  --accent:     #7cc4e8;
+  --accent-rgb: 124, 196, 232;
+  --accent-deep: #4f93c4;
+  --accent-soft: rgba(var(--accent-rgb), 0.14);
+
+  --text:        #e9e5d7;
+  --text-muted:  #8b95ad;
+  --text-faint:  #5b647d;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Hanken Grotesk', system-ui, sans-serif;
+
+  /* type scale ---------------------------------------------------------- */
+  --fs-display: 40px;   --lh-display: 1.16;   /* hero prompt (serif) */
+  --fs-title:   30px;   --lh-title:   1.2;    /* page / Order name (serif) */
+  --fs-heading: 24px;   --lh-heading: 1.3;    /* oath, section head (serif) */
+  --fs-quote:   20px;   --lh-quote:   1.35;   /* callout, pull-quote (serif) */
+  --fs-body-lg: 15px;                         /* lead body (sans) */
+  --fs-body:    14px;                         /* default body (sans) */
+  --fs-body-sm: 13px;                         /* secondary / muted (sans) */
+  --fs-overline:11.5px;                       /* uppercase labels + eyebrows */
+
+  /* spacing ------------------------------------------------------------- */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px;
+  --pad-card: 30px;   /* inner padding — regular cards */
+  --pad-hero: 40px;   /* inner padding — hero cards */
+  --gap-card: 30px;   /* space between cards, everywhere */
+  --page-x: 40px; --page-y: 30px;
+
+  /* motion -------------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-rise: 0.55s;  /* entrance */
+  --dur-ui:   0.18s;  /* hover / focus transitions */
+
+  --radius:    16px;
+  --radius-sm: 10px;
+}
+
+/* ---------- root frame (one per artboard) ---------- */
+.jbd {
+  position: relative;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: var(--font-body);
+  color: var(--text);
+  line-height: 1.6;
+  background:
+    radial-gradient(900px 520px at 50% -10%, rgba(124,196,232,0.10), transparent 60%),
+    radial-gradient(1100px 820px at 50% 118%, rgba(216,184,120,0.045), transparent 60%),
+    var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+.jbd * { box-sizing: border-box; margin: 0; padding: 0; }
+.jbd-scroll { position: relative; z-index: 1; padding: var(--page-y) var(--page-x); }
+
+/* ---------- the living aura (sits BEHIND the glass) ----------
+   Stays blue regardless of Order — the stormlight glow is the constant. */
+.aura { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.aura .orb { position: absolute; border-radius: 50%; filter: blur(60px); }
+.aura .orb-sky {
+  width: 620px; height: 360px; top: -120px; left: 50%; margin-left: -310px;
+  background: radial-gradient(closest-side, var(--stormlight-soft), transparent 72%);
+  animation: breathe 7s ease-in-out infinite;
+}
+.aura .orb-gold {
+  width: 420px; height: 300px; bottom: -120px; left: -100px;
+  background: radial-gradient(closest-side, var(--radiant-gold-soft), transparent 72%);
+  animation: breathe 9s ease-in-out infinite 1.5s;
+}
+@keyframes breathe { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* ---------- entrance motion ----------
+   Transform-only so the resting state is fully visible — content shows even
+   when an offscreen capture / print / reduced-motion freezes the timeline. */
+@keyframes rise { from { transform: translateY(16px); } to { transform: none; } }
+.rise { animation: rise var(--dur-rise) var(--ease-out) both; }
+@media (prefers-reduced-motion: reduce) {
+  .rise { animation: none; }
+  .aura .orb { animation: none !important; }
+}
+
+/* ---------- top bar ---------- */
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 26px; }
+.wordmark { font-family: var(--font-display); font-weight: 500; font-size: 21px; letter-spacing: 0.3px; }
+.wordmark span { color: var(--stormlight); }
+.nav { display: flex; gap: 22px; font-size: 13.5px; }
+.nav a { color: var(--text-muted); text-decoration: none; cursor: pointer; transition: color 0.2s; }
+.nav a:hover { color: var(--text); }
+.nav a:focus-visible { outline: none; color: var(--text); }
+.nav a.active { color: var(--text); position: relative; }
+.nav a.active::after { content: ""; display: block; height: 2px; margin-top: 5px; background: var(--accent); border-radius: 2px; box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.9); }
+
+/* ---------- glass surface ---------- */
+.glass {
+  position: relative;
+  padding: var(--pad-card);
+  background: linear-gradient(155deg, rgba(124,196,232,0.06), rgba(22,28,50,0.46) 62%);
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 var(--rim), 0 26px 60px -32px rgba(0,0,0,0.8);
+}
+.card-label { font-size: var(--fs-overline); letter-spacing: 1.4px; text-transform: uppercase; color: var(--text-faint); margin-bottom: var(--sp-4); }
+
+/* ---------- buttons (keep the glow; glow follows accent) ----------
+   Focus: primary intensifies its glow; outline buttons gain the Order-color
+   border on both hover and focus. */
+.btn { font-family: var(--font-body); font-size: var(--fs-body); font-weight: 500; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: var(--radius-sm); cursor: pointer; border: 1px solid var(--border-strong); background: rgba(255,255,255,0.02); color: var(--text); transition: border-color var(--dur-ui), box-shadow var(--dur-ui), background var(--dur-ui); }
+.btn:focus-visible { outline: none; }
+.btn:hover { border-color: var(--accent); }
+.btn-primary { background: var(--accent); color: #07111d; border-color: var(--accent); box-shadow: 0 0 24px rgba(var(--accent-rgb), 0.34); }
+.btn-primary:hover { box-shadow: 0 0 36px rgba(var(--accent-rgb), 0.52); }
+.btn-primary:focus-visible { box-shadow: 0 0 48px rgba(var(--accent-rgb), 0.75), 0 0 0 1px rgba(var(--accent-rgb), 0.7); }
+.btn svg { width: 16px; height: 16px; }
+.btn-ghost { border-color: var(--border); }
+.btn-ghost:hover, .btn-ghost:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.4); }
+
+/* ---------- pills ---------- */
+.themes { display: flex; flex-wrap: wrap; gap: 9px; }
+.pill { font-size: 12.5px; color: var(--text-muted); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; }
+
+/* ---------- Order glyph (authentic seal, used as a tintable mask) ---------- */
+.glyph-mask {
+  -webkit-mask: url('windrunner-glyph.svg') center / contain no-repeat;
+  mask: url('windrunner-glyph.svg') center / contain no-repeat;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.order-ring { display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-strong); border-radius: 50%; box-shadow: inset 0 0 14px rgba(var(--accent-rgb), 0.12), 0 0 18px rgba(var(--accent-rgb), 0.14); flex-shrink: 0; }
+.glyph-corner { position: absolute; bottom: 18px; right: 20px; opacity: 0.10; pointer-events: none; }
+.glyph-watermark { position: absolute; right: 30px; bottom: -6px; opacity: 0.07; pointer-events: none; }
+
+/* ---------- selective accent glow (color-coded to the Order) ----------
+   The same radial wash used at the top of the page, pulled inside a card.
+   Used sparingly — the hero prompt and the Order card — so it stays special. */
+.glow-accent::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  width: 400px; height: 280px; top: -120px; left: -70px;
+  background: radial-gradient(closest-side, rgba(var(--accent-rgb), 0.16), transparent 70%);
+  filter: blur(28px);
+}
+.glow-accent.glow-br::before { top: auto; left: auto; bottom: -130px; right: -80px; }
+
+/* ---------- prompt card (hero) ---------- */
+.prompt-card { padding: var(--pad-hero); overflow: hidden; }
+.eyebrow { position: relative; font-size: var(--fs-overline); letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; display: flex; align-items: center; gap: 9px; }
+.eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.9); }
+.prompt-text { position: relative; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display); line-height: var(--lh-display); max-width: 22ch; }
+.prompt-actions { position: relative; display: flex; gap: 12px; margin-top: 30px; }
+
+/* ---------- order + oath cards ---------- */
+.order-name { font-family: var(--font-display); font-size: var(--fs-title); font-weight: 500; }
+.order-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.oath-text { font-family: var(--font-display); font-size: var(--fs-heading); line-height: var(--lh-heading); margin-bottom: 20px; }
+
+/* progress */
+.progress-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.progress-row span { white-space: nowrap; }
+.progress-track { height: 6px; border-radius: 100px; background: rgba(255,255,255,0.06); overflow: visible; }
+.progress-fill { position: relative; height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--radiant-gold), #e9cf9a); box-shadow: 0 0 14px rgba(216,184,120,0.45); }
+.progress-fill.infused { background: linear-gradient(90deg, var(--stormlight-deep), #aee0fb); box-shadow: 0 0 14px rgba(124,196,232,0.55); }
+.progress-fill .bead { position: absolute; right: -5px; top: 50%; transform: translateY(-50%); width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffffff, #cfeeff 35%, var(--stormlight) 70%, var(--stormlight-deep)); box-shadow: 0 0 12px rgba(124,196,232,0.95), 0 0 3px rgba(255,255,255,0.85); }
+
+/* actions / checks */
+.actions { display: flex; flex-direction: column; gap: 14px; }
+.action { display: flex; align-items: flex-start; gap: 12px; font-size: 14.5px; line-height: 1.4; }
+.check { width: 19px; height: 19px; border-radius: 6px; flex-shrink: 0; margin-top: 1px; border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.check.done { background: var(--radiant-gold); border-color: var(--radiant-gold); }
+.check.done svg { width: 12px; height: 12px; color: #1a1407; }
+.check.infused.done { background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep)); border-color: rgba(174,224,251,0.6); box-shadow: 0 0 12px rgba(124,196,232,0.7), inset 0 0 5px rgba(255,255,255,0.4); }
+.check.infused.done svg { color: #07202f; }
+.action.done span { color: var(--text-muted); text-decoration: line-through; text-decoration-color: var(--text-faint); }
+.more { font-size: 13px; color: var(--text-faint); padding-left: 31px; margin-top: 13px; }
+
+/* ---------- gemstone reading progress (infused stormlight — stays blue) ---------- */
+.books { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; }
+.book { display: flex; align-items: center; gap: 11px; font-size: 13.5px; padding: 10px 16px 10px 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); color: var(--text-muted); transition: all 0.18s; }
+.book.read { color: var(--text); border-color: var(--border-strong); background: rgba(124,196,232,0.04); }
+.book.locked { opacity: 0.5; }
+.gemstone { width: 15px; height: 15px; flex-shrink: 0; transform: rotate(45deg); border-radius: 3px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(91,100,125,0.25));
+  border: 1px solid rgba(124,196,232,0.18); position: relative; }
+.gemstone::after { content: ""; position: absolute; inset: 3px; border-radius: 1px; background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 60%); }
+.book.read .gemstone {
+  background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep));
+  border-color: rgba(174,224,251,0.6);
+  box-shadow: 0 0 14px rgba(124,196,232,0.7), inset 0 0 6px rgba(255,255,255,0.4);
+}
+
+/* ---------- research callout: "Pick up where you left off" ----------
+   Same border as every card. Set apart by a warm inner glow + an icon chip,
+   not a border accent. */
+.callout { display: flex; align-items: center; gap: 18px; padding: 24px var(--pad-card); overflow: hidden; }
+.callout::after { content: ""; position: absolute; top: -40%; left: -6%; width: 320px; height: 200px; background: radial-gradient(closest-side, var(--radiant-gold-soft), transparent 72%); filter: blur(20px); pointer-events: none; }
+.callout > * { position: relative; }
+.callout-chip { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--radiant-gold); background: var(--radiant-gold-soft); border: 1px solid rgba(216,184,120,0.32); }
+.callout-chip svg { width: 19px; height: 19px; }
+.callout.cool::after { background: radial-gradient(closest-side, var(--stormlight-soft), transparent 72%); }
+.callout.cool .callout-chip { color: var(--stormlight); background: var(--stormlight-soft); border-color: rgba(124,196,232,0.32); }
+.callout.cool .callout-kicker { color: var(--stormlight); }
+.callout-body { flex: 1; }
+.callout-kicker { font-size: 11px; letter-spacing: 1.3px; text-transform: uppercase; color: var(--radiant-gold); margin-bottom: 6px; }
+.callout-text { font-family: var(--font-display); font-size: var(--fs-quote); line-height: var(--lh-quote); color: var(--text); }
+
+/* ---------- footer ---------- */
+.site-footer { margin-top: 38px; padding-top: 28px; border-top: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+.footer-oath { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 18px; font-family: var(--font-display); font-size: 19px; letter-spacing: 0.3px; color: var(--text); }
+.footer-oath .phrase { opacity: 0.9; white-space: nowrap; }
+.footer-sep { width: 6px; height: 6px; transform: rotate(45deg); border-radius: 1px; background: var(--stormlight); box-shadow: 0 0 9px rgba(124,196,232,0.7); flex-shrink: 0; }
+.footer-meta { display: flex; align-items: center; gap: 12px; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-faint); }
+.footer-meta .footer-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-faint); opacity: 0.6; }
+.footer-meta a { color: var(--text-faint); text-decoration: none; cursor: pointer; transition: color 0.18s; }
+.footer-meta a:hover { color: var(--accent); }
+
+/* =========================================================
+   SHARED PRIMITIVES for the other pages (Oaths, Journal, Profile, RadiantDex).
+   Same focus language as the buttons: Order-color border + faint ring.
+   ========================================================= */
+
+/* ---------- form fields ---------- */
+.field { display: flex; flex-direction: column; gap: var(--sp-2); }
+.field-label { font-size: var(--fs-overline); letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-faint); }
+.input, .textarea {
+  font-family: var(--font-body); font-size: var(--fs-body); color: var(--text); line-height: 1.55;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); padding: 12px 14px; width: 100%;
+  transition: border-color var(--dur-ui), box-shadow var(--dur-ui);
+}
+.input::placeholder, .textarea::placeholder { color: var(--text-faint); }
+.input:hover, .textarea:hover { border-color: rgba(var(--accent-rgb), 0.4); }
+.input:focus, .input:focus-visible, .textarea:focus, .textarea:focus-visible {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.4), 0 0 18px rgba(var(--accent-rgb), 0.12);
+}
+.textarea { min-height: 96px; resize: vertical; }
+
+/* ---------- list row (oath list, journal entries, character cards) ---------- */
+.row-item {
+  display: flex; align-items: center; gap: 14px; padding: 16px var(--pad-card);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.015); cursor: pointer;
+  transition: border-color var(--dur-ui), background var(--dur-ui);
+}
+.row-item:hover { border-color: var(--border-strong); background: rgba(124,196,232,0.04); }
+.row-item:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.4); }
+
+/* ---------- empty state (a designed feature, never a blank box) ---------- */
+.empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--sp-4); padding: 48px var(--pad-card); }
+.empty-glyph { opacity: 0.5; color: var(--accent); }
+.empty-title { font-family: var(--font-display); font-size: var(--fs-heading); color: var(--text); }
+.empty-text { font-size: var(--fs-body); color: var(--text-muted); max-width: 38ch; line-height: 1.55; }

@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Journey Before Destination · Full Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* =========================================================
+     DESIGN TOKENS  — the design language. Port this :root block
+     into your app's global stylesheet. Every screen reads from it.
+     ========================================================= */
+  :root {
+    --bg:            #0c101d;
+    --bg-elevated:   #141a2c;
+    --bg-card:       #19203a;
+    --border:        rgba(124, 196, 232, 0.10);
+    --border-strong: rgba(124, 196, 232, 0.24);
+    --stormlight:      #7cc4e8;
+    --stormlight-soft: rgba(124, 196, 232, 0.14);
+    --radiant-gold:  #d8b878;
+    --text:        #e9e5d7;
+    --text-muted:  #8b95ad;
+    --text-faint:  #5b647d;
+    --danger: #F87171;
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body:    'Hanken Grotesk', system-ui, sans-serif;
+    --radius:    14px;
+    --radius-sm: 9px;
+    --maxw:      980px;
+    --section-gap: 30px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-body); color: var(--text); background: var(--bg);
+    line-height: 1.6; min-height: 100vh; -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(900px 520px at 50% -8%, rgba(124,196,232,0.12), transparent 62%),
+      radial-gradient(1200px 900px at 50% 120%, rgba(216,184,120,0.05), transparent 60%);
+    background-attachment: fixed;
+  }
+  .shell { max-width: var(--maxw); margin: 0 auto; padding: 0 24px 90px; }
+  a { color: inherit; }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .rise { animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
+  /* ---------- TopBar / Layout ---------- */
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 26px 0 30px; flex-wrap: wrap; gap: 14px; }
+  .wordmark { font-family: var(--font-display); font-weight: 500; font-size: 22px; letter-spacing: 0.3px; cursor: pointer; }
+  .wordmark span { color: var(--stormlight); }
+  .nav { display: flex; gap: 24px; font-size: 14px; flex-wrap: wrap; }
+  .nav a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+  .nav a:hover { color: var(--text); }
+  .nav a.active { color: var(--text); }
+  .nav a.active::after { content: ""; display: block; height: 2px; margin-top: 5px; background: var(--stormlight); border-radius: 2px; box-shadow: 0 0 10px var(--stormlight); }
+
+  /* ---------- View switching ---------- */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ---------- Shared bits ---------- */
+  .page-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+  .page-title { font-family: var(--font-display); font-size: 34px; font-weight: 500; }
+  .card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 28px; }
+  .card-label { font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 16px; }
+  .btn { font-family: var(--font-body); font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: var(--radius-sm); cursor: pointer; border: 1px solid var(--border-strong); background: transparent; color: var(--text); transition: all 0.18s; }
+  .btn:hover { border-color: var(--stormlight); }
+  .btn-primary { background: var(--stormlight); color: #0b1120; border-color: var(--stormlight); box-shadow: 0 0 24px rgba(124,196,232,0.3); }
+  .btn-primary:hover { box-shadow: 0 0 34px rgba(124,196,232,0.5); }
+  .btn svg { width: 16px; height: 16px; }
+  .pill { font-size: 13px; color: var(--text-muted); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; }
+  .back { font-size: 14px; color: var(--text-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 7px; margin-bottom: 20px; }
+  .back:hover { color: var(--stormlight); }
+
+  /* checkboxes / actions */
+  .actions { display: flex; flex-direction: column; gap: 13px; }
+  .action { display: flex; align-items: center; gap: 12px; font-size: 14.5px; }
+  .check { width: 19px; height: 19px; border-radius: 6px; flex-shrink: 0; border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; }
+  .check.done { background: var(--radiant-gold); border-color: var(--radiant-gold); }
+  .check.done svg { width: 12px; height: 12px; color: #1a1407; }
+  .action.done span { color: var(--text-muted); text-decoration: line-through; text-decoration-color: var(--text-faint); }
+
+  /* progress */
+  .progress-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+  .progress-track { height: 6px; border-radius: 100px; background: rgba(255,255,255,0.06); overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 100px; background: var(--radiant-gold); box-shadow: 0 0 12px rgba(216,184,120,0.4); }
+
+  /* ============ DASHBOARD ============ */
+  .prompt-card { position: relative; background: linear-gradient(180deg, var(--bg-card), var(--bg-elevated)); border: 1px solid var(--border-strong); border-radius: var(--radius); padding: 40px 44px 34px; overflow: hidden; }
+  .prompt-card::before { content: ""; position: absolute; inset: -40% 30% auto; height: 280px; border-radius: 50%; background: var(--stormlight-soft); filter: blur(46px); animation: breathe 7s ease-in-out infinite; pointer-events: none; }
+  @keyframes breathe { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+  .eyebrow { position: relative; font-size: 12.5px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--stormlight); margin-bottom: 18px; display: flex; align-items: center; gap: 9px; }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--stormlight); box-shadow: 0 0 10px var(--stormlight); }
+  .prompt-text { position: relative; font-family: var(--font-display); font-weight: 400; font-size: 38px; line-height: 1.18; max-width: 24ch; }
+  .prompt-actions { position: relative; display: flex; gap: 12px; margin-top: 30px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1.25fr; gap: 22px; margin-top: 22px; }
+  .order-name { font-family: var(--font-display); font-size: 30px; font-weight: 500; }
+  .order-glyph { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; color: var(--stormlight); flex-shrink: 0; }
+  .order-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .themes { display: flex; flex-wrap: wrap; gap: 9px; }
+  .oath-text { font-family: var(--font-display); font-size: 23px; line-height: 1.3; margin-bottom: 20px; }
+  .more { font-size: 13px; color: var(--text-faint); padding-left: 31px; margin-top: 13px; }
+  .reading { margin-top: 22px; }
+  .books { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+  .book { display: flex; align-items: center; gap: 9px; font-size: 13.5px; padding: 9px 15px; border-radius: var(--radius-sm); border: 1px solid var(--border); color: var(--text-muted); }
+  .book.read { color: var(--text); border-color: var(--border-strong); }
+  .book.read .gem { background: var(--stormlight); box-shadow: 0 0 9px var(--stormlight); }
+  .gem { width: 8px; height: 8px; border-radius: 2px; transform: rotate(45deg); background: var(--text-faint); }
+  .book.locked { opacity: 0.55; }
+
+  /* ============ RADIANTDEX ============ */
+  .dex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+  .char-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 22px 20px; cursor: pointer; transition: all 0.18s; }
+  .char-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+  .char-card .avatar { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 20px; color: var(--stormlight); margin-bottom: 16px; }
+  .char-card .cname { font-family: var(--font-display); font-size: 22px; font-weight: 500; }
+  .char-card .corder { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ============ CHARACTER DETAIL ============ */
+  .char-detail { display: grid; grid-template-columns: 200px 1fr; gap: 32px; }
+  .char-portrait { background: var(--bg-elevated); border: 1px solid var(--border-strong); border-radius: var(--radius); aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 64px; color: var(--stormlight); }
+  .char-detail h1 { font-family: var(--font-display); font-size: 42px; font-weight: 500; }
+  .meta-row { display: flex; gap: 28px; margin: 16px 0 24px; font-size: 14px; }
+  .meta-row .k { color: var(--text-faint); display: block; font-size: 12px; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 4px; }
+  .summary { font-size: 16.5px; color: var(--text); max-width: 56ch; }
+  .detail-actions { display: flex; gap: 12px; margin-top: 28px; }
+
+  /* ============ JOURNAL ============ */
+  .entry { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 14px; cursor: pointer; transition: border-color 0.18s; }
+  .entry:hover { border-color: var(--border-strong); }
+  .entry-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .tag { font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; padding: 3px 10px; border-radius: 100px; }
+  .tag.prompt { background: rgba(124,196,232,0.12); color: var(--stormlight); }
+  .tag.freeform { background: rgba(216,184,120,0.12); color: var(--radiant-gold); }
+  .entry-date { font-size: 12.5px; color: var(--text-faint); }
+  .entry-title { font-family: var(--font-display); font-size: 21px; }
+  .entry-snip { font-size: 14.5px; color: var(--text-muted); margin-top: 6px; }
+
+  /* ============ PROFILE ============ */
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .field { margin-bottom: 18px; }
+  .field .k { font-size: 12px; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 6px; }
+  .field .v { font-size: 16px; }
+
+  /* ============ ONBOARDING ============ */
+  .step { margin-bottom: 36px; }
+  .step-num { font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--stormlight); margin-bottom: 12px; }
+  .step h2 { font-family: var(--font-display); font-size: 28px; font-weight: 500; margin-bottom: 18px; }
+  .order-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip { font-size: 14px; padding: 10px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border); cursor: pointer; transition: all 0.16s; }
+  .chip:hover { border-color: var(--border-strong); }
+  .chip.sel { background: var(--stormlight-soft); border-color: var(--stormlight); color: var(--text); }
+  input[type="text"] { width: 100%; font-family: var(--font-body); font-size: 15px; color: var(--text); background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 12px 16px; }
+  input[type="text"]::placeholder { color: var(--text-faint); }
+  input[type="text"]:focus { outline: none; border-color: var(--stormlight); }
+  .book-check { display: flex; align-items: center; gap: 12px; font-size: 15px; padding: 9px 0; cursor: pointer; }
+
+  /* ============ START ============ */
+  .start-hero { text-align: center; padding: 90px 0 60px; }
+  .start-hero h1 { font-family: var(--font-display); font-size: 56px; font-weight: 400; line-height: 1.1; }
+  .start-hero h1 span { color: var(--stormlight); }
+  .start-hero p { color: var(--text-muted); font-size: 17px; max-width: 44ch; margin: 22px auto 36px; }
+
+  .footnote { margin-top: 44px; text-align: center; font-size: 12.5px; color: var(--text-faint); letter-spacing: 0.4px; }
+
+  @media (max-width: 720px) {
+    .grid-2, .char-detail, .profile-grid { grid-template-columns: 1fr; }
+    .prompt-text { font-size: 30px; }
+    .nav { gap: 16px; font-size: 13px; }
+    .char-portrait { aspect-ratio: 16/9; }
+  }
+</style>
+</head>
+<body>
+  <div class="shell">
+
+    <header class="topbar">
+      <div class="wordmark" onclick="go('dashboard')">Journey <span>Before</span> Destination</div>
+      <nav class="nav" id="nav">
+        <a data-view="dashboard" onclick="go('dashboard')">Dashboard</a>
+        <a data-view="oaths" onclick="go('oaths')">Oaths</a>
+        <a data-view="journal" onclick="go('journal')">Journal</a>
+        <a data-view="radiantdex" onclick="go('radiantdex')">RadiantDex</a>
+        <a data-view="profile" onclick="go('profile')">Profile</a>
+      </nav>
+    </header>
+
+    <!-- ========================= START ========================= -->
+    <section class="view" data-view="start">
+      <div class="start-hero">
+        <h1>Turn ideals<br><span>into action.</span></h1>
+        <p>A Stormlight-inspired companion for growth, reflection, and discovery.</p>
+        <button class="btn btn-primary" onclick="go('onboarding')">Start your journey</button>
+      </div>
+    </section>
+
+    <!-- ========================= ONBOARDING ========================= -->
+    <section class="view" data-view="onboarding">
+      <div class="page-head"><h1 class="page-title">Begin your journey</h1></div>
+
+      <div class="card step">
+        <div class="step-num">Step 1 of 3</div>
+        <h2>Choose your Order</h2>
+        <div class="order-chips">
+          <span class="chip sel">Windrunner</span><span class="chip">Lightweaver</span>
+          <span class="chip">Bondsmith</span><span class="chip">Edgedancer</span>
+          <span class="chip">Elsecaller</span><span class="chip">Truthwatcher</span>
+          <span class="chip">Willshaper</span><span class="chip">Stoneward</span>
+          <span class="chip">Dustbringer</span><span class="chip">Skybreaker</span>
+        </div>
+        <p style="margin-top:16px"><a style="color:var(--text-muted);cursor:pointer">Skip for now</a></p>
+      </div>
+
+      <div class="card step">
+        <div class="step-num">Step 2 of 3</div>
+        <h2>Which have you read?</h2>
+        <label class="book-check"><span class="check done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span> The Way of Kings</label>
+        <label class="book-check"><span class="check done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span> Words of Radiance</label>
+        <label class="book-check"><span class="check"></span> Oathbringer</label>
+        <label class="book-check"><span class="check"></span> Rhythm of War</label>
+        <label class="book-check"><span class="check"></span> Wind and Truth</label>
+      </div>
+
+      <div class="card step">
+        <div class="step-num">Step 3 of 3</div>
+        <h2>Speak your first oath</h2>
+        <input type="text" placeholder="I will..." value="I will be more present with my family." />
+        <div style="margin-top:14px"><input type="text" placeholder="Add an action" /></div>
+        <div style="display:flex;gap:12px;margin-top:24px">
+          <button class="btn btn-primary" onclick="go('dashboard')">Finish</button>
+          <button class="btn" onclick="go('dashboard')">Skip for now</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= DASHBOARD ========================= -->
+    <section class="view active" data-view="dashboard">
+      <!-- Component: <PromptCard /> -->
+      <div class="prompt-card">
+        <div class="eyebrow"><span class="dot"></span> Today's reflection · Windrunner</div>
+        <h1 class="prompt-text">What responsibility are you avoiding right now?</h1>
+        <div class="prompt-actions">
+          <button class="btn btn-primary" onclick="go('journal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Respond</button>
+          <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 17.3-5.6 3 1.1-6.3-4.5-4.4 6.3-.9L12 3l2.7 5.7 6.3.9-4.5 4.4 1.1 6.3z"/></svg> Favorite</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Component: <OrderCard /> -->
+        <div class="card">
+          <div class="card-label">Your Order</div>
+          <div class="order-head">
+            <div class="order-glyph"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 4 7v6c0 5 3.5 7.5 8 9 4.5-1.5 8-4 8-9V7Z"/></svg></div>
+            <div class="order-name">Windrunner</div>
+          </div>
+          <div class="themes"><span class="pill">Protection</span><span class="pill">Leadership</span><span class="pill">Responsibility</span><span class="pill">Service</span></div>
+        </div>
+
+        <!-- Component: <ActiveOathCard /> -->
+        <div class="card">
+          <div class="card-label">Active Oath</div>
+          <div class="oath-text">I will be more present with my family.</div>
+          <div class="progress-row"><span>Progress</span><span>2 of 5 actions</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:40%"></div></div>
+          <div class="actions" style="margin-top:22px">
+            <div class="action done"><span class="check done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Put my phone away during dinner</span></div>
+            <div class="action done"><span class="check done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Plan one daddy-daughter date this month</span></div>
+            <div class="action"><span class="check"></span><span>Spend one hour outside this week</span></div>
+          </div>
+          <div class="more">2 more actions</div>
+        </div>
+      </div>
+
+      <!-- Component: <ReadingProgress /> -->
+      <div class="card reading">
+        <div class="card-label">Reading Progress</div>
+        <div class="books">
+          <span class="book read"><span class="gem"></span> The Way of Kings</span>
+          <span class="book read"><span class="gem"></span> Words of Radiance</span>
+          <span class="book locked"><span class="gem"></span> Oathbringer</span>
+          <span class="book locked"><span class="gem"></span> Rhythm of War</span>
+          <span class="book locked"><span class="gem"></span> Wind and Truth</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= OATHS ========================= -->
+    <section class="view" data-view="oaths">
+      <div class="page-head">
+        <h1 class="page-title">Oaths</h1>
+        <button class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> New Oath</button>
+      </div>
+
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-label">Active</div>
+        <div class="oath-text">I will be more present with my family.</div>
+        <div class="progress-row"><span>Progress</span><span>2 of 5 actions</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:40%"></div></div>
+        <div class="actions" style="margin-top:22px">
+          <div class="action done"><span class="check done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Put my phone away during dinner</span></div>
+          <div class="action done"><span class="check done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Plan one daddy-daughter date this month</span></div>
+          <div class="action"><span class="check"></span><span>Spend one hour outside this week</span></div>
+          <div class="action"><span class="check"></span><span>Take a family walk on Saturday</span></div>
+          <div class="action"><span class="check"></span><span>Read with the kids before bed</span></div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:24px">
+          <button class="btn">Edit</button>
+          <button class="btn">Archive</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Active</div>
+        <div class="oath-text">I will care for my body with consistency.</div>
+        <div class="progress-row"><span>Progress</span><span>1 of 3 actions</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:33%"></div></div>
+      </div>
+    </section>
+
+    <!-- ========================= JOURNAL ========================= -->
+    <section class="view" data-view="journal">
+      <div class="page-head">
+        <h1 class="page-title">Journal</h1>
+        <button class="btn btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> New Entry</button>
+      </div>
+
+      <div class="entry">
+        <div class="entry-top"><span class="tag prompt">Prompt</span><span class="entry-date">June 1, 2026</span></div>
+        <div class="entry-title">What responsibility are you avoiding?</div>
+        <div class="entry-snip">I keep pushing off the harder conversation about scheduling. The truth is I have been hiding behind being busy...</div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-top"><span class="tag freeform">Freeform</span><span class="entry-date">May 30, 2026</span></div>
+        <div class="entry-title">Evening thoughts</div>
+        <div class="entry-snip">Got an hour outside with the family today. Small thing, but it felt like the most present I have been all week.</div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-top"><span class="tag prompt">Prompt</span><span class="entry-date">May 28, 2026</span></div>
+        <div class="entry-title">Who needs your support right now?</div>
+        <div class="entry-snip">My brother has been carrying a lot. I should reach out instead of waiting for him to ask.</div>
+      </div>
+    </section>
+
+    <!-- ========================= RADIANTDEX ========================= -->
+    <section class="view" data-view="radiantdex">
+      <div class="page-head"><h1 class="page-title">RadiantDex</h1></div>
+      <div class="dex-grid" id="dexGrid"></div>
+    </section>
+
+    <!-- ========================= CHARACTER DETAIL ========================= -->
+    <section class="view" data-view="character">
+      <div class="back" onclick="go('radiantdex')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to RadiantDex</div>
+      <div class="char-detail">
+        <div class="char-portrait">K</div>
+        <div>
+          <h1>Kaladin</h1>
+          <div class="meta-row">
+            <div><span class="k">Order</span> Windrunner</div>
+            <div><span class="k">Books</span> The Way of Kings, Words of Radiance</div>
+          </div>
+          <p class="summary">A surgeon's son turned soldier who finds his purpose in protecting those who cannot protect themselves. His story explores leadership born from responsibility, and the weight of choosing to carry others.</p>
+          <div class="themes" style="margin-top:20px"><span class="pill">Bridge Four</span><span class="pill">Surgebinder</span></div>
+          <div class="detail-actions">
+            <button class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 17.3-5.6 3 1.1-6.3-4.5-4.4 6.3-.9L12 3l2.7 5.7 6.3.9-4.5 4.4 1.1 6.3z"/></svg> Favorite</button>
+            <a class="btn" href="https://coppermind.net/wiki/Kaladin" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6M10 14 21 3"/></svg> View on Coppermind</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= PROFILE ========================= -->
+    <section class="view" data-view="profile">
+      <div class="page-head">
+        <h1 class="page-title">Profile</h1>
+        <button class="btn">Edit Profile</button>
+      </div>
+      <div class="profile-grid">
+        <div class="card">
+          <div class="field"><div class="k">Name</div><div class="v">Jeremy</div></div>
+          <div class="field"><div class="k">Order</div><div class="v">Windrunner</div></div>
+        </div>
+        <div class="card">
+          <div class="field"><div class="k">Books Read</div><div class="v">The Way of Kings, Words of Radiance</div></div>
+          <div class="field"><div class="k">Want to Read</div><div class="v">Oathbringer</div></div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footnote">Static prototype. No data is wired. Life before death, strength before weakness, journey before destination.</p>
+
+  </div>
+
+<script>
+  // tiny client router: show one view, sync nav, replay the rise animation
+  var characters = [
+    ["Kaladin","Windrunner","K"],["Shallan","Lightweaver","S"],["Dalinar","Bondsmith","D"],
+    ["Adolin","Kholin Princedom","A"],["Syl","Honorspren","Sy"],["Jasnah","Elsecaller","J"],
+    ["Szeth","Skybreaker","Sz"],["Navani","Scholar","N"],["Lift","Edgedancer","L"],["Renarin","Truthwatcher","R"]
+  ];
+
+  function renderDex() {
+    var grid = document.getElementById('dexGrid');
+    grid.innerHTML = characters.map(function (c) {
+      return '<div class="char-card" onclick="go(\'character\')">' +
+        '<div class="avatar">' + c[2] + '</div>' +
+        '<div class="cname">' + c[0] + '</div>' +
+        '<div class="corder">' + c[1] + '</div></div>';
+    }).join('');
+  }
+
+  function go(view) {
+    document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('active'); });
+    var el = document.querySelector('.view[data-view="' + view + '"]');
+    el.classList.add('active');
+    el.classList.remove('rise'); void el.offsetWidth; el.classList.add('rise');
+
+    document.querySelectorAll('.nav a').forEach(function (a) {
+      a.classList.toggle('active', a.dataset.view === view);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  renderDex();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+.shell {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 30px 50px;
+  gap: var(--section-gap);
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: var(--section-gap);
+}
