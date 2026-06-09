@@ -2,18 +2,23 @@
   font-family: var(--font-display);
   font-size: 30px;
   font-weight: 500;
-  margin: 0;
+  margin-bottom: 0 !important;
 }
+/* the circular frame holding the small Order seal next to the Order name.
+   Tinted by --accent: a faint inset + outer accent glow around the ring. */
 .orderGlyph {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   border: 1px solid var(--border-strong);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--stormlight);
+  color: var(--accent);
   flex-shrink: 0;
+  box-shadow:
+    inset 0 0 14px rgba(var(--accent-rgb), 0.12),
+    0 0 18px rgba(var(--accent-rgb), 0.14);
 }
 .orderHead {
   display: flex;

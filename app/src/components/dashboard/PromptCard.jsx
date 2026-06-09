@@ -7,6 +7,7 @@ import Text from "../ui/Text";
 import Button from "../ui/Button";
 import styles from "./PromptCard.module.css";
 import cardStyles from "../ui/Card.module.css";
+import OrderGlyph from "../OrderGlyph";
 import { PencilLine, Star } from "lucide-react";
 
 function PromptCard() {
@@ -35,6 +36,7 @@ function PromptCard() {
             Favorite
           </Button>
         </Flex>
+        <OrderGlyph order="windrunner" h={240} variant="watermark" />
       </Card>
       <Modal
         open={isModalVisible}
