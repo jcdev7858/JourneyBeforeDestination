@@ -1,0 +1,36 @@
+.btn {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text);
+  transition: all 0.18s;
+}
+.btn:hover {
+  border-color: var(--stormlight);
+}
+.btnPrimary {
+  background: var(--stormlight);
+  color: #0b1120;
+  border-color: var(--stormlight);
+  box-shadow: 0 0 24px rgba(124, 196, 232, 0.3);
+}
+.btnPrimary:hover {
+  box-shadow: 0 0 34px rgba(124, 196, 232, 0.5);
+}
+.btn svg {
+  width: 16px;
+  height: 16px;
+}
+.btnDanger {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: transparent;
+}

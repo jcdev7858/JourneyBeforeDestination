@@ -1,0 +1,40 @@
+.promptCard {
+  position: relative;
+  background: linear-gradient(180deg, var(--bg-card), var(--bg-elevated)) !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: var(--radius);
+  padding: 40px 44px 34px !important;
+  overflow: hidden;
+}
+.promptCard::before {
+  content: "";
+  position: absolute;
+  inset: -40% 30% auto;
+  height: 280px;
+  border-radius: 50%;
+  background: var(--stormlight-soft);
+  filter: blur(46px);
+  animation: breathe 7s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.promptText {
+  position: relative;
+  font-family: var(--font-display);
+  line-height: 1.18;
+  max-width: 24ch;
+}
+.promptActions {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+}

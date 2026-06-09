@@ -1,0 +1,21 @@
+# Dependencies
+**/node_modules
+
+# Build output
+**/dist
+**/build
+
+# Reference material / docs — not app code, leave formatting alone
+Features
+Specs
+
+# Lockfiles & generated
+**/package-lock.json
+**/*.min.js
+
+# Binary / non-code assets
+**/*.xlsx
+**/*.csv
+**/*.zip
+**/*.webloc
+**/.DS_Store

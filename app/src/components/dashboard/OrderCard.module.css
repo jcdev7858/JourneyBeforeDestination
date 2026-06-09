@@ -1,0 +1,23 @@
+.orderName {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 500;
+  margin: 0;
+}
+.orderGlyph {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--stormlight);
+  flex-shrink: 0;
+}
+.orderHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
