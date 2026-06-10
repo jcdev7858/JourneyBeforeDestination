@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 26px 0 30px;
+  padding: 26px 0 0px;
   flex-wrap: wrap;
   gap: 14px;
 }
@@ -14,34 +14,42 @@
   letter-spacing: 0.3px;
   cursor: pointer;
   text-decoration: none;
+
+  span {
+    color: var(--stormlight);
+  }
 }
-.wordmark span {
-  color: var(--stormlight);
-}
+
 .nav {
   display: flex;
   gap: 24px;
   font-size: 14px;
   flex-wrap: wrap;
-}
-.nav a {
-  color: var(--text-muted);
-  text-decoration: none;
-  transition: color 0.2s;
-  cursor: pointer;
-}
-.nav a:hover {
-  color: var(--text);
-}
-.nav a.active {
-  color: var(--text);
-}
-.nav a.active::after {
-  content: "";
-  display: block;
-  height: 2px;
-  margin-top: 5px;
-  background: var(--stormlight);
-  border-radius: 2px;
-  box-shadow: 0 0 10px var(--stormlight);
+
+  a {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text);
+    }
+  }
+  /* NavLink stamps a plain global "active" class by URL match; :global targets
+     it (vs the module-scoped name), still anchored under .nav so it can't leak.
+     The active underline is an accent surface, so it tints with the Order. */
+  a:global(.active) {
+    color: var(--text);
+
+    &::after {
+      content: "";
+      display: block;
+      height: 2px;
+      margin-top: 5px;
+      background: var(--accent);
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.9);
+    }
+  }
 }
