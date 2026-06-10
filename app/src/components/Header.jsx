@@ -1,17 +1,20 @@
 import styles from "./Header.module.css";
+import { NavLink } from "react-router-dom";
 
 export default function Header() {
   return (
     <header className={styles.topbar}>
-      <a className={styles.wordmark} href="#">
+      <NavLink className={styles.wordmark} to="/dashboard">
         Journey <span>Before</span> Destination
-      </a>
+      </NavLink>
       <nav className={styles.nav} id="nav">
-        <a href="#">Dashboard</a>
-        <a href="#">Oaths</a>
-        <a href="#">Journal</a>
-        <a href="#">RadiantDex</a>
-        <a href="#">Profile</a>
+        <NavLink to="/dashboard" end>
+          Dashboard
+        </NavLink>
+        <NavLink to="/oaths">Oaths</NavLink>
+        <NavLink to="/journal">Journal</NavLink>
+        <NavLink to="/radiantdex">RadiantDex</NavLink>
+        <NavLink to="/profile">Profile</NavLink>
       </nav>
     </header>
   );
