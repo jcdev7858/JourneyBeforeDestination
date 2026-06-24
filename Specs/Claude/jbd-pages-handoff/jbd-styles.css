@@ -1,0 +1,490 @@
+/* =========================================================
+   JOURNEY BEFORE DESTINATION — complete v2 stylesheet
+   This is the locked v2 base (tokens + dashboard components) followed by the
+   page-component layer for Oaths, Journal, Profile and their editor modals.
+   One file: link it once. Token :root lives in the BASE section below.
+   --------------------------------------------------------- */
+
+/* =========================================================
+   JOURNEY BEFORE DESTINATION — v2 design language (Option A)
+   Keeps the heart: stormlight blue, the breathing glow, the button glow,
+   clean glass cards. The blue GLOW is constant (it's the stormlight); the
+   Order ACCENT (--accent) recolors only the interactive marks — eyebrow,
+   glyph, primary button, nav — so the dashboard can wear any Order's color.
+   ========================================================= */
+:root {
+  --bg:            #0b0f1c;
+  --bg-elevated:   #141a2c;
+
+  --border:        rgba(124, 196, 232, 0.10);
+  --border-strong: rgba(124, 196, 232, 0.22);
+  --rim:           rgba(255, 255, 255, 0.07);
+
+  --stormlight:      #7cc4e8;
+  --stormlight-deep: #4f93c4;
+  --stormlight-soft: rgba(124, 196, 232, 0.14);
+  --radiant-gold:  #d8b878;
+  --radiant-gold-soft: rgba(216, 184, 120, 0.13);
+
+  /* Order accent — overridden per Order on the .jbd root. Default Windrunner. */
+  --accent:     #7cc4e8;
+  --accent-rgb: 124, 196, 232;
+  --accent-deep: #4f93c4;
+  --accent-soft: rgba(var(--accent-rgb), 0.14);
+
+  --text:        #e9e5d7;
+  --text-muted:  #8b95ad;
+  --text-faint:  #5b647d;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Hanken Grotesk', system-ui, sans-serif;
+
+  /* type scale ---------------------------------------------------------- */
+  --fs-display: 40px;   --lh-display: 1.16;   /* hero prompt (serif) */
+  --fs-title:   30px;   --lh-title:   1.2;    /* page / Order name (serif) */
+  --fs-heading: 24px;   --lh-heading: 1.3;    /* oath, section head (serif) */
+  --fs-quote:   20px;   --lh-quote:   1.35;   /* callout, pull-quote (serif) */
+  --fs-body-lg: 15px;                         /* lead body (sans) */
+  --fs-body:    14px;                         /* default body (sans) */
+  --fs-body-sm: 13px;                         /* secondary / muted (sans) */
+  --fs-overline:11.5px;                       /* uppercase labels + eyebrows */
+
+  /* spacing ------------------------------------------------------------- */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px;
+  --pad-card: 30px;   /* inner padding — regular cards */
+  --pad-hero: 40px;   /* inner padding — hero cards */
+  --gap-card: 30px;   /* space between cards, everywhere */
+  --page-x: 40px; --page-y: 30px;
+
+  /* motion -------------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-rise: 0.55s;  /* entrance */
+  --dur-ui:   0.18s;  /* hover / focus transitions */
+
+  --radius:    16px;
+  --radius-sm: 10px;
+}
+
+/* ---------- root frame (one per artboard) ---------- */
+.jbd {
+  position: relative;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: var(--font-body);
+  color: var(--text);
+  line-height: 1.6;
+  background:
+    radial-gradient(900px 520px at 50% -10%, rgba(124,196,232,0.10), transparent 60%),
+    radial-gradient(1100px 820px at 50% 118%, rgba(216,184,120,0.045), transparent 60%),
+    var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+.jbd * { box-sizing: border-box; margin: 0; padding: 0; }
+.jbd-scroll { position: relative; z-index: 1; padding: var(--page-y) var(--page-x); }
+
+/* ---------- the living aura (sits BEHIND the glass) ----------
+   Stays blue regardless of Order — the stormlight glow is the constant. */
+.aura { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.aura .orb { position: absolute; border-radius: 50%; filter: blur(60px); }
+.aura .orb-sky {
+  width: 620px; height: 360px; top: -120px; left: 50%; margin-left: -310px;
+  background: radial-gradient(closest-side, var(--stormlight-soft), transparent 72%);
+  animation: breathe 7s ease-in-out infinite;
+}
+.aura .orb-gold {
+  width: 420px; height: 300px; bottom: -120px; left: -100px;
+  background: radial-gradient(closest-side, var(--radiant-gold-soft), transparent 72%);
+  animation: breathe 9s ease-in-out infinite 1.5s;
+}
+@keyframes breathe { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* ---------- entrance motion ----------
+   Transform-only so the resting state is fully visible — content shows even
+   when an offscreen capture / print / reduced-motion freezes the timeline. */
+@keyframes rise { from { transform: translateY(16px); } to { transform: none; } }
+.rise { animation: rise var(--dur-rise) var(--ease-out) both; }
+@media (prefers-reduced-motion: reduce) {
+  .rise { animation: none; }
+  .aura .orb { animation: none !important; }
+}
+
+/* ---------- top bar ---------- */
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 26px; }
+.wordmark { font-family: var(--font-display); font-weight: 500; font-size: 21px; letter-spacing: 0.3px; }
+.wordmark span { color: var(--stormlight); }
+.nav { display: flex; gap: 22px; font-size: 13.5px; }
+.nav a { color: var(--text-muted); text-decoration: none; cursor: pointer; transition: color 0.2s; }
+.nav a:hover { color: var(--text); }
+.nav a:focus-visible { outline: none; color: var(--text); }
+.nav a.active { color: var(--text); position: relative; }
+.nav a.active::after { content: ""; display: block; height: 2px; margin-top: 5px; background: var(--accent); border-radius: 2px; box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.9); }
+
+/* ---------- glass surface ---------- */
+.glass {
+  position: relative;
+  padding: var(--pad-card);
+  background: linear-gradient(155deg, rgba(124,196,232,0.06), rgba(22,28,50,0.46) 62%);
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 var(--rim), 0 26px 60px -32px rgba(0,0,0,0.8);
+}
+.card-label { font-size: var(--fs-overline); letter-spacing: 1.4px; text-transform: uppercase; color: var(--text-faint); margin-bottom: var(--sp-4); }
+
+/* ---------- buttons (keep the glow; glow follows accent) ----------
+   Focus: primary intensifies its glow; outline buttons gain the Order-color
+   border on both hover and focus. */
+.btn { font-family: var(--font-body); font-size: var(--fs-body); font-weight: 500; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: var(--radius-sm); cursor: pointer; border: 1px solid var(--border-strong); background: rgba(255,255,255,0.02); color: var(--text); transition: border-color var(--dur-ui), box-shadow var(--dur-ui), background var(--dur-ui); }
+.btn:focus-visible { outline: none; }
+.btn:hover { border-color: var(--accent); }
+.btn-primary { background: var(--accent); color: #07111d; border-color: var(--accent); box-shadow: 0 0 24px rgba(var(--accent-rgb), 0.34); }
+.btn-primary:hover { box-shadow: 0 0 36px rgba(var(--accent-rgb), 0.52); }
+.btn-primary:focus-visible { box-shadow: 0 0 48px rgba(var(--accent-rgb), 0.75), 0 0 0 1px rgba(var(--accent-rgb), 0.7); }
+.btn svg { width: 16px; height: 16px; }
+.btn-ghost { border-color: var(--border); }
+.btn-ghost:hover, .btn-ghost:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.4); }
+
+/* ---------- pills ---------- */
+.themes { display: flex; flex-wrap: wrap; gap: 9px; }
+.pill { font-size: 12.5px; color: var(--text-muted); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; }
+
+/* ---------- Order glyph (authentic seal, used as a tintable mask) ---------- */
+.glyph-mask {
+  -webkit-mask: url('windrunner-glyph.svg') center / contain no-repeat;
+  mask: url('windrunner-glyph.svg') center / contain no-repeat;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.order-ring { display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-strong); border-radius: 50%; box-shadow: inset 0 0 14px rgba(var(--accent-rgb), 0.12), 0 0 18px rgba(var(--accent-rgb), 0.14); flex-shrink: 0; }
+.glyph-corner { position: absolute; bottom: 18px; right: 20px; opacity: 0.10; pointer-events: none; }
+.glyph-watermark { position: absolute; right: 30px; bottom: -6px; opacity: 0.07; pointer-events: none; }
+
+/* ---------- selective accent glow (color-coded to the Order) ----------
+   The same radial wash used at the top of the page, pulled inside a card.
+   Used sparingly — the hero prompt and the Order card — so it stays special. */
+.glow-accent::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  width: 400px; height: 280px; top: -120px; left: -70px;
+  background: radial-gradient(closest-side, rgba(var(--accent-rgb), 0.16), transparent 70%);
+  filter: blur(28px);
+}
+.glow-accent.glow-br::before { top: auto; left: auto; bottom: -130px; right: -80px; }
+
+/* ---------- prompt card (hero) ---------- */
+.prompt-card { padding: var(--pad-hero); overflow: hidden; }
+.eyebrow { position: relative; font-size: var(--fs-overline); letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; display: flex; align-items: center; gap: 9px; }
+.eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.9); }
+.prompt-text { position: relative; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-display); line-height: var(--lh-display); max-width: 22ch; }
+.prompt-actions { position: relative; display: flex; gap: 12px; margin-top: 30px; }
+
+/* ---------- order + oath cards ---------- */
+.order-name { font-family: var(--font-display); font-size: var(--fs-title); font-weight: 500; }
+.order-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.oath-text { font-family: var(--font-display); font-size: var(--fs-heading); line-height: var(--lh-heading); margin-bottom: 20px; }
+
+/* progress */
+.progress-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+.progress-row span { white-space: nowrap; }
+.progress-track { height: 6px; border-radius: 100px; background: rgba(255,255,255,0.06); overflow: visible; }
+.progress-fill { position: relative; height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--radiant-gold), #e9cf9a); box-shadow: 0 0 14px rgba(216,184,120,0.45); }
+.progress-fill.infused { background: linear-gradient(90deg, var(--stormlight-deep), #aee0fb); box-shadow: 0 0 14px rgba(124,196,232,0.55); }
+.progress-fill .bead { position: absolute; right: -5px; top: 50%; transform: translateY(-50%); width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffffff, #cfeeff 35%, var(--stormlight) 70%, var(--stormlight-deep)); box-shadow: 0 0 12px rgba(124,196,232,0.95), 0 0 3px rgba(255,255,255,0.85); }
+
+/* actions / checks */
+.actions { display: flex; flex-direction: column; gap: 14px; }
+.action { display: flex; align-items: flex-start; gap: 12px; font-size: 14.5px; line-height: 1.4; }
+.check { width: 19px; height: 19px; border-radius: 6px; flex-shrink: 0; margin-top: 1px; border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.check.done { background: var(--radiant-gold); border-color: var(--radiant-gold); }
+.check.done svg { width: 12px; height: 12px; color: #1a1407; }
+.check.infused.done { background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep)); border-color: rgba(174,224,251,0.6); box-shadow: 0 0 12px rgba(124,196,232,0.7), inset 0 0 5px rgba(255,255,255,0.4); }
+.check.infused.done svg { color: #07202f; }
+.action.done span { color: var(--text-muted); text-decoration: line-through; text-decoration-color: var(--text-faint); }
+.more { font-size: 13px; color: var(--text-faint); padding-left: 31px; margin-top: 13px; }
+
+/* ---------- gemstone reading progress (infused stormlight — stays blue) ---------- */
+.books { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; }
+.book { display: flex; align-items: center; gap: 11px; font-size: 13.5px; padding: 10px 16px 10px 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); color: var(--text-muted); transition: all 0.18s; }
+.book.read { color: var(--text); border-color: var(--border-strong); background: rgba(124,196,232,0.04); }
+.book.locked { opacity: 0.5; }
+.gemstone { width: 15px; height: 15px; flex-shrink: 0; transform: rotate(45deg); border-radius: 3px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(91,100,125,0.25));
+  border: 1px solid rgba(124,196,232,0.18); position: relative; }
+.gemstone::after { content: ""; position: absolute; inset: 3px; border-radius: 1px; background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 60%); }
+.book.read .gemstone {
+  background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep));
+  border-color: rgba(174,224,251,0.6);
+  box-shadow: 0 0 14px rgba(124,196,232,0.7), inset 0 0 6px rgba(255,255,255,0.4);
+}
+
+/* ---------- research callout: "Pick up where you left off" ----------
+   Same border as every card. Set apart by a warm inner glow + an icon chip,
+   not a border accent. */
+.callout { display: flex; align-items: center; gap: 18px; padding: 24px var(--pad-card); overflow: hidden; }
+.callout::after { content: ""; position: absolute; top: -40%; left: -6%; width: 320px; height: 200px; background: radial-gradient(closest-side, var(--radiant-gold-soft), transparent 72%); filter: blur(20px); pointer-events: none; }
+.callout > * { position: relative; }
+.callout-chip { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--radiant-gold); background: var(--radiant-gold-soft); border: 1px solid rgba(216,184,120,0.32); }
+.callout-chip svg { width: 19px; height: 19px; }
+.callout.cool::after { background: radial-gradient(closest-side, var(--stormlight-soft), transparent 72%); }
+.callout.cool .callout-chip { color: var(--stormlight); background: var(--stormlight-soft); border-color: rgba(124,196,232,0.32); }
+.callout.cool .callout-kicker { color: var(--stormlight); }
+.callout-body { flex: 1; }
+.callout-kicker { font-size: 11px; letter-spacing: 1.3px; text-transform: uppercase; color: var(--radiant-gold); margin-bottom: 6px; }
+.callout-text { font-family: var(--font-display); font-size: var(--fs-quote); line-height: var(--lh-quote); color: var(--text); }
+
+/* ---------- footer ---------- */
+.site-footer { margin-top: 38px; padding-top: 28px; border-top: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+.footer-oath { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 18px; font-family: var(--font-display); font-size: 19px; letter-spacing: 0.3px; color: var(--text); }
+.footer-oath .phrase { opacity: 0.9; white-space: nowrap; }
+.footer-sep { width: 6px; height: 6px; transform: rotate(45deg); border-radius: 1px; background: var(--stormlight); box-shadow: 0 0 9px rgba(124,196,232,0.7); flex-shrink: 0; }
+.footer-meta { display: flex; align-items: center; gap: 12px; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-faint); }
+.footer-meta .footer-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-faint); opacity: 0.6; }
+.footer-meta a { color: var(--text-faint); text-decoration: none; cursor: pointer; transition: color 0.18s; }
+.footer-meta a:hover { color: var(--accent); }
+
+/* =========================================================
+   SHARED PRIMITIVES for the other pages (Oaths, Journal, Profile, RadiantDex).
+   Same focus language as the buttons: Order-color border + faint ring.
+   ========================================================= */
+
+/* ---------- form fields ---------- */
+.field { display: flex; flex-direction: column; gap: var(--sp-2); }
+.field-label { font-size: var(--fs-overline); letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-faint); }
+.input, .textarea {
+  font-family: var(--font-body); font-size: var(--fs-body); color: var(--text); line-height: 1.55;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm); padding: 12px 14px; width: 100%;
+  transition: border-color var(--dur-ui), box-shadow var(--dur-ui);
+}
+.input::placeholder, .textarea::placeholder { color: var(--text-faint); }
+.input:hover, .textarea:hover { border-color: rgba(var(--accent-rgb), 0.4); }
+.input:focus, .input:focus-visible, .textarea:focus, .textarea:focus-visible {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.4), 0 0 18px rgba(var(--accent-rgb), 0.12);
+}
+.textarea { min-height: 96px; resize: vertical; }
+
+/* ---------- list row (oath list, journal entries, character cards) ---------- */
+.row-item {
+  display: flex; align-items: center; gap: 14px; padding: 16px var(--pad-card);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.015); cursor: pointer;
+  transition: border-color var(--dur-ui), background var(--dur-ui);
+}
+.row-item:hover { border-color: var(--border-strong); background: rgba(124,196,232,0.04); }
+.row-item:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.4); }
+
+/* ---------- empty state (a designed feature, never a blank box) ---------- */
+.empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--sp-4); padding: 48px var(--pad-card); }
+.empty-glyph { opacity: 0.5; color: var(--accent); }
+.empty-title { font-family: var(--font-display); font-size: var(--fs-heading); color: var(--text); }
+.empty-text { font-size: var(--fs-body); color: var(--text-muted); max-width: 38ch; line-height: 1.55; }
+
+
+/* =========================================================
+   ░░  PAGE-COMPONENT LAYER  ░░  (Oaths · Journal · Profile · modals)
+   Everything below was added on top of the v2 base. It introduces no new
+   colors — every glow is stormlight or the Order accent at the pinned band.
+   ========================================================= */
+/* ---------- page header (non-dashboard pages lead with a title, not a hero prompt) ---------- */
+.page-head { margin-bottom: var(--gap-card); }
+.page-eyebrow { font-size: var(--fs-overline); letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 9px; }
+.page-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.9); }
+.page-title { font-family: var(--font-display); font-weight: 500; font-size: var(--fs-title); line-height: var(--lh-title); }
+.page-lead { font-size: var(--fs-body-lg); color: var(--text-muted); max-width: 56ch; margin-top: 8px; }
+
+/* a section divider used inside pages: serif heading on the left, optional action on the right */
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 0 0 18px; }
+.section-head h2 { font-family: var(--font-display); font-weight: 400; font-size: var(--fs-heading); line-height: var(--lh-heading); }
+.section-head .section-count { font-size: var(--fs-body-sm); color: var(--text-faint); white-space: nowrap; }
+
+/* =========================================================
+   OATHS — the Ideals ladder + oath cards
+   ========================================================= */
+
+/* The Ideals ladder: a vertical progression of the Five Ideals. Sworn rungs
+   carry an infused stormlight gem and a lit rail; the current rung wears the
+   Order accent; unspoken rungs are faint. The rail is the constant light. */
+.ladder { display: flex; flex-direction: column; }
+.rung { display: grid; grid-template-columns: 40px 1fr; column-gap: 20px; }
+.rung-rail { position: relative; display: flex; flex-direction: column; align-items: center; }
+.rung-line { width: 2px; flex: 1; background: var(--border); }
+.rung-line.lit { background: linear-gradient(180deg, var(--stormlight-deep), rgba(124,196,232,0.22)); }
+.rung-line.top { background: transparent; }
+.rung-node { width: 18px; height: 18px; transform: rotate(45deg); border-radius: 4px; flex-shrink: 0; margin: 4px 0; border: 1px solid var(--border-strong);
+  background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(91,100,125,0.18)); position: relative; }
+.rung-node::after { content: ""; position: absolute; inset: 3px; border-radius: 2px; background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 60%); }
+.rung.sworn .rung-node { background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep)); border-color: rgba(174,224,251,0.6); box-shadow: 0 0 14px rgba(124,196,232,0.7), inset 0 0 6px rgba(255,255,255,0.4); }
+.rung.current .rung-node { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 16px rgba(var(--accent-rgb), 0.6); }
+.rung.unspoken .rung-node { opacity: 0.5; }
+.rung-body { padding-bottom: 26px; min-width: 0; }
+.rung:last-child .rung-body { padding-bottom: 0; }
+.rung-ordinal { font-size: var(--fs-overline); letter-spacing: 1.4px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 7px; display: flex; align-items: center; gap: 10px; }
+.rung.current .rung-ordinal { color: var(--accent); }
+.rung-ordinal .tag { font-size: 10px; letter-spacing: 1px; padding: 2px 8px; border-radius: 100px; border: 1px solid var(--border-strong); color: var(--text-muted); }
+.rung.current .rung-ordinal .tag { color: var(--accent); border-color: rgba(var(--accent-rgb), 0.4); }
+.rung-words { font-family: var(--font-display); font-size: var(--fs-heading); line-height: var(--lh-heading); color: var(--text); }
+.rung.unspoken .rung-words { color: var(--text-faint); font-style: italic; }
+.rung-note { font-size: var(--fs-body-sm); color: var(--text-muted); margin-top: 8px; }
+
+/* oath card — a richer list member than the dashboard's single active oath.
+   Used in a stacked column; each carries its own progress and action peek. */
+.oath-card { display: flex; flex-direction: column; gap: 16px; }
+.oath-card + .oath-card { margin-top: var(--gap-card); }
+.oath-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+.oath-status { font-size: var(--fs-overline); letter-spacing: 1.3px; text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0; }
+.oath-status.active { color: var(--accent); }
+.oath-status.kept { color: var(--stormlight); }
+.oath-status .seal { width: 8px; height: 8px; transform: rotate(45deg); border-radius: 2px; }
+.oath-status.active .seal { background: var(--accent); box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.8); }
+.oath-status.kept .seal { background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep)); box-shadow: 0 0 10px rgba(124,196,232,0.8); }
+.oath-card .oath-words { font-family: var(--font-display); font-size: var(--fs-heading); line-height: var(--lh-heading); max-width: 30ch; }
+.oath-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.oath-foot .meta { font-size: var(--fs-body-sm); color: var(--text-faint); }
+.action-peek { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; }
+
+/* =========================================================
+   JOURNAL — reflection cadence + entry timeline
+   ========================================================= */
+
+/* Cadence: the stormlight a Radiant gathers by reflecting. A compact grid of
+   day cells; days reflected glow with infused blue, brighter the deeper the
+   entry. Stays blue — it measures the practice, not the Order. */
+.cadence-wrap { display: flex; gap: 36px; align-items: flex-start; flex-wrap: wrap; }
+.cadence { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); gap: 5px; }
+.cad { width: 15px; height: 15px; border-radius: 4px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); }
+.cad.l1 { background: rgba(124,196,232,0.18); border-color: rgba(124,196,232,0.20); }
+.cad.l2 { background: rgba(124,196,232,0.34); border-color: rgba(124,196,232,0.30); }
+.cad.l3 { background: rgba(124,196,232,0.55); border-color: rgba(124,196,232,0.45); box-shadow: 0 0 6px rgba(124,196,232,0.35); }
+.cad.l4 { background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep)); border-color: rgba(174,224,251,0.6); box-shadow: 0 0 9px rgba(124,196,232,0.6); }
+.cadence-legend { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-faint); margin-top: 14px; }
+.cadence-legend .cad { width: 11px; height: 11px; }
+
+/* the stat column beside the cadence */
+.streak-stats { display: flex; flex-direction: column; gap: 22px; flex-shrink: 0; }
+.streak-stat .n { font-family: var(--font-display); font-size: 34px; line-height: 1; color: var(--text); }
+.streak-stat .n .sub { font-size: 15px; color: var(--text-muted); margin-left: 4px; }
+.streak-stat .lbl { font-size: var(--fs-overline); letter-spacing: 1.3px; text-transform: uppercase; color: var(--text-faint); margin-top: 8px; }
+
+/* entry timeline: a left gem-gutter rail threads the entries, grouped by month */
+.month-mark { font-family: var(--font-display); font-size: var(--fs-quote); color: var(--text-muted); margin: 4px 0 16px; }
+.timeline { display: flex; flex-direction: column; }
+.tl-entry { display: grid; grid-template-columns: 28px 1fr; column-gap: 20px; }
+.tl-rail { position: relative; display: flex; flex-direction: column; align-items: center; }
+.tl-line { width: 2px; flex: 1; background: var(--border); }
+.tl-dot { width: 11px; height: 11px; transform: rotate(45deg); border-radius: 3px; margin: 6px 0; flex-shrink: 0;
+  background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep)); border: 1px solid rgba(174,224,251,0.5); box-shadow: 0 0 9px rgba(124,196,232,0.5); }
+.tl-body { padding-bottom: var(--gap-card); min-width: 0; }
+.tl-entry:last-child .tl-body { padding-bottom: 0; }
+
+/* the entry card itself */
+.entry { position: relative; }
+.entry-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+.entry-prompt { font-family: var(--font-display); font-size: var(--fs-quote); line-height: var(--lh-quote); color: var(--text-muted); max-width: 46ch; }
+.entry-date { font-size: var(--fs-body-sm); color: var(--text-faint); white-space: nowrap; flex-shrink: 0; }
+.entry-body { font-size: var(--fs-body-lg); line-height: 1.7; color: var(--text); }
+.entry-body em { font-family: var(--font-display); font-style: italic; font-size: 1.08em; color: var(--text); }
+.entry-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 18px; }
+.entry-fav { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); color: var(--text-faint); flex-shrink: 0; transition: color var(--dur-ui), border-color var(--dur-ui); }
+.entry-fav svg { width: 16px; height: 16px; }
+.entry-fav.on { color: var(--stormlight); border-color: rgba(124,196,232,0.4); box-shadow: 0 0 0 1px rgba(124,196,232,0.18); }
+.entry-fav.on svg { fill: var(--stormlight); }
+
+/* filter chips for the journal feed */
+.filterbar { display: flex; flex-wrap: wrap; gap: 9px; }
+.chip { font-size: 12.5px; color: var(--text-muted); border: 1px solid var(--border); border-radius: 100px; padding: 7px 15px; cursor: pointer; background: rgba(255,255,255,0.015); transition: border-color var(--dur-ui), color var(--dur-ui), background var(--dur-ui); }
+.chip:hover { border-color: var(--border-strong); color: var(--text); }
+.chip.on { color: #07111d; background: var(--accent); border-color: var(--accent); box-shadow: 0 0 18px rgba(var(--accent-rgb), 0.3); }
+
+/* =========================================================
+   PROFILE — identity hero, stat grid, the path, settings
+   ========================================================= */
+
+/* identity hero — big glyph, Order ring, name, the ideal reached */
+.identity { display: flex; align-items: center; gap: 30px; overflow: hidden; }
+.identity .order-ring { width: 92px; height: 92px; }
+.id-body { min-width: 0; }
+.id-name { font-family: var(--font-display); font-weight: 500; font-size: 38px; line-height: 1.1; }
+.id-order { display: flex; align-items: center; gap: 12px; margin-top: 10px; font-size: var(--fs-body-lg); color: var(--text-muted); flex-wrap: wrap; }
+.id-order .accent-text { color: var(--accent); }
+.id-order .id-sep { width: 4px; height: 4px; border-radius: 50%; background: var(--text-faint); }
+.id-meta { font-size: var(--fs-body-sm); color: var(--text-faint); margin-top: 14px; letter-spacing: 0.4px; }
+
+/* stat grid — four tiles, big serif numbers */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap-card); }
+.stat-tile { padding: 24px var(--pad-card); border: 1px solid var(--border); border-radius: var(--radius); background: rgba(255,255,255,0.015); }
+.stat-tile .n { font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--text); }
+.stat-tile .lbl { font-size: var(--fs-overline); letter-spacing: 1.3px; text-transform: uppercase; color: var(--text-faint); margin-top: 12px; }
+
+/* the path so far — milestone timeline, ideals reached */
+.path { display: flex; flex-direction: column; }
+.milestone { display: grid; grid-template-columns: 22px 1fr; column-gap: 18px; }
+.ms-rail { position: relative; display: flex; flex-direction: column; align-items: center; }
+.ms-line { width: 2px; flex: 1; background: linear-gradient(180deg, var(--stormlight-deep), rgba(124,196,232,0.18)); }
+.ms-line.top { background: transparent; }
+.ms-dot { width: 10px; height: 10px; border-radius: 50%; margin: 5px 0; flex-shrink: 0; background: radial-gradient(circle at 35% 30%, #ffffff, var(--stormlight) 60%, var(--stormlight-deep)); box-shadow: 0 0 10px rgba(124,196,232,0.7); }
+.ms-body { padding-bottom: 22px; min-width: 0; }
+.milestone:last-child .ms-body { padding-bottom: 0; }
+.ms-when { font-size: var(--fs-overline); letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 5px; }
+.ms-what { font-size: var(--fs-body-lg); color: var(--text); }
+.ms-what .em { font-family: var(--font-display); font-style: italic; color: var(--text); }
+
+/* settings — labelled rows with a toggle or a chevron */
+.settings { display: flex; flex-direction: column; gap: 2px; }
+.setting { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px 4px; border-bottom: 1px solid var(--border); }
+.setting:last-child { border-bottom: none; }
+.setting-text .t { font-size: var(--fs-body); color: var(--text); }
+.setting-text .d { font-size: var(--fs-body-sm); color: var(--text-faint); margin-top: 3px; }
+.setting-val { font-size: var(--fs-body-sm); color: var(--text-muted); display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.setting-val svg { width: 15px; height: 15px; color: var(--text-faint); }
+
+/* toggle switch — on state uses the Order accent (it's an interactive mark) */
+.toggle { width: 42px; height: 24px; border-radius: 100px; border: 1px solid var(--border-strong); background: rgba(255,255,255,0.04); position: relative; flex-shrink: 0; transition: background var(--dur-ui), border-color var(--dur-ui); }
+.toggle .knob { position: absolute; top: 50%; left: 3px; transform: translateY(-50%); width: 16px; height: 16px; border-radius: 50%; background: var(--text-muted); transition: left var(--dur-ui), background var(--dur-ui); }
+.toggle.on { background: rgba(var(--accent-rgb), 0.22); border-color: var(--accent); }
+.toggle.on .knob { left: 21px; background: var(--accent); box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.7); }
+
+/* =========================================================
+   MODAL — the oath editor (add / edit / update / delete an oath and its actions)
+   A glass dialog over a blurred scrim. Destructive actions use a single
+   restrained warm-red (the one warning hue), never gold.
+   ========================================================= */
+.scrim { position: absolute; inset: 0; z-index: 40; color: var(--text); font-family: var(--font-body); line-height: 1.6; background: rgba(7,11,20,0.64); backdrop-filter: blur(8px) saturate(110%); -webkit-backdrop-filter: blur(8px) saturate(110%); display: flex; align-items: center; justify-content: center; padding: 44px; }
+.modal { position: relative; width: 100%; max-width: 580px; display: flex; flex-direction: column; overflow: hidden; box-shadow: inset 0 1px 0 var(--rim), 0 50px 110px -28px rgba(0,0,0,0.9); }
+.modal.modal-sm { max-width: 460px; }
+.modal-glow { content: ""; position: absolute; z-index: 0; pointer-events: none; width: 360px; height: 240px; top: -120px; left: -60px; background: radial-gradient(closest-side, rgba(var(--accent-rgb), 0.16), transparent 70%); filter: blur(26px); border-radius: 50%; }
+.modal > *:not(.modal-glow) { position: relative; z-index: 1; }
+.modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.modal-eyebrow { font-size: var(--fs-overline); letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
+.modal-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.9); }
+.modal-title { font-family: var(--font-display); font-weight: 500; font-size: var(--fs-heading); line-height: 1.2; color: var(--text); }
+.modal-close { width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: color var(--dur-ui), border-color var(--dur-ui); }
+.modal-close:hover { color: var(--text); border-color: var(--border-strong); }
+.modal-close svg { width: 16px; height: 16px; }
+.modal-body { display: flex; flex-direction: column; gap: 24px; margin-top: 26px; }
+.modal-sublead { font-size: var(--fs-body); color: var(--text-muted); line-height: 1.6; margin-top: -8px; }
+.modal-quote { font-family: var(--font-display); font-size: var(--fs-quote); line-height: var(--lh-quote); color: var(--text); margin-top: 18px; padding-left: 16px; border-left: 2px solid rgba(var(--accent-rgb), 0.5); }
+
+/* the oath words read as the serif voice even while editing */
+.input-oath { font-family: var(--font-display); font-size: 21px; line-height: 1.35; padding: 14px 16px; min-height: 78px; resize: vertical; }
+
+.actions-edit-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.action-edit-list { display: flex; flex-direction: column; gap: 10px; }
+.action-edit { display: flex; align-items: center; gap: 12px; }
+.action-edit .check { cursor: pointer; width: 21px; height: 21px; margin-top: 0; }
+.action-edit .input { flex: 1; padding: 10px 12px; }
+.action-edit .input.is-done { color: var(--text-muted); text-decoration: line-through; text-decoration-color: var(--text-faint); }
+
+.icon-btn { width: 38px; height: 38px; flex-shrink: 0; border-radius: var(--radius-sm); border: 1px solid var(--border); background: transparent; color: var(--text-faint); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: color var(--dur-ui), border-color var(--dur-ui), background var(--dur-ui); }
+.icon-btn svg { width: 16px; height: 16px; }
+.icon-btn:hover { color: var(--text); border-color: var(--border-strong); }
+.icon-btn.danger:hover { color: #e58b80; border-color: rgba(229,139,128,0.5); background: rgba(229,139,128,0.06); }
+
+.modal-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--border); }
+.modal-foot .foot-right { display: flex; gap: 12px; margin-left: auto; }
+
+/* destructive button — the lone warning hue, used only here */
+.btn-danger { color: #e58b80; border-color: rgba(229,139,128,0.32); }
+.btn-danger:hover { border-color: #e58b80; box-shadow: 0 0 0 1px rgba(229,139,128,0.4); color: #ec9d93; }
+.btn-danger-solid { background: #e58b80; border-color: #e58b80; color: #2a0f0c; box-shadow: 0 0 24px rgba(229,139,128,0.34); }
+.btn-danger-solid:hover { box-shadow: 0 0 36px rgba(229,139,128,0.5); border-color: #e58b80; }

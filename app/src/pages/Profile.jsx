@@ -1,7 +1,9 @@
+import PageHead from "../components/PageHead";
+
 export default function Profile() {
   return (
     <div>
-      <h1>Profile</h1>
+      <PageHead title="Profile" cta="Edit Profile" />
     </div>
   );
 }

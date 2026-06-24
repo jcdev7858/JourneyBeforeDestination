@@ -4,11 +4,11 @@ import { NavLink } from "react-router-dom";
 export default function Header() {
   return (
     <header className={styles.topbar}>
-      <NavLink className={styles.wordmark} to="/dashboard">
+      <NavLink className={styles.wordmark} to="/">
         Journey <span>Before</span> Destination
       </NavLink>
       <nav className={styles.nav} id="nav">
-        <NavLink to="/dashboard" end>
+        <NavLink to="/" end>
           Dashboard
         </NavLink>
         <NavLink to="/oaths">Oaths</NavLink>
