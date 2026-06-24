@@ -1,7 +1,9 @@
+import PageHead from "../components/PageHead";
+
 export default function Journal() {
   return (
     <div>
-      <h1>Journal</h1>
+      <PageHead title="Journal" cta="New Entry" primary={true} />
     </div>
   );
 }

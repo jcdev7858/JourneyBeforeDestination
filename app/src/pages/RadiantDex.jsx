@@ -1,7 +1,9 @@
+import PageHead from "../components/PageHead";
+
 export default function RadiantDex() {
   return (
     <div>
-      <h1>RadiantDex</h1>
+      <PageHead title="RadientDex" />
     </div>
   );
 }
