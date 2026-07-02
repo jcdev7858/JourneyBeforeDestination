@@ -6,7 +6,7 @@ import styles from "./OathEditor.module.css";
 import modalStyles from "./ui/Modal.module.css";
 import formStyles from "./ui/Form.module.css";
 import ActionEditRow from "./ActionEditRow";
-import { useAppData } from "../context/AppDataProvider";
+import { useAppData } from "../context/AppDataContext";
 import { useState } from "react";
 import Button from "./ui/Button";
 import { Plus, Feather, Trash } from "lucide-react";

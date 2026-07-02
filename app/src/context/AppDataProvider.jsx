@@ -1,7 +1,7 @@
 // @ts-check
-import { createContext, useContext } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-/** @import { User, Oath, JournalEntry, AppData } from "../types.js" */
+import { AppDataContext } from "./AppDataContext";
+/** @import { User, Oath, JournalEntry } from "../types.js" */
 
 const SCHEMA_VERSION = 1;
 
@@ -110,9 +110,6 @@ const SEED_OATHS = [
   },
 ];
 
-/** @type {import("react").Context<AppData|null>} */
-const AppDataContext = createContext(/** @type {AppData|null} */ (null));
-
 export function AppDataProvider({ children }) {
   // Persisted so a future migration can detect which shape old data is in.
   useLocalStorage("jbd:schemaVersion", SCHEMA_VERSION);
@@ -163,11 +160,3 @@ export function AppDataProvider({ children }) {
   };
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>;
 }
-
-export const useAppData = () => {
-  const context = useContext(AppDataContext);
-  if (!context) {
-    throw new Error("useAppData must be used within an AppDataProvider");
-  }
-  return context;
-};

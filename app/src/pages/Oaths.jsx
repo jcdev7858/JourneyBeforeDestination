@@ -2,7 +2,7 @@ import PageHead from "../components/PageHead";
 import OathCard from "../components/OathCard";
 import Button from "../components/ui/Button";
 import Flex from "../components/ui/Flex";
-import { useAppData } from "../context/AppDataProvider";
+import { useAppData } from "../context/AppDataContext";
 import { useState } from "react";
 import EmptyOathCard from "../components/EmptyOathCard";
 import OathEditor from "../components/OathEditor";
