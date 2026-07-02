@@ -9,28 +9,54 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   border: 1px solid var(--border-strong);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.02);
   color: var(--text);
   transition: all 0.18s;
-}
-.btn:hover {
-  border-color: var(--stormlight);
+
+  &:hover {
+    border-color: var(--stormlight);
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 .btnPrimary {
   background: var(--stormlight);
   color: #0b1120;
   border-color: var(--stormlight);
   box-shadow: 0 0 24px rgba(124, 196, 232, 0.3);
-}
-.btnPrimary:hover {
-  box-shadow: 0 0 34px rgba(124, 196, 232, 0.5);
-}
-.btn svg {
-  width: 16px;
-  height: 16px;
+
+  &:hover {
+    box-shadow: 0 0 36px rgba(var(--accent-rgb), 0.52);
+  }
+
+  &:focus-visible {
+    box-shadow:
+      0 0 48px rgba(var(--accent-rgb), 0.75),
+      0 0 0 1px rgba(var(--accent-rgb), 0.7);
+  }
 }
 .btnDanger {
   border-color: var(--danger);
   color: var(--danger);
   background: transparent;
+
+  &:hover {
+    border-color: var(--danger);
+  }
+}
+.btnGhost {
+  border-color: var(--border);
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.4);
+  }
 }

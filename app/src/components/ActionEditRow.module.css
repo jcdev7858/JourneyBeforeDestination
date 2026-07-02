@@ -1,0 +1,69 @@
+.actionEdit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+
+  .check {
+    cursor: pointer;
+    width: 21px;
+    height: 21px;
+    margin-top: 0;
+  }
+  .input {
+    flex: 1;
+    padding: 10px 12px;
+
+    &.isDone {
+      color: var(--text-muted);
+      text-decoration: line-through;
+      text-decoration-color: var(--text-faint);
+    }
+  }
+}
+
+.iconBtn {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  padding: 0;
+  background: transparent;
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    color var(--dur-ui),
+    border-color var(--dur-ui),
+    background var(--dur-ui);
+
+  svg {
+    width: 16px;
+    height: 16px;
+    color: var(--text-faint);
+
+    &:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+  }
+
+  &.danger:hover {
+    color: var(--danger);
+    border-color: var(--danger-soft);
+    background: rgba(229, 139, 128, 0.06) !important;
+
+    svg {
+      color: var(--danger);
+    }
+  }
+}
+
+.action.done span {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--text-faint);
+}

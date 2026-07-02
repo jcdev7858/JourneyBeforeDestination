@@ -6,42 +6,6 @@ li.action {
   font-size: 14.5px;
   margin-bottom: 8px;
 }
-input.check {
-  appearance: none;
-  -webkit-appearance: none;
-  outline: none;
-  cursor: pointer;
-  width: 19px;
-  height: 19px;
-  border-radius: 6px;
-  flex-shrink: 0;
-  border: 1px solid var(--border-strong);
-  display: inline-grid;
-  place-content: center;
-
-  &::before {
-    content: "";
-    width: 8px;
-    height: 5px;
-    border-left: 2px solid #07202f;
-    border-bottom: 2px solid #07202f;
-    transform: rotate(-45deg) scale(0);
-    transition: transform 0.1s ease-in-out;
-    margin-top: -2px;
-  }
-}
-/* checked = infused stormlight gem (stays blue regardless of Order) */
-input.check:checked {
-  background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep));
-  border-color: rgba(174, 224, 251, 0.6);
-  box-shadow:
-    0 0 12px rgba(124, 196, 232, 0.7),
-    inset 0 0 5px rgba(255, 255, 255, 0.4);
-
-  &::before {
-    transform: rotate(-45deg) scale(1);
-  }
-}
 li.action.done label {
   color: var(--text-muted);
   text-decoration: line-through;

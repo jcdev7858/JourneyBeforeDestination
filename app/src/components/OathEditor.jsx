@@ -1,0 +1,211 @@
+import Flex from "./ui/Flex";
+import Title from "./ui/Title";
+import Text from "./ui/Text";
+import Modal from "./ui/Modal";
+import styles from "./OathEditor.module.css";
+import modalStyles from "./ui/Modal.module.css";
+import formStyles from "./ui/Form.module.css";
+import ActionEditRow from "./ActionEditRow";
+import { useAppData } from "../context/AppDataProvider";
+import { useState } from "react";
+import Button from "./ui/Button";
+import { Plus, Feather, Trash } from "lucide-react";
+
+const OathEditor = (props) => {
+  const { oath, closeModal } = props;
+  const { user, updateOath, addOath, deleteOath } = useAppData();
+  const isNew = !oath;
+  const makeEmptyAction = () => ({
+    id: crypto.randomUUID(),
+    title: "",
+    completed: false,
+    completedAt: null,
+  });
+  const [words, setWords] = useState(isNew ? "" : oath.title);
+  const [actions, setActions] = useState(() => (isNew ? [makeEmptyAction()] : oath.actions));
+  const [confirm, setConfirm] = useState(false);
+
+  const toggleDraft = (id) => {
+    setActions((prev) =>
+      prev.map((draft) => (draft.id === id ? { ...draft, completed: !draft.completed } : draft))
+    );
+  };
+
+  const renameDraft = (id, newText) => {
+    setActions((prev) =>
+      prev.map((draft) => (draft.id === id ? { ...draft, title: newText } : draft))
+    );
+  };
+
+  const handleSave = () => {
+    isNew
+      ? addOath({
+          id: crypto.randomUUID(),
+          userId: user.id,
+          title: words,
+          status: "active",
+          archivedAt: null,
+          createdAt: new Date().toISOString(),
+          actions: actions,
+        })
+      : updateOath(oath.id, { title: words, actions });
+    closeModal();
+  };
+
+  const addDraftAction = () => {
+    setActions((prev) => [...prev, makeEmptyAction()]);
+  };
+
+  const deleteDraft = (id) => {
+    setActions((prev) => prev.filter((draft) => id !== draft.id));
+  };
+
+  return (
+    <Modal
+      open={true}
+      onCancel={closeModal}
+      centered
+      width={"650px"}
+      closable
+      maskBlur
+      glassmorphic
+      footer={null}
+      styles={{
+        content: {
+          maxHeight: "95vh",
+          overflowY: "auto",
+        },
+        body: {
+          padding: "30px",
+        },
+      }}
+    >
+      {confirm ? (
+        <>
+          <Text className={modalStyles.modalGlow}></Text>
+          <Flex className={modalStyles.modalHead}>
+            <Flex vertical>
+              <div className={modalStyles.modalEyebrow}>
+                <span className={modalStyles.dot}></span>
+                {` ${user.orderId} · Oath`}
+              </div>
+              <Title level={2} className={modalStyles.modalTitle}>
+                Release this oath?
+              </Title>
+            </Flex>
+          </Flex>
+
+          <Flex className={modalStyles.modalBody}>
+            <Flex className={formStyles.field}>
+              <Text className={modalStyles.modalSublead}>
+                {`Deleting this oath removes it and its ${actions.length} actions for good. The
+              reflections you wrote along the way stay in your journal.`}
+              </Text>
+              <Flex className={modalStyles.modalQuote}>{oath.title || "Unspoken oath"}</Flex>
+            </Flex>
+          </Flex>
+
+          <Flex className={modalStyles.modalFoot}>
+            <Flex className={modalStyles.footRight}>
+              <Button type="ghost" size="large" onClick={() => setConfirm(false)}>
+                Keep It
+              </Button>
+              <Button
+                danger
+                size="large"
+                icon={<Trash />}
+                onClick={() => {
+                  deleteOath(oath.id);
+                  closeModal();
+                }}
+              >
+                Delete Oath
+              </Button>
+            </Flex>
+          </Flex>
+        </>
+      ) : (
+        <>
+          <Text className={modalStyles.modalGlow}></Text>
+          <Flex className={modalStyles.modalHead}>
+            <Flex vertical>
+              <div className={modalStyles.modalEyebrow}>
+                <span className={modalStyles.dot}></span>
+                {` ${user.orderId} · Oath`}
+              </div>
+              <Title level={2} className={modalStyles.modalTitle}>
+                {isNew ? "Speak a new oath" : "Edit oath"}
+              </Title>
+            </Flex>
+          </Flex>
+
+          <Flex className={modalStyles.modalBody}>
+            <Flex className={formStyles.field}>
+              <label className={formStyles.fieldLabel}>The words</label>
+              <textarea
+                className={`${formStyles.input} ${styles.inputOath}`}
+                value={words}
+                onChange={(e) => setWords(e.target.value)}
+                placeholder="I will…"
+                rows={2}
+              />
+            </Flex>
+
+            <Flex className={formStyles.field}>
+              <Flex align="baseline" justify="space-between" gap={12}>
+                <label className={formStyles.fieldLabel}>Actions</label>
+                <Text>How you will live it</Text>
+              </Flex>
+              <Flex gap={10} vertical>
+                {actions.map((a) => (
+                  <ActionEditRow
+                    title={a.title}
+                    key={a.id}
+                    checked={a.completed}
+                    onRename={(e) => renameDraft(a.id, e.target.value)}
+                    onToggle={() => toggleDraft(a.id)}
+                    onTrash={() => deleteDraft(a.id)}
+                  />
+                ))}
+              </Flex>
+              <Button
+                type="ghost"
+                size="large"
+                icon={<Plus />}
+                style={{ width: "fit-content", marginTop: "14px" }}
+                onClick={addDraftAction}
+              >
+                Add action
+              </Button>
+
+              <Flex className={modalStyles.modalFoot}>
+                {!isNew && (
+                  <Button
+                    danger
+                    size="large"
+                    icon={<Trash />}
+                    onClick={() => {
+                      setConfirm(true);
+                    }}
+                  >
+                    Delete Oath
+                  </Button>
+                )}
+                <Flex className={modalStyles.footRight}>
+                  <Button size="large" onClick={closeModal}>
+                    Cancel
+                  </Button>
+                  <Button type="primary" size="large" icon={<Feather />} onClick={handleSave}>
+                    Speak it
+                  </Button>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Flex>
+        </>
+      )}
+    </Modal>
+  );
+};
+
+export default OathEditor;

@@ -1,0 +1,64 @@
+/* =========================================================
+   FORM FIELDS — shared field language for the editors
+   (oath, reflection). A field is neither a modal nor an oath:
+   both editors reuse these, and a confirm dialog has none.
+   Same focus language as the buttons: Order-color border + faint ring.
+   ========================================================= */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.fieldLabel {
+  font-size: var(--fs-overline);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.input,
+.textarea {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  color: var(--text);
+  line-height: 1.55;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  box-sizing: border-box;
+  width: 100%;
+  transition:
+    border-color var(--dur-ui),
+    box-shadow var(--dur-ui);
+}
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-faint);
+}
+.input:hover,
+.textarea:hover {
+  border-color: rgba(var(--accent-rgb), 0.4);
+}
+.input:focus,
+.input:focus-visible,
+.textarea:focus,
+.textarea:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px rgba(var(--accent-rgb), 0.4),
+    0 0 18px rgba(var(--accent-rgb), 0.12);
+}
+
+.textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.sectionCount {
+  font-size: var(--fs-body);
+  color: var(--text);
+  white-space: nowrap;
+}
