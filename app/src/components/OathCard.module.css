@@ -19,27 +19,28 @@
   background: linear-gradient(90deg, var(--stormlight-deep), #aee0fb);
   box-shadow: 0 0 14px rgba(124, 196, 232, 0.55);
   transition: width 0.45s var(--ease-out);
-}
-/* the glowing bead at the leading edge of the infused fill (stays blue) */
-.progressFill::after {
-  content: "";
-  position: absolute;
-  right: -5px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 35% 30%,
-    #ffffff,
-    #cfeeff 35%,
-    var(--stormlight) 70%,
-    var(--stormlight-deep)
-  );
-  box-shadow:
-    0 0 12px rgba(124, 196, 232, 0.95),
-    0 0 3px rgba(255, 255, 255, 0.85);
+
+  &::after {
+    /* the glowing bead at the leading edge of the infused fill (stays blue) */
+    content: "";
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 35% 30%,
+      #ffffff,
+      #cfeeff 35%,
+      var(--stormlight) 70%,
+      var(--stormlight-deep)
+    );
+    box-shadow:
+      0 0 12px rgba(124, 196, 232, 0.95),
+      0 0 3px rgba(255, 255, 255, 0.85);
+  }
 }
 
 /* oaths */
@@ -60,4 +61,53 @@
 ul.actions {
   list-style-type: none;
   padding-left: 0;
+}
+
+/* ---------- empty state (a designed feature, never a blank box) ---------- */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--sp-4);
+  padding: 48px var(--pad-card);
+}
+.emptyGlyph {
+  opacity: 0.5;
+  color: var(--accent);
+}
+.emptyTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  color: var(--text);
+}
+.emptyText {
+  font-size: var(--fs-body-lg);
+  color: var(--text-muted);
+  max-width: 38ch;
+  display: block;
+  margin-bottom: 20px;
+  line-height: 1.55;
+}
+
+/* ---------- selective accent glow (color-coded to the Order) ----------
+   The same radial wash used at the top of the page, pulled inside a card.
+   Used sparingly — the hero prompt and the Order card — so it stays special. */
+.glowAccent::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  width: 400px;
+  height: 280px;
+  top: -120px;
+  left: -70px;
+  background: radial-gradient(closest-side, rgba(var(--accent-rgb), 0.16), transparent 70%);
+  filter: blur(28px);
+}
+.glowAccent.glowBr::before {
+  top: auto;
+  left: auto;
+  bottom: -130px;
+  right: -80px;
 }

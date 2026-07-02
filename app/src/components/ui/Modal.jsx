@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import ReactDOM from "react-dom";
+import modalStyles from "./Modal.module.css";
 import { glassmorphic as gm } from "../../utils/glassmorphic.js";
+import Button from "./Button.jsx";
+import { X } from "lucide-react";
 
 /**
  * Lightweight Modal - Drop-in replacement for Ant Design's <Modal>
@@ -60,7 +63,7 @@ const Modal = (props) => {
       console.error(
         `[ui/Modal] Unknown props: ${unknown.join(", ")}. ` +
           "This component doesn't support AntD-specific props. " +
-          "Clean up the call site.",
+          "Clean up the call site."
       );
     }
   }
@@ -80,10 +83,10 @@ const Modal = (props) => {
     position: "fixed",
     inset: 0,
     zIndex,
-    background: "rgba(0, 0, 0, 0.45)",
+    background: "rgba(7, 11, 20, 0.64)",
     ...(maskBlur && {
-      backdropFilter: "blur(4px)",
-      WebkitBackdropFilter: "blur(4px)",
+      backdropFilter: "blur(4px) saturate(110%)",
+      WebkitBackdropFilter: "blur(4px) saturate(110%)",
     }),
     ...styles.mask,
   };
@@ -101,12 +104,12 @@ const Modal = (props) => {
   const contentStyle = {
     width,
     maxWidth: "90vw",
-    background: "#1a1a2e",
-    borderRadius: 8,
+    borderRadius: "var(--radius)",
     position: "relative",
+    boxShadow: "inset 0 1px 0 var(--rim), 0 50px 110px -28px rgba(0, 0, 0, 0.9)",
     ...(glassmorphic &&
       gm({
-        tint: "rgba(13, 13, 18, 0.7)",
+        tint: "rgba(7, 11, 20, 0.64)",
         blur: 10,
         saturation: 1.75,
       })),
@@ -128,19 +131,14 @@ const Modal = (props) => {
       }}
     >
       <filter id="modal-noise">
-        <feTurbulence
-          type="fractalNoise"
-          baseFrequency="0.8"
-          numOctaves="4"
-          stitchTiles="stitch"
-        />
+        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
       </filter>
       <rect width="100%" height="100%" filter="url(#modal-noise)" />
     </svg>
   ) : null;
 
   const bodyStyle = {
-    padding: "clamp(12px, 4vw, 24px)",
+    padding: "clamp(12px, 4vw, 30px)",
     ...styles.body,
   };
 
@@ -151,21 +149,18 @@ const Modal = (props) => {
         <div style={contentStyle} onClick={(e) => e.stopPropagation()}>
           {noiseOverlay}
           {closable && (
-            <span
+            <Button
               onClick={onCancel}
+              className={modalStyles.modalClose}
               style={{
                 position: "absolute",
-                top: 12,
-                right: 16,
-                cursor: "pointer",
-                color: "#a0a0a0",
-                fontSize: 18,
-                lineHeight: 1,
+                top: 30,
+                right: 30,
+                fontSize: "24px",
                 zIndex: 1,
               }}
-            >
-              &times;
-            </span>
+              icon={<X />}
+            ></Button>
           )}
           {title != null && (
             <div
@@ -173,7 +168,7 @@ const Modal = (props) => {
                 padding: "16px 24px 0",
                 fontWeight: 600,
                 fontSize: 16,
-                color: "#e0e0e0",
+                color: "var(--text-muted)",
                 position: "relative",
               }}
             >
@@ -182,14 +177,12 @@ const Modal = (props) => {
           )}
           <div style={{ ...bodyStyle, position: "relative" }}>{children}</div>
           {footer != null && (
-            <div style={{ padding: "0 24px 16px", position: "relative" }}>
-              {footer}
-            </div>
+            <div style={{ padding: "0 24px 16px", position: "relative" }}>{footer}</div>
           )}
         </div>
       </div>
     </>,
-    document.body,
+    document.body
   );
 };
 

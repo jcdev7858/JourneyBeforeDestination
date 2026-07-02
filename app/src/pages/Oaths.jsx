@@ -1,24 +1,39 @@
 import PageHead from "../components/PageHead";
 import OathCard from "../components/OathCard";
-import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Flex from "../components/ui/Flex";
-import Title from "../components/ui/Title";
 import { useAppData } from "../context/AppDataProvider";
-import { Plus } from "lucide-react";
-import styles from "../components/OathCard.module.css";
+import { useState } from "react";
+import EmptyOathCard from "../components/EmptyOathCard";
+import OathEditor from "../components/OathEditor";
 
 export default function Oaths() {
   const { oaths } = useAppData();
+  const [editing, setEditing] = useState(null);
 
   return (
     <Flex vertical gap={20}>
-      <PageHead title="Oaths" cta="New Oath" primary={true} />
+      <PageHead
+        eyebrow="Your Oaths"
+        title="The words you live by"
+        lead="Two oaths run in parallel: the Ideals that mark how far you've walked the path, and the personal vows you keep day to day."
+        cta="New Oath"
+        onClick={() => setEditing("new")}
+        primary
+      />
+      {editing && (
+        <OathEditor
+          oath={editing === "new" ? undefined : editing}
+          closeModal={() => setEditing(null)}
+        />
+      )}
+
       {oaths.length > 0 ? (
+        // TODO: add sorting of oaths before map, so by createdDate or status
         oaths.map((oath) => (
           <OathCard oath={oath} title={oath.status} key={oath.id}>
             <Flex gap={12}>
-              <Button type="default" size="large">
+              <Button type="default" size="large" onClick={() => setEditing(oath)}>
                 Edit
               </Button>
               <Button type="default" size="large">
@@ -28,14 +43,7 @@ export default function Oaths() {
           </OathCard>
         ))
       ) : (
-        <Card title="Set An Oath">
-          <Title level={3} className={styles.oathText}>
-            Say the words. Swear your first oath.
-          </Title>
-          <Button type="primary" size="large" icon={<Plus />}>
-            Create Oath
-          </Button>
-        </Card>
+        <EmptyOathCard />
       )}
     </Flex>
   );

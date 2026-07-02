@@ -18,6 +18,8 @@
   --stormlight-soft: rgba(124, 196, 232, 0.14);
   --radiant-gold: #d8b878; /* RETIRED — reference only, do not use for progress */
   --radiant-gold-soft: rgba(216, 184, 120, 0.13);
+  --danger: #e58b80;
+  --danger-soft: rgba(229, 139, 128, 0.5);
 
   /* Order accent — overridden per Order on the layout root. Default Windrunner. */
   --accent: #7cc4e8;

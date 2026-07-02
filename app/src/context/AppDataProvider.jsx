@@ -1,11 +1,28 @@
+// @ts-check
 import { createContext, useContext } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+/** @import { User, Oath, JournalEntry, AppData } from "../types.js" */
 
+const SCHEMA_VERSION = 1;
+
+/** @type {User} */
+const SEED_USER = {
+  id: "user-1",
+  name: "Daniel Rhodes",
+  orderId: "windrunner",
+  booksRead: [],
+  booksWantToRead: [],
+  createdAt: "2026-02-01T00:00:00.000Z",
+};
+
+/** @type {Oath[]} */
 const SEED_OATHS = [
   {
     id: "oath-1",
+    userId: SEED_USER.id,
     title: "I will be more present with my family.",
     status: "active",
+    archivedAt: null,
     createdAt: "2026-06-22T00:00:00.000Z",
     actions: [
       { id: "a1", title: "Put my phone away during dinner", completed: true, completedAt: null },
@@ -37,8 +54,10 @@ const SEED_OATHS = [
   },
   {
     id: "oath-2",
+    userId: SEED_USER.id,
     title: "I will see things as they truly are.",
     status: "active",
+    archivedAt: null,
     createdAt: "2026-06-22T00:00:00.000Z",
     actions: [
       {
@@ -63,8 +82,10 @@ const SEED_OATHS = [
   },
   {
     id: "oath-3",
+    userId: SEED_USER.id,
     title: "I will master my anger before it masters me.",
     status: "completed",
+    archivedAt: null,
     createdAt: "2026-06-22T00:00:00.000Z",
     actions: [
       {
@@ -89,12 +110,18 @@ const SEED_OATHS = [
   },
 ];
 
-const AppDataContext = createContext(null);
+/** @type {import("react").Context<AppData|null>} */
+const AppDataContext = createContext(/** @type {AppData|null} */ (null));
 
 export function AppDataProvider({ children }) {
-  const [user, setUser] = useLocalStorage("jbd:user", null);
+  // Persisted so a future migration can detect which shape old data is in.
+  useLocalStorage("jbd:schemaVersion", SCHEMA_VERSION);
+  const [user, setUser] = useLocalStorage("jbd:user", SEED_USER);
   const [oaths, setOaths] = useLocalStorage("jbd:oaths", SEED_OATHS);
-  const [journalEntries, setJournalEntries] = useLocalStorage("jbd:journalEntries", []);
+  const [journalEntries, setJournalEntries] = useLocalStorage(
+    "jbd:journalEntries",
+    /** @type {JournalEntry[]} */ ([])
+  );
 
   const toggleAction = (oathId, actionId) => {
     setOaths((prevOaths) =>
@@ -110,7 +137,30 @@ export function AppDataProvider({ children }) {
     );
   };
 
-  const value = { user, setUser, oaths, setOaths, journalEntries, setJournalEntries, toggleAction };
+  const updateOath = (oathId, patch) => {
+    setOaths((prev) => prev.map((o) => (o.id === oathId ? { ...o, ...patch } : o)));
+  };
+
+  const addOath = (newOath) => {
+    setOaths((prev) => [...prev, newOath]);
+  };
+
+  const deleteOath = (oathId) => {
+    setOaths((prev) => prev.filter((o) => oathId !== o.id));
+  };
+
+  const value = {
+    user,
+    setUser,
+    oaths,
+    setOaths,
+    journalEntries,
+    setJournalEntries,
+    toggleAction,
+    updateOath,
+    addOath,
+    deleteOath,
+  };
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>;
 }
 
