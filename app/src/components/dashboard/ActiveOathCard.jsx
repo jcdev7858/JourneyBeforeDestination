@@ -1,6 +1,6 @@
 import OathCard from "../OathCard";
 import EmptyOathCard from "../EmptyOathCard";
-import { useAppData } from "../../context/AppDataProvider";
+import { useAppData } from "../../context/AppDataContext";
 
 export default function ActiveOathCard() {
   const { oaths } = useAppData();

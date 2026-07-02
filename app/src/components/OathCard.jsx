@@ -3,7 +3,7 @@ import Title from "../components/ui/Title";
 import Text from "../components/ui/Text";
 import Flex from "../components/ui/Flex";
 import ActionItem from "../components/dashboard/ActionItem";
-import { useAppData } from "../context/AppDataProvider";
+import { useAppData } from "../context/AppDataContext";
 import styles from "./OathCard.module.css";
 
 const OathCard = (props) => {
