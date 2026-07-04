@@ -1,5 +1,5 @@
 import React from "react";
-import useBreakpoint, { BP_ORDER } from "../../hooks/useBreakpoint";
+// import useBreakpoint, { BP_ORDER } from "../../hooks/useBreakpoint";
 
 /**
  * Lightweight Col - responsive 24-column grid unit
@@ -41,7 +41,7 @@ import useBreakpoint, { BP_ORDER } from "../../hooks/useBreakpoint";
  */
 
 const Col = ({ span, xs, sm, md, lg, xl, xxl, style, className, children }) => {
-  const bp = useBreakpoint();
+  // const bp = useBreakpoint();
 
   // Walk breakpoints largest → smallest.
   // First one that's both active AND has a value = our span.
