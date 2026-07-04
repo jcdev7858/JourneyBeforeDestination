@@ -22,6 +22,7 @@ pnpm-debug.log*
 Features/
 CLAUDE.md
 CODE_TUTOR.md
+TASKS.md
 
 # Specs: track the spec + design handoff, ignore the cruft inside
 Specs/**/*.zip

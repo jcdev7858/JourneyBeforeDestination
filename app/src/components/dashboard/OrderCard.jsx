@@ -11,7 +11,7 @@ export default function OrderCard() {
     <Card title="Your Order" className={`${cardStyles.glowAccent} ${cardStyles.glowBr}`}>
       <Flex vertical align="flex-start" gap="15px">
         <Flex vertical>
-          <Flex gap="10px" align="center">
+          <Flex gap="10px" wrap align="center">
             <Flex className={styles.orderGlyph}>
               <OrderGlyph order="windrunner" h={30} />
             </Flex>

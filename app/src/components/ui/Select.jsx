@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Z } from "../../utils/viewport.js";
+// import { Z } from "../../utils/viewport.js";
 
 /**
  * Lightweight Select - Drop-in replacement for Ant Design's <Select>
@@ -18,11 +18,20 @@ import { Z } from "../../utils/viewport.js";
  */
 
 const KNOWN_PROPS = new Set([
-  "value", "onChange", "options", "disabled",
-  "placeholder", "name", "id",
-  "tabIndex", "title",
-  "onFocus", "onBlur",
-  "style", "className", "children",
+  "value",
+  "onChange",
+  "options",
+  "disabled",
+  "placeholder",
+  "name",
+  "id",
+  "tabIndex",
+  "title",
+  "onFocus",
+  "onBlur",
+  "style",
+  "className",
+  "children",
 ]);
 
 const Select = (props) => {
@@ -53,8 +62,8 @@ const Select = (props) => {
     if (unknown.length) {
       console.error(
         `[ui/Select] Unknown props: ${unknown.join(", ")}. ` +
-        "This component doesn't support AntD-specific props. " +
-        "Clean up the call site."
+          "This component doesn't support AntD-specific props. " +
+          "Clean up the call site."
       );
     }
   }
@@ -98,10 +107,13 @@ const Select = (props) => {
     if (!disabled) setIsOpen((prev) => !prev);
   }, [disabled]);
 
-  const handleSelect = useCallback((optionValue) => {
-    onChange?.(optionValue);
-    setIsOpen(false);
-  }, [onChange]);
+  const handleSelect = useCallback(
+    (optionValue) => {
+      onChange?.(optionValue);
+      setIsOpen(false);
+    },
+    [onChange]
+  );
 
   // ========================================================================
   // RENDER
@@ -192,10 +204,12 @@ const Select = (props) => {
                 transition: "background 0.1s",
               }}
               onMouseEnter={(e) => {
-                if (option.value !== value) e.currentTarget.style.background = "rgba(255,255,255,0.06)";
+                if (option.value !== value)
+                  e.currentTarget.style.background = "rgba(255,255,255,0.06)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = option.value === value ? "rgba(0, 212, 255, 0.08)" : "transparent";
+                e.currentTarget.style.background =
+                  option.value === value ? "rgba(0, 212, 255, 0.08)" : "transparent";
               }}
             >
               {option.label}
