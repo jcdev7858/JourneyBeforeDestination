@@ -243,6 +243,52 @@
 .footer-meta a:hover { color: var(--accent); }
 
 /* =========================================================
+   DASHBOARD v3 — lean integration
+   Three additions on top of Direction A, nothing new in the palette:
+   (1) a quiet "launch into the full page" link for summary cards;
+   (2) tickable action rows on the active oath (tick anywhere, restructure
+   in the modal); (3) a compact cadence strip that carries momentum home.
+   ========================================================= */
+
+/* card header: label on the left, a launch link on the right */
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: var(--sp-4); }
+.card-head .card-label { margin-bottom: 0; }
+
+/* the launch link — quiet until hovered, arrow slides toward the destination */
+.card-launch { font-family: var(--font-body); font-size: 12.5px; font-weight: 500; letter-spacing: 0.2px; display: inline-flex; align-items: center; gap: 6px; color: var(--text-faint); background: none; border: none; cursor: pointer; padding: 4px 2px; transition: color var(--dur-ui); }
+.card-launch svg { width: 14px; height: 14px; transition: transform var(--dur-ui); }
+.card-launch:hover { color: var(--accent); }
+.card-launch:hover svg { transform: translateX(3px); }
+.card-launch:focus-visible { outline: none; color: var(--accent); }
+
+/* tickable action rows — the low-friction "answer it here" affordance.
+   Structural edits (rename / add / remove / delete) still live in the modal. */
+.actions.tickable-list { gap: 8px; }
+.action.tickable { width: 100%; text-align: left; font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 6px 8px; margin: 0 -8px; border-radius: var(--radius-sm); transition: background var(--dur-ui); }
+.action.tickable:hover { background: rgba(124,196,232,0.05); }
+.action.tickable:focus-visible { outline: none; background: rgba(124,196,232,0.05); box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.35); }
+.action.tickable .check { transition: background 0.18s var(--ease-out), border-color 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out); }
+.action.tickable .check svg { animation: check-pop 0.22s var(--ease-out) both; }
+@keyframes check-pop { from { transform: scale(0.4); opacity: 0; } to { transform: none; opacity: 1; } }
+.progress-fill { transition: width 0.45s var(--ease-out); }
+@media (prefers-reduced-motion: reduce) { .action.tickable .check svg { animation: none; } .progress-fill { transition: none; } }
+
+/* active-oath footer on the dashboard: meta + the launch to Oaths */
+.oath-foot-dash { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); }
+.oath-foot-dash .meta { font-size: var(--fs-body-sm); color: var(--text-faint); }
+
+/* compact cadence strip — a spark of the streak, not the full 18-week board */
+.cadence-strip { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
+.cad-streak { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+.cad-streak .n { font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--text); }
+.cad-streak .n .sub { font-size: 16px; color: var(--text-muted); margin-left: 5px; }
+.cad-streak .lbl { font-size: var(--fs-overline); letter-spacing: 1.3px; text-transform: uppercase; color: var(--text-faint); }
+.cad-spark { display: flex; flex-direction: column; gap: 11px; min-width: 0; }
+.cad-spark .row { display: flex; gap: 5px; }
+.cad-spark .meta { font-size: var(--fs-body-sm); color: var(--text-faint); }
+.cad-spark .meta em { font-family: var(--font-display); font-style: italic; color: var(--text-muted); }
+
+/* =========================================================
    SHARED PRIMITIVES for the other pages (Oaths, Journal, Profile, RadiantDex).
    Same focus language as the buttons: Order-color border + faint ring.
    ========================================================= */
@@ -286,6 +332,7 @@
    Everything below was added on top of the v2 base. It introduces no new
    colors — every glow is stormlight or the Order accent at the pinned band.
    ========================================================= */
+
 /* ---------- page header (non-dashboard pages lead with a title, not a hero prompt) ---------- */
 .page-head { margin-bottom: var(--gap-card); }
 .page-eyebrow { font-size: var(--fs-overline); letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 9px; }
@@ -342,6 +389,49 @@
 .oath-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .oath-foot .meta { font-size: var(--fs-body-sm); color: var(--text-faint); }
 .action-peek { display: flex; flex-direction: column; gap: 12px; padding-top: 4px; }
+
+/* ---------- Ideal ladder: interactive rungs ----------
+   The ladder was pure history; now unspoken + current rungs read as
+   touchable (word lifts to accent on hover) and every rung reveals its
+   actions — "Borrow this Ideal" (opens the oath editor pre-filled) on the
+   rungs you can still act on, "Reflect on this Ideal" on all of them. */
+.rung.interactive .rung-words { transition: color var(--dur-ui); }
+.rung.current.interactive:hover .rung-words { color: var(--accent); }
+.rung.unspoken.interactive:hover .rung-words { color: var(--text-muted); }
+.rung-actions { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px; opacity: 0; transform: translateY(-3px); transition: opacity var(--dur-ui), transform var(--dur-ui); }
+.rung.interactive:hover .rung-actions, .rung.interactive:focus-within .rung-actions { opacity: 1; transform: none; }
+@media (hover: none) { .rung-actions { opacity: 1; transform: none; } }
+.rung-link { font-family: var(--font-body); font-size: 12.5px; font-weight: 500; letter-spacing: 0.2px; display: inline-flex; align-items: center; gap: 6px; color: var(--text-faint); background: none; border: none; cursor: pointer; padding: 2px 0; transition: color var(--dur-ui); }
+.rung-link svg { width: 14px; height: 14px; transition: transform var(--dur-ui); }
+.rung-link:hover svg, .rung-link:focus-visible svg { transform: translateX(2px); }
+.rung-link:hover, .rung-link:focus-visible { color: var(--accent); outline: none; }
+.rung-link.reflect:hover, .rung-link.reflect:focus-visible { color: var(--stormlight); }
+
+/* ---------- practice oath (no actions) ----------
+   An oath's treatment is derived, not chosen: no actions → a practice oath.
+   It drops the progress bar + checklist for a scoped cadence + streak and a
+   single "Practiced today" tap. Same stormlight vocabulary as the journal. */
+.oath-practice { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+.oath-mini-cad { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); gap: 4px; }
+.oath-mini-cad .cad { width: 12px; height: 12px; border-radius: 3px; }
+.oath-practice-stat { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+.oath-practice-stat .n { font-family: var(--font-display); font-size: 32px; line-height: 1; color: var(--text); }
+.oath-practice-stat .n .sub { font-size: 14px; color: var(--text-muted); margin-left: 4px; }
+.oath-practice-stat .lbl { font-size: var(--fs-overline); letter-spacing: 1.3px; text-transform: uppercase; color: var(--text-faint); }
+.btn.is-practiced { color: var(--stormlight); border-color: rgba(124,196,232,0.4); box-shadow: 0 0 0 1px rgba(124,196,232,0.18); }
+.btn.is-practiced svg { fill: none; }
+
+/* ---------- "mark as kept" moment ----------
+   When every action on a commitment oath is answered, the card doesn't
+   silently complete — it surfaces a quiet CTA. Keeping is a confirmed act. */
+.oath-ready { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.oath-ready .ready-note { font-size: var(--fs-body-sm); color: var(--accent); }
+
+/* ---------- archived oaths ----------
+   Same visual weight as Kept, but muted: not fulfilled, just set aside. */
+.oath-card.archived { opacity: 0.7; }
+.oath-status.archived { color: var(--text-faint); }
+.oath-status.archived .seal { background: var(--text-faint); box-shadow: none; }
 
 /* =========================================================
    JOURNAL — reflection cadence + entry timeline
@@ -488,3 +578,10 @@
 .btn-danger:hover { border-color: #e58b80; box-shadow: 0 0 0 1px rgba(229,139,128,0.4); color: #ec9d93; }
 .btn-danger-solid { background: #e58b80; border-color: #e58b80; color: #2a0f0c; box-shadow: 0 0 24px rgba(229,139,128,0.34); }
 .btn-danger-solid:hover { box-shadow: 0 0 36px rgba(229,139,128,0.5); border-color: #e58b80; }
+
+/* archive button — archiving is NOT destructive, so it never wears the warm
+   red. A quiet neutral in the footer; a soft filled confirm on the dialog. */
+.btn-archive { color: var(--text-muted); border-color: var(--border-strong); }
+.btn-archive:hover { color: var(--text); border-color: var(--text-muted); box-shadow: 0 0 0 1px var(--border-strong); }
+.btn-archive-solid { background: rgba(255,255,255,0.07); border-color: var(--border-strong); color: var(--text); }
+.btn-archive-solid:hover { background: rgba(255,255,255,0.12); border-color: var(--text-muted); }

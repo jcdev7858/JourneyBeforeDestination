@@ -6,7 +6,9 @@ companion to the original `design_handoff_design_system/` — same philosophy,
 same primitives, no new colors.
 
 Open **`preview.html`** in a browser to see everything: switch pages from the in-page
-nav or the preview bar at the bottom, and open each modal state from that bar.
+nav or the preview bar at the bottom, and open each modal state from that bar. The
+preview ships two dashboards (the v2 **Dashboard** and the newer **Dashboard v3**),
+both Oaths treatments, and every modal mode including the Ideal-borrow and archive flows.
 
 > Like the original handoff, the `.jsx` files are **design references** (React-in-Babel
 > prototypes), not production code. Recreate them in the real codebase per the v2
@@ -29,6 +31,8 @@ jbd-pages-handoff/
   reflection-editor.jsx  ← Reflection editor modal (write / edit / delete + themes/favorite)
   profile.jsx            ← Profile page: identity hero + stats + path + settings
   dashA.jsx              ← the v2 Dashboard (included so the preview is a full app)
+  dashC.jsx              ← Dashboard v3 (lean integration: launch-point cards,
+                           tickable active oath, compact cadence strip)
 ```
 
 ### The stylesheet
@@ -61,9 +65,24 @@ warm-red (`#e58b80`) — never gold.
   and a lit rail; the current rung wears the Order accent; unspoken rungs go faint.
   Parts: `.rung-rail` / `.rung-line(.lit/.top)` / `.rung-node` / `.rung-ordinal` (`.tag`) /
   `.rung-words` / `.rung-note`.
-- **`.oath-card`** — a richer stacked oath than the dashboard's single active oath:
-  `.oath-top` + `.oath-status` (`.active` / `.kept` with a `.seal`), `.oath-words`,
-  `.action-peek` (reuses `.action`/`.check`), `.oath-foot`.
+  - **`.rung.interactive` + `.rung-actions` / `.rung-link` (`.reflect`)** — the ladder is now
+    touchable. Unspoken + current rungs lift their words on hover; every rung reveals
+    actions that fade in: **Borrow this Ideal** (unspoken/current — opens the oath editor in
+    `new` mode pre-filled with the Ideal's words) and **Reflect on this Ideal** (all rungs —
+    opens the reflection composer with the Ideal as context). The **`Speaking now`** `.tag`
+    is shown dynamically once an Ideal's words are borrowed by an active oath.
+- **`.oath-card`** — a stacked personal oath. Its treatment is **derived from whether it has
+  actions**, never a type the user picks up front:
+  - **commitment** (has actions): `.oath-top` + `.oath-status` (`.active`/`.kept` + `.seal`),
+    `.oath-words`, a progress bar, and a **tickable** action list (reuses the dashboard's
+    `.actions.tickable-list` / `.action.tickable` — tick anywhere, restructure in the modal).
+    When every action is answered the card surfaces an **`.oath-ready`** "Mark as kept" CTA —
+    keeping is a confirmed act, never automatic.
+  - **practice** (no actions): drops progress/checklist for **`.oath-practice`** — a scoped
+    **`.oath-mini-cad`** cadence + **`.oath-practice-stat`** streak and a "Practice today" tap
+    (`.btn.is-practiced` when marked).
+- **`.oath-card.archived` / `.oath-status.archived`** — the **Archived** section: oaths set
+  aside (not deleted), at the same visual weight as Kept, muted.
 
 ### Journal
 - **`.cadence` / `.cad` (`.l1`–`.l4`)** — the **reflection cadence**: a stormlight streak
@@ -94,16 +113,27 @@ warm-red (`#e58b80`) — never gold.
   `.modal-sublead`, `.modal-quote`.
 - **`.input-oath`** — the oath words edited in the serif voice (pair with `.input`).
 - **`.action-edit` / `.action-edit-list`** — editable action rows: a clickable `.check`
-  (toggle done), an `.input`, and an **`.icon-btn.danger`** delete.
-- **`.btn-danger` / `.btn-danger-solid`** — the destructive buttons (the lone warm-red).
+  (toggle done), an `.input`, and an **`.icon-btn.danger`** delete. Actions are **optional** —
+  leaving them empty keeps a practice oath; adding one opts the oath into the commitment
+  treatment.
+- **`.btn-danger` / `.btn-danger-solid`** — the destructive buttons (the lone warm-red), used
+  by the reflection delete only.
+- **`.btn-archive` / `.btn-archive-solid`** — ending an oath **archives** it (set aside,
+  restorable), so it uses a quiet neutral, *never* the warm-red. The oath editor's confirm
+  reads "Archive this oath?" with **Keep it** / **Archive**.
 
 #### Modal states (props on the prototype components)
-Both `OathEditorModal` and `ReflectionEditorModal` take `mode` (`'new'` | `'edit'`),
-`startConfirm` (boolean — opens straight to the delete-confirm dialog), and `onClose`.
-- **New** — empty form, no delete affordance.
-- **Edit** — populated; toggle/rename/add/delete actions (oath) or themes + favorite
-  (reflection); exposes **Delete**, which arms the confirm dialog.
-- **Delete · confirm** — a compact `.modal-sm` that quotes the item and warns what's lost.
+`OathEditorModal` takes `mode` (`'new'`|`'edit'`), `startConfirm` (opens the archive confirm),
+`seedWords` (pre-fill the words, e.g. borrowed from an Ideal — starts with no actions),
+`fromIdeal` (eyebrow label), and `onClose`.
+`ReflectionEditorModal` takes `mode`, `startConfirm` (delete confirm), `contextPrompt` +
+`contextLabel` (reflect on a specific Ideal), and `onClose`.
+- **New** — empty form, no archive/delete affordance.
+- **Edit** — populated; toggle/rename/add/remove actions (oath) or themes + favorite
+  (reflection); the oath exposes **Archive**, the reflection **Delete**.
+- **Archive / Delete · confirm** — a compact `.modal-sm`. Archive is a soft neutral confirm;
+  reflection delete keeps the warm-red warning.
+- **Borrow Ideal** (oath) / **On Ideal** (reflection) — opened pre-filled from a ladder rung.
 
 The `OathEditorPage` / `ReflectionEditorPage` wrappers composite a modal over a blurred
 page (used by the design canvas); in a real app, render just the modal in your own
@@ -113,9 +143,10 @@ overlay (as `preview.html` does).
 
 ## Load order
 
-React → ReactDOM → Babel, then `glyph.jsx` → `pageshell.jsx` → page files →
-editor files (editors depend on their page for the `*Page` wrappers). Each component
-publishes itself to `window`, so plain `<script>` tags in this order are enough.
+React → ReactDOM → Babel, then `glyph.jsx` → `pageshell.jsx` → `dashA.jsx` → `dashC.jsx`
+→ page files → editor files (editors depend on their page for the `*Page` wrappers;
+`dashC.jsx` depends on `dashA.jsx` for `ORDERS` and `pageshell.jsx` for `PIcon`/`ICONS`).
+Each component publishes itself to `window`, so plain `<script>` tags in this order are enough.
 
 ## Inherited from v2 (don't re-decide)
 Type scale (Cormorant + Hanken), 30px card rhythm, `--radius` 16/10, motion

@@ -19,9 +19,9 @@ function ThemeChips({ chosen, onToggle }) {
   );
 }
 
-function ReflectionEditorModal({ mode = 'edit', startConfirm = false, onClose }) {
+function ReflectionEditorModal({ mode = 'edit', startConfirm = false, contextPrompt, contextLabel, onClose }) {
   const isNew = mode === 'new';
-  const prompt = 'What responsibility are you avoiding right now?';
+  const prompt = contextPrompt || 'What responsibility are you avoiding right now?';
   const [text, setText] = React.useState(isNew ? '' : "The call to my brother. I keep waiting for the right moment, but the waiting is the avoidance — there isn't a clean version of it.");
   const [themes, setThemes] = React.useState(isNew ? [] : ['Responsibility', 'Family']);
   const [fav, setFav] = React.useState(!isNew);
@@ -59,7 +59,7 @@ function ReflectionEditorModal({ mode = 'edit', startConfirm = false, onClose })
       <span className="modal-glow"></span>
       <div className="modal-head">
         <div>
-          <div className="modal-eyebrow"><span className="dot"></span> {isNew ? "Today's reflection · Windrunner" : 'Edit reflection · Jun 22'}</div>
+          <div className="modal-eyebrow"><span className="dot"></span> {contextLabel ? contextLabel : (isNew ? "Today's reflection · Windrunner" : 'Edit reflection · Jun 22')}</div>
           <div className="modal-title" style={{ maxWidth: '32ch' }}>{prompt}</div>
         </div>
         <button className="modal-close" onClick={onClose}><PIcon d={RX_X} /></button>
@@ -94,12 +94,12 @@ function ReflectionEditorModal({ mode = 'edit', startConfirm = false, onClose })
   );
 }
 
-function ReflectionEditorPage({ mode = 'edit', startConfirm = false }) {
+function ReflectionEditorPage({ mode = 'edit', startConfirm = false, contextPrompt, contextLabel }) {
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <JournalPage />
       <div className="scrim">
-        <ReflectionEditorModal mode={mode} startConfirm={startConfirm} />
+        <ReflectionEditorModal mode={mode} startConfirm={startConfirm} contextPrompt={contextPrompt} contextLabel={contextLabel} />
       </div>
     </div>
   );

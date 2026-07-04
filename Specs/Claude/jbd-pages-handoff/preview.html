@@ -52,6 +52,7 @@
   <script type="text/babel" src="glyph.jsx"></script>
   <script type="text/babel" src="pageshell.jsx"></script>
   <script type="text/babel" src="dashA.jsx"></script>
+  <script type="text/babel" src="dashC.jsx"></script>
   <script type="text/babel" src="oaths.jsx"></script>
   <script type="text/babel" src="oath-editor.jsx"></script>
   <script type="text/babel" src="journal.jsx"></script>
@@ -60,7 +61,8 @@
 
   <script type="text/babel">
     const { useState } = React;
-    const PAGE_NAMES = ['Dashboard', 'Oaths', 'Journal', 'RadiantDex', 'Profile'];
+    const PAGE_NAMES = ['Dashboard', 'Dashboard v3', 'Oaths', 'Journal', 'RadiantDex', 'Profile'];
+    const IDEAL_WORDS = 'I will protect even those I dislike, so long as it is right.';
 
     function RadiantDexPage({ onNav }) {
       return (
@@ -83,8 +85,8 @@
     function ModalOverlay({ modal, onClose }) {
       if (!modal) return null;
       let body = null;
-      if (modal.kind === 'oath') body = <OathEditorModal mode={modal.mode} startConfirm={modal.confirm} onClose={onClose} />;
-      if (modal.kind === 'refl') body = <ReflectionEditorModal mode={modal.mode} startConfirm={modal.confirm} onClose={onClose} />;
+      if (modal.kind === 'oath') body = <OathEditorModal mode={modal.mode} startConfirm={modal.confirm} seedWords={modal.seedWords} fromIdeal={modal.fromIdeal} onClose={onClose} />;
+      if (modal.kind === 'refl') body = <ReflectionEditorModal mode={modal.mode} startConfirm={modal.confirm} contextPrompt={modal.contextPrompt} contextLabel={modal.contextLabel} onClose={onClose} />;
       return (
         <div style={{ position: 'fixed', inset: 0, zIndex: 60 }}>
           <div className="scrim" onClick={onClose}>
@@ -97,10 +99,19 @@
     function App() {
       const [page, setPage] = useState('Oaths');
       const [modal, setModal] = useState(null);
-      const nav = (n) => { if (PAGE_NAMES.includes(n)) setPage(n); };
+      // The pages call onNav with real page names AND with modal intents fired
+      // from the Ideal ladder (borrow / reflect) and oath cards (edit). Route both.
+      const nav = (n, payload) => {
+        if (PAGE_NAMES.includes(n)) { setPage(n); return; }
+        if (n === 'oath-new') setModal({ kind: 'oath', mode: 'new' });
+        else if (n === 'oath-new-ideal') setModal({ kind: 'oath', mode: 'new', seedWords: (payload && payload.words) || IDEAL_WORDS, fromIdeal: (payload && payload.ord) || 'Third Ideal' });
+        else if (n === 'oath-editor') setModal({ kind: 'oath', mode: 'edit' });
+        else if (n === 'reflect-ideal') setModal({ kind: 'refl', mode: 'new', contextPrompt: (payload && payload.words) || IDEAL_WORDS, contextLabel: 'Reflecting on the ' + ((payload && payload.ord) || 'Third Ideal') + ' · Windrunner' });
+      };
 
       const PAGES = {
         Dashboard: <DashboardA order="windrunner" scheme="stormlight" />,
+        'Dashboard v3': <DashboardV3 order="windrunner" onNav={nav} />,
         Oaths: <OathsPage onNav={nav} />,
         Journal: <JournalPage onNav={nav} />,
         RadiantDex: <RadiantDexPage onNav={nav} />,
@@ -121,11 +132,13 @@
             <span className="grp"><span>Oath</span>
               <button onClick={() => setModal({ kind: 'oath', mode: 'new' })}>New</button>
               <button onClick={() => setModal({ kind: 'oath', mode: 'edit' })}>Edit</button>
-              <button onClick={() => setModal({ kind: 'oath', mode: 'edit', confirm: true })}>Delete</button>
+              <button onClick={() => setModal({ kind: 'oath', mode: 'new', seedWords: IDEAL_WORDS, fromIdeal: 'Third Ideal' })}>Borrow Ideal</button>
+              <button onClick={() => setModal({ kind: 'oath', mode: 'edit', confirm: true })}>Archive</button>
             </span>
             <span className="grp"><span>Reflection</span>
               <button onClick={() => setModal({ kind: 'refl', mode: 'new' })}>New</button>
               <button onClick={() => setModal({ kind: 'refl', mode: 'edit' })}>Edit</button>
+              <button onClick={() => setModal({ kind: 'refl', mode: 'new', contextPrompt: IDEAL_WORDS, contextLabel: 'Reflecting on the Third Ideal · Windrunner' })}>On Ideal</button>
               <button onClick={() => setModal({ kind: 'refl', mode: 'edit', confirm: true })}>Delete</button>
             </span>
           </div>
