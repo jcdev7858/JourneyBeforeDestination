@@ -23,6 +23,7 @@ const SEED_OATHS = [
     title: "I will be more present with my family.",
     status: "active",
     archivedAt: null,
+    keptAt: null,
     createdAt: "2026-06-22T00:00:00.000Z",
     actions: [
       { id: "a1", title: "Put my phone away during dinner", completed: true, completedAt: null },
@@ -34,7 +35,7 @@ const SEED_OATHS = [
       },
       {
         id: "a3",
-        title: "Spend one hour outside this week",
+        title: "Go to the waterpark with the kids",
         completed: false,
         completedAt: null,
       },
@@ -46,11 +47,12 @@ const SEED_OATHS = [
       },
       {
         id: "a5",
-        title: "Spend one hour outside this week",
+        title: "Plan a date night",
         completed: false,
         completedAt: null,
       },
     ],
+    practiceLog: [],
   },
   {
     id: "oath-2",
@@ -58,6 +60,7 @@ const SEED_OATHS = [
     title: "I will see things as they truly are.",
     status: "active",
     archivedAt: null,
+    keptAt: null,
     createdAt: "2026-06-22T00:00:00.000Z",
     actions: [
       {
@@ -79,13 +82,26 @@ const SEED_OATHS = [
         completedAt: null,
       },
     ],
+    practiceLog: [],
   },
   {
     id: "oath-3",
     userId: SEED_USER.id,
-    title: "I will master my anger before it masters me.",
-    status: "completed",
+    title: "I will sit in stillness each morning, before the day claims me.",
+    status: "active",
     archivedAt: null,
+    keptAt: null,
+    createdAt: "2026-06-22T00:00:00.000Z",
+    actions: [],
+    practiceLog: [],
+  },
+  {
+    id: "oath-4",
+    userId: SEED_USER.id,
+    title: "I will master my anger before it masters me.",
+    status: "kept",
+    archivedAt: null,
+    keptAt: "2026-06-23T00:00:00.000Z",
     createdAt: "2026-06-22T00:00:00.000Z",
     actions: [
       {
@@ -107,6 +123,37 @@ const SEED_OATHS = [
         completedAt: null,
       },
     ],
+    practiceLog: [],
+  },
+  {
+    id: "oath-5",
+    userId: SEED_USER.id,
+    title: "I will train for the mountain climb this spring.",
+    status: "archived",
+    archivedAt: "2026-06-23T00:00:00.000Z",
+    keptAt: null,
+    createdAt: "2026-06-22T00:00:00.000Z",
+    actions: [
+      {
+        id: "c1",
+        title: "Paused and breathed before replying when heated",
+        completed: true,
+        completedAt: null,
+      },
+      {
+        id: "c2",
+        title: "Named the fear out loud instead of acting on it",
+        completed: true,
+        completedAt: null,
+      },
+      {
+        id: "c3",
+        title: "Walk away from one argument I would normally win",
+        completed: false,
+        completedAt: null,
+      },
+    ],
+    practiceLog: [],
   },
 ];
 
@@ -114,7 +161,7 @@ export function AppDataProvider({ children }) {
   // Persisted so a future migration can detect which shape old data is in.
   useLocalStorage("jbd:schemaVersion", SCHEMA_VERSION);
   const [user, setUser] = useLocalStorage("jbd:user", SEED_USER);
-  const [oaths, setOaths] = useLocalStorage("jbd:oaths", SEED_OATHS);
+  const [oaths, setOaths] = useLocalStorage("jbd:oaths", []);
   const [journalEntries, setJournalEntries] = useLocalStorage(
     "jbd:journalEntries",
     /** @type {JournalEntry[]} */ ([])
@@ -146,6 +193,37 @@ export function AppDataProvider({ children }) {
     setOaths((prev) => prev.filter((o) => oathId !== o.id));
   };
 
+  const archiveOath = (oathId) => {
+    updateOath(oathId, { status: "archived", archivedAt: new Date().toISOString() });
+  };
+
+  const restoreOath = (oathId) => {
+    updateOath(oathId, { status: "active", archivedAt: null });
+  };
+
+  const markKept = (oathId) => {
+    updateOath(oathId, { status: "kept", keptAt: new Date().toISOString() });
+  };
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const formatter = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
+    return formatter.format(d);
+  };
+
+  const formatRelativeTime = (date) => {
+    const past = new Date(date).getTime();
+    const now = new Date().getTime();
+    const daysAgo = Math.floor((now - past) / (1000 * 60 * 60 * 24));
+    const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
+    if (daysAgo >= 7) {
+      const weeksAgo = Math.floor(daysAgo / 7);
+      return rtf.format(-weeksAgo, "week");
+    }
+    return rtf.format(-daysAgo, "day");
+  };
+
   const value = {
     user,
     setUser,
@@ -157,6 +235,11 @@ export function AppDataProvider({ children }) {
     updateOath,
     addOath,
     deleteOath,
+    archiveOath,
+    restoreOath,
+    markKept,
+    formatDate,
+    formatRelativeTime,
   };
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>;
 }

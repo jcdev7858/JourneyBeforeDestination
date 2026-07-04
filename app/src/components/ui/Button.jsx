@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from "./Button.module.css";
 /**
  * Lightweight Button - Drop-in replacement for Ant Design's <Button>
@@ -12,7 +13,8 @@ import styles from "./Button.module.css";
  *                     onMouseEnter, onMouseLeave
  *   Styling:          style, className
  *
- * type: "primary" → cyan bg / black text, "default" → transparent / light text
+ * type: "primary" → cyan bg / black text, "default" → transparent / light text,
+ *       "ghost" → subtle border, "archive" → quiet neutral (set-aside, non-destructive)
  *
  * Zero dependencies.
  */
@@ -41,6 +43,7 @@ const KNOWN_PROPS = new Set([
   "style",
   "className",
   "children",
+  "to",
 ]);
 
 const Button = (props) => {
@@ -74,6 +77,7 @@ const Button = (props) => {
     style,
     className,
     children,
+    to,
   } = props;
 
   // Fail fast: surface unknown props during development
@@ -90,11 +94,13 @@ const Button = (props) => {
 
   const isPrimary = type === "primary";
   const isGhost = type === "ghost";
+  const isArchive = type === "archive";
   // const isSecondary = type === "secondary";
   const classes = [
     styles.btn,
     isPrimary && styles.btnPrimary,
     isGhost && styles.btnGhost,
+    isArchive && styles.btnArchive,
     danger && styles.btnDanger,
     className,
   ]
@@ -104,6 +110,21 @@ const Button = (props) => {
     ...(disabled && { opacity: 0.4, cursor: "not-allowed" }),
     ...style,
   };
+
+  if (to)
+    return (
+      <Link
+        className={classes}
+        icon={icon}
+        style={computed}
+        disabled={disabled}
+        to={to}
+        onClick={onClick}
+      >
+        {children}
+        {icon}
+      </Link>
+    );
 
   return (
     <button
@@ -126,8 +147,8 @@ const Button = (props) => {
       tabIndex={tabIndex}
       title={title}
     >
-      {icon}
       {children}
+      {icon}
     </button>
   );
 };

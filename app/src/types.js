@@ -37,10 +37,12 @@
  * @property {string} id
  * @property {string} userId              // the User.id this oath belongs to (the relation)
  * @property {string} title
- * @property {"active"|"completed"|"archived"} status
+ * @property {"active"|"kept"|"archived"} status
  * @property {OathAction[]} actions       // NESTED — actions ride along inside their oath
+ * @property {string[]} practiceLog       // ISO dates the oath was practiced; the raw fact the streak (and, in v1.1, the cadence heatmap) derives FROM. [] for commitment oaths.
  * @property {string} createdAt           // ISO date
  * @property {string|null} archivedAt
+ * @property {string|null} keptAt
  */
 
 /**

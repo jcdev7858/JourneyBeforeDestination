@@ -9,11 +9,11 @@ import ActionEditRow from "./ActionEditRow";
 import { useAppData } from "../context/AppDataContext";
 import { useState } from "react";
 import Button from "./ui/Button";
-import { Plus, Feather, Trash } from "lucide-react";
+import { Plus, Feather, Archive } from "lucide-react";
 
 const OathEditor = (props) => {
   const { oath, closeModal } = props;
-  const { user, updateOath, addOath, deleteOath } = useAppData();
+  const { user, updateOath, addOath, deleteOath, archiveOath } = useAppData();
   const isNew = !oath;
   const makeEmptyAction = () => ({
     id: crypto.randomUUID(),
@@ -90,7 +90,7 @@ const OathEditor = (props) => {
                 {` ${user.orderId} · Oath`}
               </div>
               <Title level={2} className={modalStyles.modalTitle}>
-                Release this oath?
+                Archive this oath?
               </Title>
             </Flex>
           </Flex>
@@ -98,8 +98,7 @@ const OathEditor = (props) => {
           <Flex className={modalStyles.modalBody}>
             <Flex className={formStyles.field}>
               <Text className={modalStyles.modalSublead}>
-                {`Deleting this oath removes it and its ${actions.length} actions for good. The
-              reflections you wrote along the way stay in your journal.`}
+                {`Archiving sets this oath aside — it leaves your active list but you can restore it anytime, and the reflections you wrote along the way stay in your journal.`}
               </Text>
               <Flex className={modalStyles.modalQuote}>{oath.title || "Unspoken oath"}</Flex>
             </Flex>
@@ -113,13 +112,13 @@ const OathEditor = (props) => {
               <Button
                 danger
                 size="large"
-                icon={<Trash />}
+                icon={<Archive />}
                 onClick={() => {
-                  deleteOath(oath.id);
+                  archiveOath(oath.id);
                   closeModal();
                 }}
               >
-                Delete Oath
+                Archive Oath
               </Button>
             </Flex>
           </Flex>
@@ -183,12 +182,12 @@ const OathEditor = (props) => {
                   <Button
                     danger
                     size="large"
-                    icon={<Trash />}
+                    icon={<Archive />}
                     onClick={() => {
                       setConfirm(true);
                     }}
                   >
-                    Delete Oath
+                    Archive Oath
                   </Button>
                 )}
                 <Flex className={modalStyles.footRight}>
