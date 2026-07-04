@@ -6,7 +6,8 @@ import styles from "./OathCard.module.css";
 import OrderGlyph from "./OrderGlyph";
 import { Feather } from "lucide-react";
 
-export default function EmptyOathCard() {
+const EmptyOathCard = (props) => {
+  const { makeNewOath } = props;
   return (
     <Card className={`${styles.empty} ${styles.glowAccent}`}>
       <OrderGlyph order="windrunner" h={90} variant="block" className={styles.emptyGlyph} />
@@ -17,9 +18,10 @@ export default function EmptyOathCard() {
         Every Radiant begins with the same words and comes to mean something personal by them. Speak
         the First Ideal to start your path.
       </Text>
-      <Button type="primary" size="large" icon={<Feather />}>
+      <Button type="primary" size="large" icon={<Feather />} onClick={makeNewOath}>
         Speak the First Ideal
       </Button>
     </Card>
   );
-}
+};
+export default EmptyOathCard;

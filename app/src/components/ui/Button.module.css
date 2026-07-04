@@ -4,6 +4,7 @@
   font-weight: 500;
   display: inline-flex;
   align-items: center;
+  text-decoration: none;
   gap: 8px;
   padding: 11px 20px;
   border-radius: var(--radius-sm);
@@ -58,5 +59,17 @@
   &:focus-visible {
     border-color: var(--accent);
     box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.4);
+  }
+}
+/* archive = ending an oath by setting it aside (restorable), NOT deleting.
+   A quiet neutral — never the warm-red destructive treatment. */
+.btnArchive {
+  color: var(--text-muted);
+  border-color: var(--border-strong);
+
+  &:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+    box-shadow: 0 0 0 1px var(--border-strong);
   }
 }

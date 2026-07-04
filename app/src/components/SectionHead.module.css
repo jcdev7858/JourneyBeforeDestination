@@ -1,0 +1,21 @@
+/* a section divider used inside pages: serif heading on the left, optional action on the right */
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 20px 0 0;
+
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--fs-heading) !important;
+    line-height: var(--lh-heading);
+  }
+
+  .sectionLead {
+    font-size: var(--fs-body-sm);
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
+}
