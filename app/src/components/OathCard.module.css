@@ -122,6 +122,137 @@
   opacity: 0.7;
 }
 
+/* whole oath card is the open target — hover lifts + glows the Order accent.
+   The footer then trims to Reflect (secondary) + the ⋯ overflow menu. */
+.cardLink {
+  cursor: pointer;
+  transition:
+    border-color var(--dur-ui),
+    box-shadow var(--dur-ui),
+    transform var(--dur-ui);
+
+  &:hover {
+    border-color: var(--accent);
+    box-shadow:
+      inset 0 1px 0 var(--rim),
+      0 26px 60px -30px rgba(0, 0, 0, 0.85),
+      0 0 0 1px rgba(var(--accent-rgb), 0.35),
+      0 0 34px -6px rgba(var(--accent-rgb), 0.25);
+    transform: translateY(-2px);
+  }
+}
+/* an archived card is dimmed (.archivedCard opacity) — don't brighten it on hover */
+.archivedCard.cardLink:hover {
+  opacity: 1;
+}
+
+/* the meta line + its "Open →" hint (arrow nudges right on card hover) */
+.footLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.footActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.openHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs-body-sm);
+  color: var(--text-faint);
+  transition: color var(--dur-ui);
+
+  .oh {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-muted);
+  }
+
+  svg {
+    width: 15px;
+    height: 15px;
+    transition: transform var(--dur-ui);
+  }
+}
+.cardLink:hover .openHint,
+.cardLink:hover .openHint .oh {
+  color: var(--accent);
+}
+.cardLink:hover .openHint svg {
+  transform: translateX(3px);
+}
+
+/* ⋯ overflow menu — rare, per-view oath actions (Archive, Delete, Restore).
+   Opens upward since the footer sits near the card's lower edge. */
+.oathMenu {
+  position: relative;
+  display: inline-flex;
+}
+.oathMenuTrigger {
+  padding: 11px;
+  width: 44px;
+  justify-content: center;
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+.oathMenuPop {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  min-width: 196px;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  background: rgba(13, 13, 18, 0.96);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 12px 34px -14px rgba(0, 0, 0, 0.85);
+  z-index: 20;
+}
+.oathMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 9px 11px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: var(--fs-body-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background var(--dur-ui),
+    color var(--dur-ui);
+
+  &:hover {
+    background: rgba(var(--accent-rgb), 0.09);
+    color: var(--text);
+  }
+
+  svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  &.danger {
+    color: #e58b80;
+
+    &:hover {
+      background: rgba(229, 139, 128, 0.1);
+    }
+  }
+}
+
 .oathText {
   font-family: var(--font-display);
   font-size: 23px;
@@ -139,6 +270,7 @@
 ul.actions {
   list-style-type: none;
   padding-left: 0;
+  width: fit-content;
 }
 
 /* ---------- empty state (a designed feature, never a blank box) ---------- */

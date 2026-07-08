@@ -5,28 +5,54 @@ import Flex from "../components/ui/Flex";
 import Button from "../components/ui/Button";
 import ActionItem from "../components/dashboard/ActionItem";
 import { useAppData } from "../context/AppDataContext";
-import { Check } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import styles from "./OathCard.module.css";
 
 const OathCard = (props) => {
   const { toggleAction, markKept, formatDate, formatRelativeTime } = useAppData();
-  const { oath, maxActions = Infinity } = props;
+  const { oath, clickable = false, onClick, maxActions = Infinity } = props;
   const completedCount = oath.actions.filter((a) => a.completed).length;
   const total = oath.actions.length;
   const hiddenCount = total - maxActions;
   const statusClasses = [styles.oathStatus, styles[oath.status]].filter(Boolean).join(" ");
+  const classes = [
+    oath.status === "archived" ? styles.archivedCard : undefined,
+    clickable && styles.cardLink,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   function footMeta() {
     if (oath.actions.length === 0)
-      return <Text className={styles.meta}>A practice · no checklist, just the habit</Text>;
+      return (
+        <Text className={styles.openHint}>
+          A practice · no checklist, just the habit ·
+          <span className={styles.oh}>
+            Open
+            <ArrowRight />
+          </span>
+        </Text>
+      );
     if (oath.status === "kept")
       return (
-        <Text
-          className={styles.meta}
-        >{`Fulfilled ${oath.keptAt && formatDate(oath.keptAt)} · all ${oath.actions.length} actions answered`}</Text>
+        <Text className={styles.openHint}>
+          {`Fulfilled ${oath.keptAt && formatDate(oath.keptAt)} · all ${oath.actions.length} actions answered · `}
+          <span className={styles.oh}>
+            Open
+            <ArrowRight />
+          </span>
+        </Text>
       );
     if (oath.status === "archived")
-      return <Text className={styles.meta}>{`Set aside ${formatDate(oath.archivedAt)}`}</Text>;
+      return (
+        <Text className={styles.openHint}>
+          {`Set aside ${formatDate(oath.archivedAt)} · `}
+          <span className={styles.oh}>
+            Open
+            <ArrowRight />
+          </span>
+        </Text>
+      );
 
     if (oath.actions.every((a) => a.completed)) {
       return (
@@ -39,14 +65,18 @@ const OathCard = (props) => {
       );
     }
     return (
-      <Text
-        className={styles.meta}
-      >{`Began ${oath.createdAt && formatRelativeTime(oath.createdAt)} · ${oath.actions.filter((a) => a.completed !== true).length} more actions`}</Text>
+      <Text className={styles.openHint}>
+        {`Began ${oath.createdAt && formatRelativeTime(oath.createdAt)} · ${oath.actions.filter((a) => a.completed !== true).length} more actions · `}
+        <span className={styles.oh}>
+          Open
+          <ArrowRight />
+        </span>
+      </Text>
     );
   }
 
   return (
-    <Card key={oath.id} className={oath.status === "archived" ? styles.archivedCard : undefined}>
+    <Card key={oath.id} className={classes} clickable onClick={onClick}>
       <Flex className={styles.oathTop}>
         <Title level={3} className={styles.oathText}>
           {oath.title}
@@ -69,7 +99,7 @@ const OathCard = (props) => {
             ></Flex>
           </Flex>
 
-          <ul className={styles.actions}>
+          <ul className={styles.actions} onClick={(e) => e.stopPropagation()}>
             {oath.actions.slice(0, maxActions).map((a) => (
               <ActionItem
                 action={a.title}
@@ -87,9 +117,9 @@ const OathCard = (props) => {
           className={styles.more}
         >{`${hiddenCount} more item${hiddenCount !== 1 ? "s" : ""}`}</Flex>
       )}
-      <Flex gap={12} justify="space-between" align="center" wrap>
+      <Flex gap={12} justify="space-between" align="center" wrap style={{ paddingTop: "20px" }}>
         {footMeta()}
-        <Flex gap={12} justify="flex-end">
+        <Flex gap={12} justify="flex-end" onClick={(e) => e.stopPropagation()}>
           {props.children}
         </Flex>
       </Flex>

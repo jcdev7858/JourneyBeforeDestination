@@ -161,7 +161,7 @@ export function AppDataProvider({ children }) {
   // Persisted so a future migration can detect which shape old data is in.
   useLocalStorage("jbd:schemaVersion", SCHEMA_VERSION);
   const [user, setUser] = useLocalStorage("jbd:user", SEED_USER);
-  const [oaths, setOaths] = useLocalStorage("jbd:oaths", []);
+  const [oaths, setOaths] = useLocalStorage("jbd:oaths", SEED_OATHS);
   const [journalEntries, setJournalEntries] = useLocalStorage(
     "jbd:journalEntries",
     /** @type {JournalEntry[]} */ ([])
