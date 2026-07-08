@@ -31,7 +31,7 @@ export default function Oaths() {
         />
       )}
 
-      <Flex vertical gap={20} className="rise" style={{ animationDelay: "100ms" }}>
+      <Flex vertical gap={20} className="rise" style={{ animationDelay: "200ms" }}>
         <SectionHead title="Personal oaths" cta="Write an Oath" onClick={() => setEditing("new")} />
         {active.length > 0 ? (
           // show only active oaths
@@ -61,7 +61,7 @@ export default function Oaths() {
       </Flex>
 
       {kept.length > 0 && (
-        <Flex vertical gap={20} className="rise" style={{ animationDelay: "200ms" }}>
+        <Flex vertical gap={20} className="rise" style={{ animationDelay: "300ms" }}>
           <SectionHead title="Kept" lead={`${kept.length} fulfilled`} />
           {kept.map((oath) => (
             // show only kept oaths
@@ -80,7 +80,7 @@ export default function Oaths() {
       )}
 
       {archived.length > 0 && (
-        <Flex vertical gap={20} className="rise" style={{ animationDelay: "300ms" }}>
+        <Flex vertical gap={20} className="rise" style={{ animationDelay: "400ms" }}>
           <SectionHead title="Archived" lead={`${archived.length} set aside`} />
           {archived.map((oath) => (
             // show only active oaths

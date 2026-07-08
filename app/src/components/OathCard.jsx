@@ -10,7 +10,7 @@ import styles from "./OathCard.module.css";
 
 const OathCard = (props) => {
   const { toggleAction, markKept, formatDate, formatRelativeTime } = useAppData();
-  const { oath, clickable = false, onClick, maxActions = Infinity } = props;
+  const { oath, clickable = false, onClick, maxActions = Infinity, footMeta } = props;
   const completedCount = oath.actions.filter((a) => a.completed).length;
   const total = oath.actions.length;
   const hiddenCount = total - maxActions;
@@ -22,7 +22,7 @@ const OathCard = (props) => {
     .filter(Boolean)
     .join(" ");
 
-  function footMeta() {
+  function buildFootMeta() {
     if (oath.actions.length === 0)
       return (
         <Text className={styles.openHint}>
@@ -64,13 +64,20 @@ const OathCard = (props) => {
         </Flex>
       );
     }
+
+    const statusText =
+      footMeta ??
+      `Began ${oath.createdAt && formatRelativeTime(oath.createdAt)} · ${oath.actions.filter((a) => a.completed !== true).length} more actions · `;
+
     return (
       <Text className={styles.openHint}>
-        {`Began ${oath.createdAt && formatRelativeTime(oath.createdAt)} · ${oath.actions.filter((a) => a.completed !== true).length} more actions · `}
-        <span className={styles.oh}>
-          Open
-          <ArrowRight />
-        </span>
+        {statusText}
+        {clickable && (
+          <span className={styles.oh}>
+            Open
+            <ArrowRight />
+          </span>
+        )}
       </Text>
     );
   }
@@ -99,7 +106,12 @@ const OathCard = (props) => {
             ></Flex>
           </Flex>
 
-          <ul className={styles.actions} onClick={(e) => e.stopPropagation()}>
+          <Flex
+            className={`${styles.actions} ${styles.tickableList}`}
+            onClick={(e) => e.stopPropagation()}
+            vertical
+            gap={5}
+          >
             {oath.actions.slice(0, maxActions).map((a) => (
               <ActionItem
                 action={a.title}
@@ -109,7 +121,7 @@ const OathCard = (props) => {
                 onChange={() => toggleAction(oath.id, a.id)}
               />
             ))}
-          </ul>
+          </Flex>
         </>
       )}
       {total - maxActions > 0 && (
@@ -118,7 +130,7 @@ const OathCard = (props) => {
         >{`${hiddenCount} more item${hiddenCount !== 1 ? "s" : ""}`}</Flex>
       )}
       <Flex gap={12} justify="space-between" align="center" wrap style={{ paddingTop: "20px" }}>
-        {footMeta()}
+        {buildFootMeta()}
         <Flex gap={12} justify="flex-end" onClick={(e) => e.stopPropagation()}>
           {props.children}
         </Flex>

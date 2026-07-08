@@ -267,10 +267,9 @@
   margin-top: 10px;
 }
 
-ul.actions {
-  list-style-type: none;
-  padding-left: 0;
-  width: fit-content;
+.actions.tickableList {
+  gap: 8px;
+  margin-top: var(--sp-5);
 }
 
 /* ---------- empty state (a designed feature, never a blank box) ---------- */
