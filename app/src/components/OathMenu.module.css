@@ -52,7 +52,7 @@
     color: var(--danger);
 
     &:hover {
-      background: rgba(229, 139, 128, 0.1);
+      background: rgba(var(--danger-rgb), 0.1);
     }
   }
 }

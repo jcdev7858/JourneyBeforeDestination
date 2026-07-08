@@ -31,7 +31,7 @@
   transform: rotate(45deg);
   border-radius: 1px;
   background: var(--stormlight);
-  box-shadow: 0 0 9px rgba(124, 196, 232, 0.7);
+  box-shadow: 0 0 9px rgba(var(--stormlight-rgb), 0.7);
   flex-shrink: 0;
 }
 .footerMeta {
