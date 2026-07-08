@@ -1,8 +1,16 @@
 import { forwardRef } from "react";
 
 const KNOWN_PROPS = new Set([
-  "title", "content", "open", "textAlign", "className",
-  "style", "styles", "classNames", "children", "onClick",
+  "title",
+  "content",
+  "open",
+  "textAlign",
+  "className",
+  "style",
+  "styles",
+  "classNames",
+  "children",
+  "onClick",
 ]);
 
 const Popover = forwardRef((props, ref) => {
@@ -23,8 +31,8 @@ const Popover = forwardRef((props, ref) => {
     if (unknown.length) {
       console.error(
         `[ui/Popover] Unknown props: ${unknown.join(", ")}. ` +
-        "This component doesn't support AntD-specific props. " +
-        "Clean up the call site."
+          "This component doesn't support AntD-specific props. " +
+          "Clean up the call site."
       );
     }
   }
@@ -41,12 +49,17 @@ const Popover = forwardRef((props, ref) => {
       <div
         className={`ant-popover-container ${classNames.container || ""}`.trim()}
         style={{
-          background: "rgba(13, 13, 18, 0.95)",
-          borderRadius: 8,
-          border: "1px solid #2a2a3e",
-          boxShadow: "0 4px 16px rgba(0, 0, 0, 0.4)",
-          padding: 12,
+          background: "rgba(13, 13, 18, 0.96)",
+          borderRadius: "var(--radius-sm)",
+          border: "1px solid var(--border-strong)",
+          boxShadow: "0 12px 34px -14px rgba(0, 0, 0, 0.85)",
+          padding: 6,
           textAlign,
+          minWidth: "196px",
+          bottom: "calc(100% + 8px)",
+          right: 0,
+          position: "absolute",
+          zIndex: 20,
           ...styles.container,
         }}
       >

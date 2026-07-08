@@ -7,12 +7,16 @@ import layoutStyles from "../components/Layout.module.css";
 export default function Dashboard() {
   return (
     <>
-      <PromptCard />
-      <div className={layoutStyles.grid2}>
+      <div className="rise" style={{ animationDelay: "100ms" }}>
+        <PromptCard />
+      </div>
+      <div className={`${layoutStyles.grid2} rise`} style={{ animationDelay: "200ms" }}>
         <OrderCard />
         <ActiveOathCard />
       </div>
-      <ReadingProgress />
+      <div className="rise" style={{ animationDelay: "300ms" }}>
+        <ReadingProgress />
+      </div>
     </>
   );
 }

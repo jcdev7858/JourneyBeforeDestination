@@ -13,7 +13,7 @@ import { Plus, Feather, Archive } from "lucide-react";
 
 const OathEditor = (props) => {
   const { oath, closeModal } = props;
-  const { user, updateOath, addOath, deleteOath, archiveOath } = useAppData();
+  const { user, updateOath, addOath, archiveOath } = useAppData();
   const isNew = !oath;
   const makeEmptyAction = () => ({
     id: crypto.randomUUID(),
@@ -110,7 +110,7 @@ const OathEditor = (props) => {
                 Keep It
               </Button>
               <Button
-                danger
+                type="archive"
                 size="large"
                 icon={<Archive />}
                 onClick={() => {
@@ -180,7 +180,7 @@ const OathEditor = (props) => {
               <Flex className={modalStyles.modalFoot}>
                 {!isNew && (
                   <Button
-                    danger
+                    type="archive"
                     size="large"
                     icon={<Archive />}
                     onClick={() => {

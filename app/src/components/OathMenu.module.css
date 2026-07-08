@@ -1,0 +1,58 @@
+/* ⋯ overflow menu — rare, per-view oath actions (Archive, Delete, Restore).
+   Opens upward since the footer sits near the card's lower edge. */
+.oathMenu {
+  position: relative;
+  display: inline-flex;
+}
+.oathMenuTrigger {
+  padding: 11px;
+  width: 44px;
+  justify-content: center;
+}
+/* .oathMenuPop {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  min-width: 196px;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  background: rgba(13, 13, 18, 0.96);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 12px 34px -14px rgba(0, 0, 0, 0.85);
+  z-index: 20;
+} */
+.oathMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 9px 11px;
+  border: none;
+  background: none;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: var(--fs-body-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background var(--dur-ui),
+    color var(--dur-ui);
+
+  &:hover {
+    background: rgba(var(--accent-rgb), 0.09);
+    color: var(--text);
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &.danger {
+    color: var(--danger);
+
+    &:hover {
+      background: rgba(229, 139, 128, 0.1);
+    }
+  }
+}
