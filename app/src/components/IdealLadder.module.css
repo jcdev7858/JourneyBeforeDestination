@@ -1,0 +1,377 @@
+/* The Ideals ladder: the REVELATION model (Hidden / Revealed / Spoken).
+   The rail lights only through SPOKEN rungs (how far you've walked); Revealed is
+   legible-but-quiet; Hidden is obscured behind the Women's script or the Order
+   glyph. Nothing is counted or completion-gated. Order chips + a books-read strip
+   page across and derive reveal; the whole ladder recolors to the viewed Order. */
+.ladder {
+  display: flex;
+  flex-direction: column;
+}
+
+.oathText {
+  font-family: var(--font-display);
+  font-size: 23px;
+  line-height: 1.3;
+  margin-bottom: 20px;
+}
+
+/* ---------- ladder chrome: Order chips, context blurb, books-read strip ---------- */
+.ladderWrap {
+  display: block;
+}
+
+.ladderOrders {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 12px;
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    &.on .homeGem {
+      background: #07111d;
+      box-shadow: none;
+    }
+  }
+
+  .homeGem {
+    width: 8px;
+    height: 8px;
+    transform: rotate(45deg);
+    border-radius: 2px;
+    background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep));
+    box-shadow: 0 0 8px rgba(var(--stormlight-rgb), 0.7);
+  }
+}
+
+.ladderContext {
+  font-size: var(--fs-body-sm);
+  line-height: 1.65;
+  color: var(--text-faint);
+  margin: 0 0 22px;
+  max-width: 64ch;
+
+  .ladderForeignNote {
+    color: var(--text-muted);
+  }
+}
+
+.ladderBooks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 30px;
+
+  /* the book chips are <button>s — reset the native button chrome (the UA grey
+     fill was jarring) and give unread/read quiet states in the stormlight
+     discipline. Kept compact so all five titles sit on one line. */
+  .book {
+    font: inherit;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.015);
+    font-size: 12.5px;
+    padding: 8px 12px 8px 11px;
+    gap: 8px;
+
+    .gemstone {
+      width: 13px;
+      height: 13px;
+    }
+
+    &:hover {
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+
+    &:focus-visible {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.4);
+    }
+
+    &.read {
+      background: rgba(var(--stormlight-rgb), 0.06);
+    }
+  }
+}
+
+.ladderBooksLabel {
+  font-size: var(--fs-overline);
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-right: 2px;
+}
+
+/* ---------- rungs ---------- */
+.rung {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  column-gap: 20px;
+
+  /* SPOKEN — walked; the infused gem + lit rail (was .sworn) */
+  &.spoken {
+    .rungNode {
+      background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep));
+      border-color: rgba(174, 224, 251, 0.6);
+      box-shadow:
+        0 0 14px rgba(var(--stormlight-rgb), 0.7),
+        inset 0 0 6px rgba(255, 255, 255, 0.4);
+      opacity: 1;
+    }
+
+    .rungOrdinal {
+      color: var(--text-muted);
+    }
+  }
+
+  /* REVEALED — legible but quiet; word lifts to accent when interactive */
+  &.revealed {
+    .rungNode {
+      opacity: 0.85;
+    }
+
+    &.interactive:hover .rungWords {
+      color: var(--accent);
+    }
+  }
+
+  /* HIDDEN — obscured behind Women's script / Order glyph */
+  &.hidden .rungNode {
+    opacity: 0.32;
+  }
+
+  /* the reveal FEELING — script dissolves, words emerge (first mount post-unlock) */
+  &.revealing {
+    .rungScript.overlay,
+    .rungHiddenGlyph.overlay {
+      animation: scriptDissolve 0.9s var(--ease-out) forwards;
+    }
+
+    .rungWords {
+      animation: wordsEmerge 0.9s var(--ease-out) 0.3s both;
+    }
+  }
+
+  &:last-child .rungBody {
+    padding-bottom: 0;
+  }
+}
+
+.rungRail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rungLine {
+  width: 2px;
+  flex: 1;
+  background: var(--border);
+
+  &.lit {
+    background: linear-gradient(180deg, var(--stormlight-deep), rgba(var(--stormlight-rgb), 0.22));
+  }
+
+  &.top {
+    background: transparent;
+  }
+}
+
+.rungNode {
+  width: 18px;
+  height: 18px;
+  transform: rotate(45deg);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin: 4px 0;
+  border: 1px solid var(--border-strong);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(91, 100, 125, 0.18));
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 2px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 60%);
+  }
+}
+
+.rungBody {
+  padding-bottom: 26px;
+  min-width: 0;
+}
+
+.rungOrdinal {
+  font-size: var(--fs-overline);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .tag {
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    border: 1px solid var(--border-strong);
+    color: var(--text-muted);
+
+    &.spokenTag {
+      color: var(--stormlight);
+      border-color: rgba(var(--stormlight-rgb), 0.4);
+    }
+  }
+}
+
+.rungWords {
+  font-family: var(--font-display);
+  font-size: var(--fs-heading);
+  line-height: var(--lh-heading);
+  color: var(--text);
+
+  /* words not yet known even when revealed — italic placeholder */
+  &.unknown {
+    color: var(--text-faint);
+    font-style: italic;
+  }
+}
+
+.rungNote {
+  font-size: var(--fs-body-sm);
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* ---------- Women's-script obscuring on Hidden rungs (+ glyph fallback) ---------- */
+.rungReveal {
+  position: relative;
+}
+
+.rungScript {
+  color: rgba(var(--stormlight-rgb), 0.5);
+  opacity: 0.5;
+  max-width: 440px;
+
+  svg {
+    width: auto;
+    height: 38px;
+    max-width: 100%;
+    display: block;
+  }
+}
+
+.rungHiddenGlyph {
+  color: var(--text-faint);
+  opacity: 0.16;
+
+  svg {
+    display: block;
+  }
+}
+
+/* both overlays share the absolute-fill stacking used during the reveal */
+.rungScript.overlay,
+.rungHiddenGlyph.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.rungHiddenHint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-body-sm);
+  color: var(--text-faint);
+  margin-top: 14px;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+}
+
+/* ---------- Speak — the deliberate, ceremonial marking (the ladder's only user
+   state change) — and the reserved Understanding slot ---------- */
+.rungLink {
+  &.speak {
+    color: var(--accent);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--accent);
+    }
+  }
+}
+
+.rungSpokeMeta {
+  font-size: var(--fs-body-sm);
+  color: var(--text-faint);
+  margin-top: 12px;
+}
+
+.rungUnderstanding {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  letter-spacing: 0.2px;
+  color: var(--text-faint);
+  opacity: 0.5;
+  cursor: default;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* the reveal animation — script dissolves out, words emerge */
+@keyframes scriptDissolve {
+  from {
+    opacity: 0.5;
+    filter: blur(0.2px);
+  }
+  to {
+    opacity: 0;
+    filter: blur(5px);
+  }
+}
+
+@keyframes wordsEmerge {
+  from {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rung.revealing .rungScript.overlay,
+  .rung.revealing .rungHiddenGlyph.overlay {
+    animation: none;
+    opacity: 0;
+  }
+
+  .rung.revealing .rungWords {
+    animation: none;
+  }
+}
