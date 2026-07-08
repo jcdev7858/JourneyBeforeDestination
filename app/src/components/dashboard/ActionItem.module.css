@@ -1,13 +1,58 @@
 /* checkboxes / actions */
-li.action {
+.action {
   display: flex;
   align-items: center;
   gap: 12px;
   font-size: 14.5px;
   margin-bottom: 8px;
 }
-li.action.done label {
+.action.done label {
   color: var(--text-muted);
   text-decoration: line-through;
   text-decoration-color: var(--text-faint);
+}
+
+/* tickable action rows — the low-friction "answer it here" affordance.
+   Structural edits (rename / add / remove / delete) still live in the modal. */
+
+.action.tickable {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 8px;
+  margin: 0 -8px;
+  border-radius: var(--radius-sm);
+  transition: background var(--dur-ui);
+
+  &:hover {
+    background: rgba(var(--stormlight-rgb), 0.05);
+  }
+
+  &:focus-visible {
+    outline: none;
+    background: rgba(var(--stormlight-rgb), 0.05);
+    box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.35);
+  }
+}
+@keyframes check-pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .action.tickable .check svg {
+    animation: none;
+  }
+  .progress-fill {
+    transition: none;
+  }
 }

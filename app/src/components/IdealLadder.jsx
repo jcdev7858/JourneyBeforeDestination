@@ -3,8 +3,6 @@ import Card from "../components/ui/Card";
 import Flex from "../components/ui/Flex";
 import { useAppData } from "../context/AppDataContext";
 import { useState } from "react";
-import { Check, Feather } from "lucide-react";
-import OathEditor from "../components/OathEditor";
 import styles from "./IdealLadder.module.css";
 
 const IDEALS = [

@@ -18,6 +18,9 @@ npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
 
+# Raw downloaded font source (.ttf/zip) — app ships the derived woff2 in app/public/fonts/
+Media/Fonts/
+
 # Personal / scratch — kept local, not pushed
 Features/
 CLAUDE.md
