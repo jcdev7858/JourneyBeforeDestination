@@ -17,7 +17,7 @@
   height: 100%;
   border-radius: 100px;
   background: linear-gradient(90deg, var(--stormlight-deep), #aee0fb);
-  box-shadow: 0 0 14px rgba(124, 196, 232, 0.55);
+  box-shadow: 0 0 14px rgba(var(--stormlight-rgb), 0.55);
   transition: width 0.45s var(--ease-out);
 
   &::after {
@@ -38,7 +38,7 @@
       var(--stormlight-deep)
     );
     box-shadow:
-      0 0 12px rgba(124, 196, 232, 0.95),
+      0 0 12px rgba(var(--stormlight-rgb), 0.95),
       0 0 3px rgba(255, 255, 255, 0.85);
   }
 }
@@ -66,7 +66,7 @@
 
     .seal {
       background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep));
-      box-shadow: 0 0 10px rgba(124, 196, 232, 0.8);
+      box-shadow: 0 0 10px rgba(var(--stormlight-rgb), 0.8);
     }
   }
   &.active {
@@ -245,10 +245,10 @@
   }
 
   &.danger {
-    color: #e58b80;
+    color: var(--danger);
 
     &:hover {
-      background: rgba(229, 139, 128, 0.1);
+      background: rgba(var(--danger-rgb), 0.1);
     }
   }
 }

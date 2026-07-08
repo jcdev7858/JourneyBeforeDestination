@@ -5,6 +5,38 @@
    recolors only a short, fixed list of marks — set the three --accent* vars
    on the page/layout root from the user's Order to reskin everything at once.
    ========================================================= */
+
+/* ---------- self-hosted webfonts ----------
+   Variable fonts: ONE @font-face per family covers the whole weight axis, so a
+   single face answers every font-weight we use (400, 500, …) — that's why we
+   ship one .woff2 instead of one file per weight. Files live in public/fonts/,
+   so they serve from the root at /fonts/*. font-display: swap paints the
+   fallback (Georgia / system-ui) immediately, then swaps in the real font.
+   The font-family name MUST match the --font-display / --font-body tokens
+   below exactly, or the tokens silently fall back. */
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/cormorant-garamond.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/cormorant-garamond-italic.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url("/fonts/hanken-grotesk.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #0b0f1c;
   --bg-elevated: #141a2c;
@@ -16,10 +48,13 @@
   --stormlight: #7cc4e8;
   --stormlight-deep: #4f93c4;
   --stormlight-soft: rgba(124, 196, 232, 0.14);
+  --stormlight-rgb:
+    124, 196, 232; /* channel token — the constant blue glow at any alpha; NEVER recolored per Order */
   --radiant-gold: #d8b878; /* RETIRED — reference only, do not use for progress */
   --radiant-gold-soft: rgba(216, 184, 120, 0.13);
   --danger: #e58b80;
   --danger-soft: rgba(229, 139, 128, 0.5);
+  --danger-rgb: 229, 139, 128; /* channel token — the lone warning hue at any alpha */
 
   /* Order accent — overridden per Order on the layout root. Default Windrunner. */
   --accent: #7cc4e8;
