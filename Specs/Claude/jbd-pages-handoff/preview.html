@@ -100,13 +100,15 @@
       const [page, setPage] = useState('Oaths');
       const [modal, setModal] = useState(null);
       // The pages call onNav with real page names AND with modal intents fired
-      // from the Ideal ladder (borrow / reflect) and oath cards (edit). Route both.
+      // from the Ideal ladder (borrow / reflect), oath cards (open → edit, and
+      // Reflect → the reflection modal carrying the oath as context). Route both.
       const nav = (n, payload) => {
         if (PAGE_NAMES.includes(n)) { setPage(n); return; }
         if (n === 'oath-new') setModal({ kind: 'oath', mode: 'new' });
         else if (n === 'oath-new-ideal') setModal({ kind: 'oath', mode: 'new', seedWords: (payload && payload.words) || IDEAL_WORDS, fromIdeal: (payload && payload.ord) || 'Third Ideal' });
         else if (n === 'oath-editor') setModal({ kind: 'oath', mode: 'edit' });
         else if (n === 'reflect-ideal') setModal({ kind: 'refl', mode: 'new', contextPrompt: (payload && payload.words) || IDEAL_WORDS, contextLabel: 'Reflecting on the ' + ((payload && payload.ord) || 'Third Ideal') + ' · Windrunner' });
+        else if (n === 'reflect') setModal({ kind: 'refl', mode: 'new', contextPrompt: (payload && payload.words) || '', contextLabel: 'Reflecting on your oath · Windrunner' });
       };
 
       const PAGES = {

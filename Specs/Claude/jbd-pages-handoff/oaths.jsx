@@ -15,6 +15,42 @@
    Below the personal oaths sit Kept and Archived (set aside, not deleted). */
 
 const ARCHIVE_ICON = ['M3 4h18v4H3z', 'M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8', 'M10 12h4'];
+const TRASH_ICON = ['M3 6h18', 'M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2', 'M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6', 'M10 11v6', 'M14 11v6'];
+
+/* ---------- ⋯ overflow menu — the card's rare, per-view actions ----------
+   The frequent action (Reflect) stays a visible button; Archive / Delete /
+   permanent-delete live here so they never crowd the footer. Opens upward,
+   closes on click-outside or Escape. stopPropagation so the trigger and items
+   don't also fire the whole-card "open" click. */
+function OathMenu({ items }) {
+  const [open, setOpen] = React.useState(false);
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!open) return;
+    const onDown = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey); };
+  }, [open]);
+  if (!items || !items.length) return null;
+  return (
+    <div className="oath-menu" ref={ref} onClick={(e) => e.stopPropagation()}>
+      <button className="btn btn-ghost oath-menu-trigger" title="More actions" onClick={() => setOpen((v) => !v)}>
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.7" /><circle cx="12" cy="12" r="1.7" /><circle cx="19" cy="12" r="1.7" /></svg>
+      </button>
+      {open && (
+        <div className="oath-menu-pop" role="menu">
+          {items.map((it, i) => (
+            <button key={i} role="menuitem" className={'oath-menu-item' + (it.danger ? ' danger' : '')} onClick={() => { setOpen(false); it.onClick && it.onClick(); }}>
+              <PIcon d={it.icon} sw={1.8} /> {it.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 /* ---------- the Ideals ladder ---------- */
 const IDEALS = [
@@ -77,7 +113,7 @@ function TickableActions({ actions, onToggle }) {
 }
 
 /* ---------- commitment oath (has actions) ---------- */
-function CommitmentCard({ oath, onOpen }) {
+function CommitmentCard({ oath, onOpen, onReflect }) {
   const [actions, setActions] = React.useState(oath.actions);
   const [kept, setKept] = React.useState(false);
   const done = actions.filter((a) => a.done).length;
@@ -88,7 +124,7 @@ function CommitmentCard({ oath, onOpen }) {
   const remaining = total - done;
 
   return (
-    <div className="glass oath-card">
+    <div className={'glass oath-card' + (kept ? '' : ' card-link')} onClick={kept ? undefined : () => onOpen && onOpen(oath)}>
       <div className="oath-top">
         <div className="oath-words">{oath.words}</div>
         <span className={'oath-status ' + (kept ? 'kept' : 'active')}><span className="seal"></span> {kept ? 'Kept' : 'Active'}</span>
@@ -97,21 +133,29 @@ function CommitmentCard({ oath, onOpen }) {
         <div className="progress-row"><span>Progress</span><span>{done} of {total} actions</span></div>
         <div className="progress-track"><div className="progress-fill infused" style={{ width: pct + '%' }}><span className="bead"></span></div></div>
       </div>
-      <TickableActions actions={actions} onToggle={toggle} />
+      <div onClick={(e) => e.stopPropagation()}>
+        <TickableActions actions={actions} onToggle={toggle} />
+      </div>
       <div className="oath-foot">
-        {kept ? (
-          <span className="meta">Kept just now · all {total} actions answered</span>
-        ) : allDone ? (
-          <div className="oath-ready">
-            <span className="ready-note">Every action answered.</span>
-            <button className="btn btn-primary" onClick={() => setKept(true)}><PIcon d={ICONS.check} sw={2.4} /> Mark as kept</button>
-          </div>
-        ) : (
-          <span className="meta">{oath.begun} · {remaining} more action{remaining > 1 ? 's' : ''}</span>
-        )}
-        {!kept && (
-          <button className="btn btn-ghost" onClick={() => onOpen && onOpen(oath)}><PIcon d={ICONS.edit} /> Edit</button>
-        )}
+        <div className="foot-left">
+          {kept ? (
+            <span className="meta">Kept just now · all {total} actions answered</span>
+          ) : allDone ? (
+            <div className="oath-ready" onClick={(e) => e.stopPropagation()}>
+              <span className="ready-note">Every action answered.</span>
+              <button className="btn btn-primary" onClick={() => setKept(true)}><PIcon d={ICONS.check} sw={2.4} /> Mark as kept</button>
+            </div>
+          ) : (
+            <span className="open-hint">{oath.begun} · {remaining} more · <span className="oh">Open <PIcon d={ICONS.arrow} /></span></span>
+          )}
+        </div>
+        <div className="foot-actions" onClick={(e) => e.stopPropagation()}>
+          <button className="btn btn-secondary" onClick={() => onReflect && onReflect(oath)}><PIcon d={ICONS.feather} /> Reflect</button>
+          <OathMenu items={[
+            { label: 'Archive (set aside)', icon: ARCHIVE_ICON },
+            { label: 'Delete oath', icon: TRASH_ICON, danger: true },
+          ]} />
+        </div>
       </div>
     </div>
   );
@@ -121,12 +165,12 @@ function CommitmentCard({ oath, onOpen }) {
 const PRACTICE_CAD = [
   0,0,1,2,0,0,0, 2,1,0,3,2,1,0, 3,2,4,3,2,3,1, 2,4,3,2,4,3,2, 4,3,4,2,3,4,3, 3,4,3,4,4,3,4,
 ];
-function PracticeCard({ oath, onOpen }) {
+function PracticeCard({ oath, onOpen, onReflect }) {
   const [practiced, setPracticed] = React.useState(false);
   const streak = oath.streak + (practiced ? 1 : 0);
   const cells = practiced ? [...PRACTICE_CAD.slice(1), 4] : PRACTICE_CAD;
   return (
-    <div className="glass oath-card practice">
+    <div className="glass oath-card practice card-link" onClick={() => onOpen && onOpen(oath)}>
       <div className="oath-top">
         <div className="oath-words">{oath.words}</div>
         <span className="oath-status active"><span className="seal"></span> Practice</span>
@@ -141,12 +185,16 @@ function PracticeCard({ oath, onOpen }) {
         </div>
       </div>
       <div className="oath-foot">
-        <span className="meta">{oath.begun}</span>
-        <div style={{ display: 'flex', gap: 12 }}>
+        <span className="open-hint">{oath.begun} · <span className="oh">Open <PIcon d={ICONS.arrow} /></span></span>
+        <div className="foot-actions" onClick={(e) => e.stopPropagation()}>
           <button className={'btn btn-ghost' + (practiced ? ' is-practiced' : '')} onClick={() => setPracticed((v) => !v)}>
             <PIcon d={ICONS.check} sw={practiced ? 2.6 : 2} /> {practiced ? 'Practiced today' : 'Practice today'}
           </button>
-          <button className="btn btn-ghost" onClick={() => onOpen && onOpen(oath)}><PIcon d={ICONS.edit} /> Edit</button>
+          <button className="btn btn-secondary" onClick={() => onReflect && onReflect(oath)}><PIcon d={ICONS.feather} /> Reflect</button>
+          <OathMenu items={[
+            { label: 'Archive (set aside)', icon: ARCHIVE_ICON },
+            { label: 'Delete oath', icon: TRASH_ICON, danger: true },
+          ]} />
         </div>
       </div>
     </div>
@@ -172,6 +220,7 @@ const PRACTICE = { id: 'p1', kind: 'practice', words: 'I will sit in stillness e
 
 function OathsPage({ empty, onNav }) {
   const open = (o) => onNav && onNav('oath-editor', o);
+  const reflect = (o) => onNav && onNav('reflect', o);
   if (empty) {
     return (
       <PageShell active="Oaths" onNav={onNav}>
@@ -216,9 +265,9 @@ function OathsPage({ empty, onNav }) {
           <h2>Personal oaths</h2>
           <button className="btn btn-ghost" onClick={() => onNav && onNav('oath-new')}><PIcon d={ICONS.plus} /> Write an oath</button>
         </div>
-        <CommitmentCard oath={COMMITMENTS[0]} onOpen={open} />
-        <PracticeCard oath={PRACTICE} onOpen={open} />
-        <CommitmentCard oath={COMMITMENTS[1]} onOpen={open} />
+        <CommitmentCard oath={COMMITMENTS[0]} onOpen={open} onReflect={reflect} />
+        <PracticeCard oath={PRACTICE} onOpen={open} onReflect={reflect} />
+        <CommitmentCard oath={COMMITMENTS[1]} onOpen={open} onReflect={reflect} />
       </section>
 
       {/* kept oaths */}
@@ -227,14 +276,20 @@ function OathsPage({ empty, onNav }) {
           <h2>Kept</h2>
           <span className="section-count">1 fulfilled</span>
         </div>
-        <div className="glass oath-card">
+        <div className="glass oath-card card-link" onClick={() => open()}>
           <div className="oath-top">
             <div className="oath-words">I will finish what I start before beginning something new.</div>
             <span className="oath-status kept"><span className="seal"></span> Kept</span>
           </div>
           <div className="oath-foot">
-            <span className="meta">Fulfilled March 2026 · all 5 actions answered</span>
-            <button className="btn btn-ghost">Reflect <PIcon d={ICONS.arrow} /></button>
+            <span className="open-hint">Fulfilled March 2026 · <span className="oh">Open <PIcon d={ICONS.arrow} /></span></span>
+            <div className="foot-actions" onClick={(e) => e.stopPropagation()}>
+              <button className="btn btn-secondary" onClick={() => reflect()}><PIcon d={ICONS.feather} /> Reflect</button>
+              <OathMenu items={[
+                { label: 'Archive', icon: ARCHIVE_ICON },
+                { label: 'Delete oath', icon: TRASH_ICON, danger: true },
+              ]} />
+            </div>
           </div>
         </div>
       </section>
@@ -245,14 +300,19 @@ function OathsPage({ empty, onNav }) {
           <h2>Archived</h2>
           <span className="section-count">1 set aside</span>
         </div>
-        <div className="glass oath-card archived">
+        <div className="glass oath-card archived card-link" onClick={() => open()}>
           <div className="oath-top">
             <div className="oath-words">I will train for the mountain climb this spring.</div>
             <span className="oath-status archived"><span className="seal"></span> Archived</span>
           </div>
           <div className="oath-foot">
-            <span className="meta">Set aside April 2026 · plans changed, not a failure</span>
-            <button className="btn btn-ghost">Restore <PIcon d={ICONS.arrow} /></button>
+            <span className="open-hint">Set aside April 2026 · <span className="oh">Open <PIcon d={ICONS.arrow} /></span></span>
+            <div className="foot-actions" onClick={(e) => e.stopPropagation()}>
+              <button className="btn btn-secondary"><PIcon d={ICONS.arrow} /> Restore</button>
+              <OathMenu items={[
+                { label: 'Delete permanently', icon: TRASH_ICON, danger: true },
+              ]} />
+            </div>
           </div>
         </div>
       </section>
