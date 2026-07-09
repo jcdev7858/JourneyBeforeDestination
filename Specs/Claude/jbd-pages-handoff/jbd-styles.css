@@ -697,3 +697,109 @@
 .btn-archive:hover { color: var(--text); border-color: var(--text-muted); box-shadow: 0 0 0 1px var(--border-strong); }
 .btn-archive-solid { background: rgba(255,255,255,0.07); border-color: var(--border-strong); color: var(--text); }
 .btn-archive-solid:hover { background: rgba(255,255,255,0.12); border-color: var(--text-muted); }
+
+/* =========================================================
+   ░░  FREE-JOURNAL COMPOSER + FEED  ░░
+   The journal is a place to just WRITE. A prompt, an oath or an ideal can be
+   attached if it fits, but is never required. Writing is the default act;
+   context is progressive disclosure. Entry "kind" is DERIVED from which links
+   an entry carries (prompt? → Prompt · oathId/idealId? → linked · else → Free)
+   and is never stored.
+   → app dest: components/journal/ReflectionEditor.jsx (make `prompt` optional,
+     add optional oathId/idealId/title), pages/Journal.jsx (feed), and
+     components/journal/EntryCard.jsx. New tokens: none — stormlight blue is
+     the constant, the Order accent recolors only the marks it already owns,
+     and Ideals keep their reference gold.
+   ========================================================= */
+
+/* ---------- "add context" affordance: dashed ghost chips ---------- */
+.attach-row { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; }
+.attach-lead { font-size: var(--fs-overline); letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-faint); margin-right: 2px; }
+.attach-wrap { position: relative; }
+.attach-chip {
+  display: inline-flex; align-items: center; gap: 7px; font: 500 12.5px var(--font-body); color: var(--text-muted);
+  border: 1px dashed var(--border-strong); border-radius: 100px; padding: 7px 14px; background: transparent;
+  cursor: pointer; transition: color var(--dur-ui), border-color var(--dur-ui), background var(--dur-ui);
+}
+.attach-chip svg { width: 14px; height: 14px; }
+.attach-chip:hover, .attach-chip.on { color: var(--accent); border-color: var(--accent); border-style: solid; background: rgba(var(--accent-rgb), 0.08); }
+
+/* ---------- popover list anchored under an attach chip ---------- */
+.pop {
+  position: absolute; z-index: 20; top: calc(100% + 8px); left: 0; width: 320px; max-width: 78vw;
+  background: rgba(18,24,38,0.98); border: 1px solid var(--border-strong); border-radius: 12px;
+  box-shadow: 0 26px 60px -20px rgba(0,0,0,0.85); padding: 8px; backdrop-filter: blur(20px);
+}
+.pop-head { font-size: var(--fs-overline); letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-faint); padding: 6px 10px 8px; }
+.pop-list { display: flex; flex-direction: column; gap: 2px; max-height: 240px; overflow: auto; }
+.pop-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; text-align: left; background: transparent; border: 0; color: var(--text); font: 400 13px var(--font-body); line-height: 1.4; padding: 9px 10px; border-radius: 8px; cursor: pointer; }
+.pop-item svg { width: 15px; height: 15px; color: var(--accent); flex-shrink: 0; }
+.pop-item:hover { background: rgba(var(--accent-rgb), 0.09); }
+.pop-item.on { color: var(--accent); }
+
+/* ---------- removable context pills (attached oath / ideal / prompt / theme) ----------
+   Each tone carries the color it already owns: oath links + prompts read as
+   stormlight-neutral, ideals keep their reference gold, themes stay quiet. */
+.ctx-cluster { display: flex; flex-wrap: wrap; gap: 8px; }
+.link-pill { display: inline-flex; align-items: center; gap: 7px; max-width: 100%; font-size: 12.5px; line-height: 1.3; padding: 7px 8px 7px 12px; border-radius: 100px; border: 1px solid; }
+.link-pill svg { width: 13px; height: 13px; flex-shrink: 0; }
+.link-pill-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 30ch; }
+.link-pill-x { display: inline-flex; width: 18px; height: 18px; border-radius: 50%; border: 0; background: transparent; color: inherit; cursor: pointer; opacity: 0.65; align-items: center; justify-content: center; flex-shrink: 0; }
+.link-pill-x svg { width: 11px; height: 11px; }
+.link-pill-x:hover { opacity: 1; background: rgba(255,255,255,0.12); }
+.link-pill-oath   { color: var(--stormlight); border-color: rgba(var(--stormlight-rgb), 0.4); background: rgba(var(--stormlight-rgb), 0.09); }
+.link-pill-ideal  { color: var(--radiant-gold); border-color: rgba(216,184,120,0.4); background: rgba(216,184,120,0.09); }
+.link-pill-prompt { color: var(--text); border-color: var(--border-strong); background: rgba(255,255,255,0.035); }
+.link-pill-theme  { color: var(--text-muted); border-color: var(--border); background: rgba(255,255,255,0.02); }
+
+/* live word count in the composer foot */
+.word-count { font-size: 12px; color: var(--text-faint); }
+
+/* ---------- feed: search + tune ---------- */
+.journal-search { display: flex; align-items: center; gap: 11px; border: 1px solid var(--border-strong); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; background: rgba(255,255,255,0.02); }
+.journal-search > svg { width: 17px; height: 17px; color: var(--text-faint); flex-shrink: 0; }
+.journal-search input { flex: 1; background: transparent; border: 0; outline: 0; color: var(--text); font: 400 14px var(--font-body); }
+.journal-search input::placeholder { color: var(--text-faint); }
+.search-tune { width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 9px; background: transparent; color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: color var(--dur-ui), border-color var(--dur-ui); }
+.search-tune svg { width: 16px; height: 16px; }
+.search-tune:hover { color: var(--accent); border-color: var(--accent); }
+.theme-lead { font-size: var(--fs-overline); letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-faint); align-self: center; margin-right: 2px; }
+
+/* ---------- feed entry: derived-kind badge, optional serif title, backlink ---------- */
+.entry-tags { display: flex; align-items: center; gap: 9px; }
+.entry-badge { font-size: 10.5px; letter-spacing: 1.1px; text-transform: uppercase; font-weight: 600; padding: 3px 9px; border-radius: 100px; border: 1px solid; }
+.entry-badge-free   { color: var(--text-muted); border-color: var(--border-strong); }
+.entry-badge-prompt { color: var(--text); border-color: var(--border-strong); background: rgba(255,255,255,0.04); }
+.entry-badge-oath   { color: var(--stormlight); border-color: rgba(var(--stormlight-rgb), 0.4); background: rgba(var(--stormlight-rgb), 0.09); }
+.entry-badge-ideal  { color: var(--radiant-gold); border-color: rgba(216,184,120,0.4); background: rgba(216,184,120,0.09); }
+.entry-title { font-family: var(--font-display); font-size: 23px; font-weight: 500; line-height: 1.25; color: var(--text); }
+.backlink { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-muted); margin-top: 14px; padding: 8px 13px; border-radius: 9px; border: 1px solid var(--border); background: rgba(var(--stormlight-rgb), 0.04); max-width: 100%; }
+.backlink svg { width: 14px; height: 14px; color: var(--stormlight); flex-shrink: 0; }
+.backlink.ideal { background: rgba(216,184,120,0.05); }
+.backlink.ideal svg { color: var(--radiant-gold); }
+
+/* =========================================================
+   ░░  FULL COMPOSER (optional superset of Option B)  ░░
+   Styles for reflection-editor-full.jsx — the shelved feature set (rich
+   toolbar, mood, photo/voice attachments, prompt library, privacy). Not used
+   by the default preview; here so the full composer renders if you drop it in.
+   ========================================================= */
+.composer-meta-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 4px; }
+.composer-meta { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--text-muted); }
+.composer-meta svg { width: 14px; height: 14px; }
+.meta-toggle { border: 1px solid var(--border); background: transparent; border-radius: 100px; padding: 5px 12px; cursor: pointer; transition: color var(--dur-ui), border-color var(--dur-ui), background var(--dur-ui); }
+.meta-toggle.on { color: var(--stormlight); border-color: rgba(var(--stormlight-rgb), 0.4); background: rgba(var(--stormlight-rgb), 0.08); }
+.composer-scroll { max-height: 620px; overflow: auto; padding-right: 6px; }
+.editor-toolbar { display: flex; align-items: center; gap: 4px; border: 1px solid var(--border-strong); border-bottom: 0; border-radius: 10px 10px 0 0; padding: 7px 9px; background: rgba(255,255,255,0.025); }
+.editor-toolbar > button { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border: 0; background: transparent; color: var(--text-muted); border-radius: 7px; cursor: pointer; }
+.editor-toolbar > button svg { width: 16px; height: 16px; }
+.editor-toolbar > button:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+.toolbar-sep { width: 1px; height: 20px; background: var(--border-strong); margin: 0 5px; }
+.toolbar-inspire { width: auto !important; padding: 0 12px !important; gap: 7px; font: 500 12.5px var(--font-body); color: var(--accent) !important; }
+.toolbar-inspire svg { color: var(--accent); }
+.attach-static { display: flex; flex-wrap: wrap; gap: 9px; }
+.mood-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.mood-dot { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 100px; padding: 7px 14px 7px 11px; background: rgba(255,255,255,0.015); color: var(--text-muted); font: 500 12.5px var(--font-body); cursor: pointer; transition: color var(--dur-ui), border-color var(--dur-ui), background var(--dur-ui); }
+.mood-dot:hover { border-color: var(--border-strong); color: var(--text); }
+.mood-dot.on { border-color: var(--border-strong); color: var(--text); background: rgba(255,255,255,0.04); }
+.mood-swatch { width: 11px; height: 11px; border-radius: 50%; transition: box-shadow .16s; }

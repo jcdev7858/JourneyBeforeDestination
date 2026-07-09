@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JBD · Dashboard v2 — Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="jbd-v2.css" />
+<link rel="stylesheet" href="jbd-pages.css" />
+<style>
+  html, body { margin: 0; height: 100%; background: #f0eee9; }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script src="../jbd-pages-handoff/womens-script/womens-script.js"></script>
+
+  <script type="text/babel" src="../jbd-pages-handoff/glyph.jsx"></script>
+  <script type="text/babel" src="../design_handoff_design_system/source/spec-colorroles.jsx"></script>
+  <script type="text/babel" src="../design_handoff_design_system/source/spec-accentsystem.jsx"></script>
+  <script type="text/babel" src="../design_handoff_design_system/source/spec-foundations.jsx"></script>
+  <script type="text/babel" src="../jbd-pages-handoff/dashA.jsx"></script>
+  <script type="text/babel" src="../jbd-pages-handoff/pageshell.jsx"></script>
+  <script type="text/babel" src="../jbd-pages-handoff/dashC.jsx"></script>
+  <script type="text/babel" src="../jbd-pages-handoff/oaths.jsx"></script>
+  <script type="text/babel" src="../jbd-pages-handoff/oath-editor.jsx"></script>
+  <script type="text/babel" src="../jbd-pages-handoff/journal.jsx"></script>
+  <script type="text/babel" src="../jbd-pages-handoff/reflection-editor.jsx"></script>
+  <script type="text/babel" src="../jbd-pages-handoff/reflection-editor-full.jsx"></script>
+  <script type="text/babel" src="../jbd-pages-handoff/profile.jsx"></script>
+  <script type="text/babel" src="design-canvas.jsx"></script>
+
+  <script type="text/babel">
+    function App() {
+      return (
+        <DesignCanvas>
+          <DCSection id="v3" title="Dashboard v3 · lean integration" subtitle="The chosen next step. Three changes on Direction A, nothing new in the palette: (1) every summary card launches into its full page — no dead-end cards; (2) the active oath's actions are tickable inline — tick anywhere, restructure in the modal — try the checkboxes; (3) a compact cadence strip carries the streak home. One look-back widget only; stats and milestones stay on Profile.">
+            <DCArtboard id="v3-main" label="Dashboard v3 · launch points + tickable oath + cadence strip" width={1040} height={1180}><DashboardV3 /></DCArtboard>
+          </DCSection>
+          <DCSection id="system" title="Color system" subtitle="The proposed discipline (left), then the same dashboard with gold retired vs. gold kept only for progress. Logo no longer changes by Order; checkboxes & progress now use the infused-stormlight look.">
+            <DCArtboard id="roles" label="Color roles" width={620} height={760}><ColorRoles /></DCArtboard>
+            <DCArtboard id="storm" label="Stormlight only · no gold (recommended)" width={1040} height={1140}><DashboardA order="windrunner" scheme="stormlight" /></DCArtboard>
+            <DCArtboard id="reserved" label="Gold reserved for progress" width={1040} height={1140}><DashboardA order="windrunner" scheme="reserved" /></DCArtboard>
+          </DCSection>
+          <DCSection id="accent" title="Order accent · recommended scheme" subtitle="Blue glow + infused gems stay constant; only the accent (eyebrow, glyph, button, nav, two soft glows) shifts. Wordmark stays stormlight blue across all Orders. Colors are now the canonical gemstone hues, pinned to one tonal band.">
+            <DCArtboard id="acc-w" label="Windrunner · sapphire" width={1040} height={1140}><DashboardA order="windrunner" scheme="stormlight" /></DCArtboard>
+            <DCArtboard id="acc-t" label="Truthwatcher · emerald" width={1040} height={1140}><DashboardA order="truthwatcher" scheme="stormlight" /></DCArtboard>
+            <DCArtboard id="acc-d" label="Dustbringer · ruby" width={1040} height={1140}><DashboardA order="dustbringer" scheme="stormlight" /></DCArtboard>
+          </DCSection>
+          <DCSection id="discipline" title="How far should the accent go?" subtitle="The spec card answers it: limit by surface (a fixed short list) and by intensity (pin all ten gem colors to one tonal band). Then the three hardest Orders, run live against the UI — a clean hue, a near-twin red, and the retired-gold collision.">
+            <DCArtboard id="disc-spec" label="Accent discipline · the rule" width={760} height={1180}><AccentSystem /></DCArtboard>
+            <DCArtboard id="disc-purple" label="Willshaper · amethyst · a clean, distinct hue" width={1040} height={1140}><DashboardA accent={{ name: 'Willshaper', glyph: 'willshaper', accent: '#c79ad8', accentRgb: '199, 154, 216', accentDeep: '#a06fc0' }} /></DCArtboard>
+            <DCArtboard id="disc-gold" label="Bondsmith · heliodor · the retired-gold case" width={1040} height={1140}><DashboardA accent={{ name: 'Bondsmith', glyph: 'bondsmith', accent: '#e6cd86', accentRgb: '230, 205, 134', accentDeep: '#c9a94f' }} /></DCArtboard>
+            <DCArtboard id="disc-red" label="Lightweaver · garnet · near-twin of ruby" width={1040} height={1140}><DashboardA accent={{ name: 'Lightweaver', glyph: 'lightweaver', accent: '#df8398', accentRgb: '223, 131, 152', accentDeep: '#c25a73' }} /></DCArtboard>
+          </DCSection>
+          <DCSection id="oaths" title="Oaths · the words you live by" subtitle="Windrunner / stormlight. The signature is the Ideals ladder — now a ladder of REVELATION, not progress: every rung is Hidden (words obscured behind the Women's script or the Order glyph until you've read the gating book), Revealed (legible; offers Speak / Reflect / Borrow) or Spoken (claimed — lit rail + infused gem). Reveal is derived from books read (toggle the strip to watch the script dissolve); Speaking is the only user state change and is ungated. Order chips page across every Order — foreign Ideals can be reflected on or borrowed, never spoken. Personal oaths below keep their derived commitment / practice treatments; Kept and Archived sit at equal weight.">
+            <DCArtboard id="oaths-main" label="Oaths · ladder · commitment + practice · kept + archived" width={1040} height={2860}><OathsPage /></DCArtboard>
+            <DCArtboard id="oaths-empty" label="Oaths · empty state" width={1040} height={701}><OathsPage empty /></DCArtboard>
+          </DCSection>
+          <DCSection id="oath-editor" title="Oaths · the editor modal" subtitle="A glass dialog over a blurred page. Interactive — toggle an action done, rename it, add or remove rows. Actions are optional: leaving them empty keeps a practice oath, adding one opts into the commitment treatment. Ending an oath ARCHIVES it (set aside, restorable) with a soft confirm — never the warm-red destructive treatment. A new oath can be pre-filled by borrowing an Ideal.">
+            <DCArtboard id="oath-edit" label="Edit oath · toggle / rename / add / remove actions" width={1040} height={880}><OathEditorPage mode="edit" /></DCArtboard>
+            <DCArtboard id="oath-new" label="New oath · empty form" width={1040} height={740}><OathEditorPage mode="new" /></DCArtboard>
+            <DCArtboard id="oath-new-ideal" label="Borrow this Ideal · new oath pre-filled, no actions yet" width={1040} height={720}><OathEditorPage mode="new" seedWords="I will protect even those I dislike, so long as it is right." fromIdeal="Third Ideal" /></DCArtboard>
+            <DCArtboard id="oath-archive" label="Archive oath · soft confirm (not delete)" width={1040} height={560}><OathEditorPage mode="edit" startConfirm /></DCArtboard>
+          </DCSection>
+          <DCSection id="journal" title="Journal · the record of reflections" subtitle="The journal is a place to just WRITE. Most entries are free brain-dumps; a prompt, an oath or an ideal is attached only if it fits. The feed interleaves free + prompted entries on one timeline, each marked with a badge whose kind is DERIVED from its links (prompt → Prompt · oath → Oath · ideal → Ideal · else → Free), never stored. The reflection cadence (a stormlight streak grid — it measures the practice, so it stays blue, never the Order accent) still crowns the page.">
+            <DCArtboard id="journal-main" label="Journal · cadence + timeline" width={1040} height={2071}><JournalPage /></DCArtboard>
+          </DCSection>
+          <DCSection id="reflection-editor" title="Journal · the composer modal" subtitle="Option B — the chosen direction. Writing is the default act: a title and body, then an Add context row that OPTIONALLY attaches a theme, an oath, an ideal or a prompt via small popovers. Attached context shows as removable pills; nothing is required. Also kept on the shelf: the full composer (rich toolbar, mood, photo/voice, prompt library, privacy) — exported as reflection-editor-full.jsx, not the shipped default.">
+            <DCArtboard id="refl-new" label="New entry · free-first, attach context if it fits" width={1040} height={800}><ReflectionEditorPage mode="new" /></DCArtboard>
+            <DCArtboard id="refl-edit" label="Edit entry · pills / favorite / delete" width={1040} height={800}><ReflectionEditorPage mode="edit" /></DCArtboard>
+            <DCArtboard id="refl-delete" label="Delete entry · confirm" width={1040} height={560}><ReflectionEditorPage mode="edit" startConfirm /></DCArtboard>
+            <DCArtboard id="refl-ideal" label="Reflect on this Ideal · composer opened from a rung" width={1040} height={800}><ReflectionEditorPage mode="new" contextPrompt="I will protect even those I dislike, so long as it is right." contextLabel="Reflecting on the Third Ideal · Windrunner" /></DCArtboard>
+            <DCArtboard id="refl-full" label="Full composer · the shelved superset (not shipped by default)" width={1040} height={980}><FullComposerPage /></DCArtboard>
+          </DCSection>
+          <DCSection id="profile" title="Profile · who you are on the path" subtitle="New components: the identity hero (glyph ring + Order + ideal reached), a four-tile stat grid, the path-so-far milestone timeline, and a settings list with accent toggles.">
+            <DCArtboard id="profile-main" label="Profile · identity, stats, path, settings" width={1040} height={1701}><ProfilePage /></DCArtboard>
+          </DCSection>
+          <DCSection id="foundations" title="Foundations · standards for every page" subtitle="Locked from our standardization pass: the type scale, the 30px card rhythm, button + input focus states, motion tokens, Lucide icons, and the empty-state pattern. Oaths, Journal, Profile and the RadiantDex all inherit these.">
+            <DCArtboard id="found-spec" label="Foundations · type, spacing, states, motion" width={920} height={2120}><Foundations /></DCArtboard>
+          </DCSection>
+        </DesignCanvas>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

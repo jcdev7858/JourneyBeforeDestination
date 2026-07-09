@@ -27,8 +27,10 @@ jbd-pages-handoff/
   pageshell.jsx          ← shared chrome: aura + top bar/nav + footer (+ optional onNav)
   oaths.jsx              ← Oaths page: Ideals ladder + oath cards (+ empty state)
   oath-editor.jsx        ← Oath editor modal (add / edit / update / delete + actions)
-  journal.jsx            ← Journal page: reflection cadence + entry timeline
-  reflection-editor.jsx  ← Reflection editor modal (write / edit / delete + themes/favorite)
+  journal.jsx            ← Journal page: reflection cadence + free/prompted feed (derived-kind badges)
+  reflection-editor.jsx  ← Free-first composer modal (write freely; optionally attach theme/oath/ideal/prompt)
+  reflection-editor-full.jsx ← Full composer (SHELVED superset of Option B: toolbar, mood,
+                           photo/voice, prompt library, privacy) — not wired into preview.html
   profile.jsx            ← Profile page: identity hero + stats + path + settings
   dashA.jsx              ← the v2 Dashboard (included so the preview is a full app)
   dashC.jsx              ← Dashboard v3 (lean integration: launch-point cards,
@@ -85,14 +87,24 @@ warm-red (`#e58b80`) — never gold.
   aside (not deleted), at the same visual weight as Kept, muted.
 
 ### Journal
+The journal is a place to **just write**. Most entries are free brain-dumps; a
+prompt, an oath or an ideal is attached only if it fits. An entry's **kind is
+derived** from its links (`prompt? → Prompt · oathId? → Oath · idealId? → Ideal
+· else → Free`) and is never stored (`journal.jsx deriveKind`).
 - **`.cadence` / `.cad` (`.l1`–`.l4`)** — the **reflection cadence**: a stormlight streak
   grid; deeper entries glow brighter. Stays blue (it measures the practice, not the Order).
   `.cadence-wrap` lays it beside the **`.streak-stats` / `.streak-stat`** column.
 - **`.timeline` / `.tl-entry` / `.tl-rail` / `.tl-line` / `.tl-dot`** — the gem-gutter
   entry timeline, grouped under **`.month-mark`**.
-- **`.entry`** — a journal entry card: `.entry-head` (`.entry-prompt` serif + `.entry-date`),
-  `.entry-body` (with serif `em`), `.entry-foot`, and the **`.entry-fav`** star toggle (`.on`).
-- **`.filterbar` / `.chip` (`.on`)** — filter chips; selected chip wears the accent.
+- **`.entry`** — a journal entry card: `.entry-head` (a derived **`.entry-badge`**
+  `-free`/`-prompt`/`-oath`/`-ideal` + either a serif **`.entry-title`** or, for an
+  untitled prompt entry, the `.entry-prompt`), `.entry-body` (serif `em`), an optional
+  **`.backlink`** (`.ideal`) to the linked oath/ideal, `.entry-foot`, and the
+  **`.entry-fav`** star toggle (`.on`).
+- **`.journal-search` / `.search-tune` / `.theme-lead`** — the feed search bar and
+  theme-filter lead-in.
+- **`.filterbar` / `.chip` (`.on`)** — filter chips (All / Free / Prompted / Linked /
+  Favorites + themes); selected chip wears the accent.
 
 ### Profile
 - **`.identity`** — the identity hero: a large `.order-ring` glyph, `.id-name`,
@@ -116,6 +128,13 @@ warm-red (`#e58b80`) — never gold.
   (toggle done), an `.input`, and an **`.icon-btn.danger`** delete. Actions are **optional** —
   leaving them empty keeps a practice oath; adding one opts the oath into the commitment
   treatment.
+- **`.attach-row` / `.attach-chip` / `.pop` (`.pop-head`/`.pop-list`/`.pop-item`)** — the
+  free composer's **Add context** row: dashed ghost chips (Theme / Oath / Ideal / Prompt)
+  that open a small popover list. Attaching is always optional.
+- **`.ctx-cluster` / `.link-pill` (`-oath`/`-ideal`/`-prompt`/`-theme`) / `.link-pill-x`** —
+  the attached context, shown as removable pills; each tone carries the color it already
+  owns (oath/prompt read stormlight-neutral, ideal keeps its reference gold, theme stays quiet).
+- **`.word-count`** — live word count in the composer foot (new entries).
 - **`.btn-danger` / `.btn-danger-solid`** — the destructive buttons (the lone warm-red), used
   by the reflection delete only.
 - **`.btn-archive` / `.btn-archive-solid`** — ending an oath **archives** it (set aside,
@@ -127,7 +146,14 @@ warm-red (`#e58b80`) — never gold.
 `seedWords` (pre-fill the words, e.g. borrowed from an Ideal — starts with no actions),
 `fromIdeal` (eyebrow label), and `onClose`.
 `ReflectionEditorModal` takes `mode`, `startConfirm` (delete confirm), `contextPrompt` +
-`contextLabel` (reflect on a specific Ideal), and `onClose`.
+`contextLabel` (reflect on a specific Ideal/oath — pre-attaches it as a removable prompt
+pill), and `onClose`.
+- **New** — empty composer: title + body, the **Add context** row, no delete affordance,
+  a live word count in the foot.
+- **Edit** — populated; add/remove any context pill or theme, toggle favorite; exposes **Delete**.
+- **Delete · confirm** — a compact `.modal-sm` keeping the warm-red warning.
+- **On Ideal / reflect** — opened from a ladder rung or oath with the context pre-attached;
+  the writer can remove it and still keep a free entry.
 - **New** — empty form, no archive/delete affordance.
 - **Edit** — populated; toggle/rename/add/remove actions (oath) or themes + favorite
   (reflection); the oath exposes **Archive**, the reflection **Delete**.
@@ -145,6 +171,8 @@ overlay (as `preview.html` does).
 
 React → ReactDOM → Babel, then `glyph.jsx` → `pageshell.jsx` → `dashA.jsx` → `dashC.jsx`
 → page files → editor files (editors depend on their page for the `*Page` wrappers;
+`reflection-editor-full.jsx`, if used, loads AFTER `reflection-editor.jsx` — it reuses
+`LinkPill` from it and `OATHS`/`THEMES` from `journal.jsx`;
 `dashC.jsx` depends on `dashA.jsx` for `ORDERS` and `pageshell.jsx` for `PIcon`/`ICONS`).
 Each component publishes itself to `window`, so plain `<script>` tags in this order are enough.
 
