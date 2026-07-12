@@ -6,23 +6,24 @@ import Button from "../components/ui/Button";
 import Flex from "../components/ui/Flex";
 import { useAppData } from "../context/AppDataContext";
 import { useState } from "react";
-import { RotateCcw, Check, Feather } from "lucide-react";
+import { RotateCcw, Check, Plus, Feather } from "lucide-react";
 import EmptyOathCard from "../components/EmptyOathCard";
 import OathEditor from "../components/OathEditor";
 
 export default function Oaths() {
-  const { oaths, restoreOath, archiveOath, deleteOath } = useAppData();
+  const { oaths, restoreOath, archiveOath, deleteOath, user } = useAppData();
   const [editing, setEditing] = useState(null);
   const active = oaths.filter((o) => o.status === "active");
   const kept = oaths.filter((o) => o.status === "kept");
   const archived = oaths.filter((o) => o.status === "archived");
 
   return (
-    <Flex vertical gap={20}>
+    <Flex vertical gap={"var(--sp-5)"}>
       <PageHead
         eyebrow="Your Oaths"
         title="The words you live by"
         lead="Two oaths run in parallel: the Ideals that mark how far you've walked the path, and the personal vows you keep day to day."
+        user={user}
       />
       {editing && (
         <OathEditor
@@ -32,7 +33,13 @@ export default function Oaths() {
       )}
 
       <Flex vertical gap={20} className="rise" style={{ animationDelay: "200ms" }}>
-        <SectionHead title="Personal oaths" cta="Write an Oath" onClick={() => setEditing("new")} />
+        <SectionHead
+          title="Personal oaths"
+          cta="Write an Oath"
+          icon={<Plus />}
+          onClick={() => setEditing("new")}
+          primary
+        />
         {active.length > 0 ? (
           // show only active oaths
           // TODO: add sorting of oaths before map, so by createdDate or status
