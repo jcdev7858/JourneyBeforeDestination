@@ -72,6 +72,8 @@ function OathMenu({ items }) {
 const SPEAK_ICON = ['M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z', 'M19 10v2a7 7 0 0 1-14 0v-2', 'M12 19v3'];
 const BOOK_ICON = ['M4 19.5A2.5 2.5 0 0 1 6.5 17H20', 'M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z'];
 const INFO_ICON = ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z', 'M12 16v-4', 'M12 8h.01'];
+// lucide chevrons-up-down — the affordance that a control opens a menu
+const CHEVRON_UD = ['m7 15 5 5 5-5', 'm7 9 5-5 5 5'];
 
 const ORDER_LIST = ['windrunner', 'skybreaker', 'edgedancer', 'truthwatcher', 'lightweaver', 'elsecaller', 'dustbringer', 'willshaper', 'stoneward', 'bondsmith'];
 const ORDER_META = {
@@ -212,6 +214,29 @@ function Rung({ ord, i, order, isHome, words, state, gateBook, borrowed, reveali
   );
 }
 
+/* ---------- a small popover — trigger button + glass panel ----------
+   Collapses the Order switcher and Books-read toggles (two heavy, wrapping
+   rows) behind compact icon buttons. Closes on click-outside or Escape;
+   the panel opens downward, aligned to the trigger's left edge. */
+function LadderPopover({ className, label, children }) {
+  const [open, setOpen] = React.useState(false);
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!open) return;
+    const onDown = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey); };
+  }, [open]);
+  return (
+    <div className={'ladder-switch' + (className ? ' ' + className : '')} ref={ref}>
+      {label({ open, toggle: () => setOpen((v) => !v) })}
+      {open && <div className="ladder-pop">{children({ close: () => setOpen(false) })}</div>}
+    </div>
+  );
+}
+
 function IdealLadder({ homeOrder = 'windrunner', onBorrow, onReflect }) {
   // Stored state (the ONLY things persisted for the ladder): which books the
   // reader has read, and which of their own Ideals they've spoken. Revealed is
@@ -249,32 +274,67 @@ function IdealLadder({ homeOrder = 'windrunner', onBorrow, onReflect }) {
 
   return (
     <div className="ladder-wrap" style={{ '--accent': meta.accent, '--accent-rgb': meta.accentRgb, '--accent-deep': meta.accentDeep }}>
-      {/* cross-order resonance: page to any Order's ladder */}
-      <div className="ladder-orders" role="tablist" aria-label="Browse an Order's Ideals">
-        {ORDER_LIST.map((o) => (
-          <button key={o} role="tab" aria-selected={o === order} className={'chip' + (o === order ? ' on' : '')} onClick={() => setOrder(o)}>
-            {o === homeOrder && <span className="home-gem" title="Your Order"></span>}
-            {ORDER_META[o].name}
+      {/* the section head doubles as the ladder's control bar: the title on the
+          left, the Order switcher + Books-read input (each collapsed behind an
+          icon button that opens a popover) on the right */}
+      <div className="section-head ladder-head">
+        <h2>The Five Ideals</h2>
+        <div className="ladder-controls">
+        <LadderPopover className="ls-orders" label={({ open, toggle }) => (
+          <button className={'ladder-switch-btn' + (open ? ' open' : '')} aria-expanded={open} aria-haspopup="true" onClick={toggle}>
+            <OrderGlyph order={order} h={17} />
+            <span className="lsb-name">{meta.name}</span>
+            {!isHome && <span className="lsb-tag">viewing</span>}
+            <PIcon d={CHEVRON_UD} sw={1.9} />
           </button>
-        ))}
+        )}>
+          {({ close }) => (
+            <React.Fragment>
+              <div className="ladder-pop-head">Browse an Order&rsquo;s Ideals</div>
+              <div className="ladder-pop-orders" role="tablist" aria-label="Browse an Order's Ideals">
+                {ORDER_LIST.map((o) => (
+                  <button key={o} role="tab" aria-selected={o === order} className={'chip' + (o === order ? ' on' : '')} onClick={() => { setOrder(o); close(); }}>
+                    {o === homeOrder && <span className="home-gem" title="Your Order"></span>}
+                    {ORDER_META[o].name}
+                  </button>
+                ))}
+              </div>
+            </React.Fragment>
+          )}
+        </LadderPopover>
+
+        <LadderPopover className="ls-books" label={({ open, toggle }) => (
+          <button className={'ladder-switch-btn' + (open ? ' open' : '')} aria-expanded={open} aria-haspopup="true" onClick={toggle}>
+            <PIcon d={BOOK_ICON} sw={1.8} />
+            <span className="lsb-name">Books read</span>
+            <span className="lsb-count">{booksRead.length}<span className="of">/{BOOKS.length}</span></span>
+            <PIcon d={CHEVRON_UD} sw={1.9} />
+          </button>
+        )}>
+          {() => (
+            <React.Fragment>
+              <div className="ladder-pop-head">Which of the Archive have you read?</div>
+              <div className="ladder-pop-books">
+                {BOOKS.map((b) => {
+                  const read = booksRead.includes(b.id);
+                  return (
+                    <button key={b.id} className={'book' + (read ? ' read' : '')} onClick={() => toggleBook(b.id)} aria-pressed={read}>
+                      <span className="gemstone"></span>{b.title}
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="ladder-pop-note">Reading a book reveals the Ideals it gates.</div>
+            </React.Fragment>
+          )}
+        </LadderPopover>
+        </div>
       </div>
+
       <div className="ladder-context">
         {isHome
           ? <span>The {meta.name} Ideals. You speak each when you&rsquo;re ready.</span>
           : <span><span className="ladder-foreign-note">The {meta.name} Ideals.</span> You can reflect on or borrow these words, but only your own Order&rsquo;s can be spoken.</span>}
-      </div>
-
-      {/* the reveal input — which books you've read (stands in for onboarding) */}
-      <div className="ladder-books">
-        <span className="ladder-books-label">Books read</span>
-        {BOOKS.map((b) => {
-          const read = booksRead.includes(b.id);
-          return (
-            <button key={b.id} className={'book' + (read ? ' read' : '')} onClick={() => toggleBook(b.id)} aria-pressed={read}>
-              <span className="gemstone"></span>{b.title}
-            </button>
-          );
-        })}
       </div>
 
       <div className="ladder">
@@ -443,10 +503,6 @@ function OathsPage({ empty, onNav }) {
       {/* signature: the Ideals ladder */}
       <section className="glass glow-accent rise" style={{ animationDelay: '0.05s' }}>
         <Glyph order="windrunner" h={150} className="glyph-corner" />
-        <div className="section-head">
-          <h2>The Five Ideals</h2>
-          <span className="section-count">Revelation, not progress</span>
-        </div>
         <IdealLadder
           homeOrder="windrunner"
           onBorrow={(it) => onNav && onNav('oath-new-ideal', it)}

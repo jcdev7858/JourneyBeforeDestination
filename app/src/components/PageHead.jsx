@@ -6,15 +6,14 @@ import styles from "./PageHead.module.css";
 import { Plus } from "lucide-react";
 
 const PageHead = (props) => {
-  const { title, eyebrow, lead, cta, primary, onClick } = props;
+  const { title, eyebrow, lead, cta, primary, onClick, user } = props;
   return (
     <Flex className={styles.pageHead}>
       <Flex vertical>
         {eyebrow && (
           <Flex className={styles.pageEyebrow}>
             <Text className={styles.dot}></Text>
-            {`${eyebrow} · Windrunner`}
-            {/* TODO: Wire in actual user.order to keep it dynamic */}
+            {eyebrow && `${eyebrow} · ${user.orderId}`}
           </Flex>
         )}
         <Title level={2} className={styles.pageTitle}>

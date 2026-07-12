@@ -88,6 +88,12 @@ When you write code in `Specs/Claude/…` that's meant to become app code:
 - **Derive, don't store** (a repo convention): treatment, section, and reveal
   state are computed from data, not saved as flags.
 
+## 2a. Preferred handoff download mode
+
+When I ask for a handoff as a download, package only the files that changed or were added this session, laid out at their real repo-relative paths (under Specs/Claude/…), zipped so I can unzip and drop them straight into the repo as replacements. Do NOT zip the whole jbd-pages-handoff/ folder.
+
+Include a CHANGES.txt manifest at the zip root that lists, split into NEW vs CHANGED: each file's repo path, a one-line note on what changed, and any load-order or dependency caveats.
+
 ---
 
 ## 3. Never ship

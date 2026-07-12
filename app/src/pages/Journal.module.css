@@ -1,0 +1,42 @@
+/* timeline layout: the gem-gutter rail beside each entry's body.
+   the rail is pure decoration owned by the timeline, so it lives here with
+   the map that renders it — not in a component. */
+.tlEntry {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  column-gap: 20px;
+}
+.tlRail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tlLine {
+  width: 2px;
+  flex: 1;
+  background: var(--border);
+}
+/* the very first entry hides its top line so the timeline doesn't start
+   with a line dangling above the first dot. */
+.tlLine.hidden {
+  visibility: hidden;
+}
+.tlDot {
+  width: 11px;
+  height: 11px;
+  transform: rotate(45deg);
+  border-radius: 3px;
+  margin: 6px 0;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep));
+  border: 1px solid rgba(174, 224, 251, 0.5);
+  box-shadow: 0 0 9px rgba(var(--stormlight-rgb), 0.5);
+}
+.tlBody {
+  padding-bottom: var(--gap-card);
+  min-width: 0;
+}
+.tlEntry:last-child .tlBody {
+  padding-bottom: 0;
+}

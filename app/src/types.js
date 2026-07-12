@@ -49,11 +49,14 @@
  * @typedef {Object} JournalEntry
  * @property {string} id
  * @property {string} userId              // the User.id this entry belongs to
- * @property {"prompt"|"freeform"} entryType
- * @property {string|null} promptId       // set when entryType === "prompt"
- * @property {string} title
+ * @property {string} [prompt]
+ * @property {string} [oathId]
+ * @property {string} [idealId]
+ * @property {string} [title]
  * @property {string} body
  * @property {string} createdAt           // ISO date
+ * @property {boolean} fav
+ * @property {string[]} themes
  */
 
 /**

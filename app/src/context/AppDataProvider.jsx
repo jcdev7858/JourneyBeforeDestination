@@ -157,6 +157,65 @@ const SEED_OATHS = [
   },
 ];
 
+/** @type {JournalEntry[]} */
+const SEED_JOURNAL = [
+  {
+    id: "1",
+    userId: SEED_USER.id,
+    oathId: "oath-1",
+    idealId: "ideal-3",
+    title: "Keeping score",
+    body: "Covered a shift for someone without expecting anything back. It felt lighter than I thought it would — no ledger to balance. I keep noticing how much of my week I spend keeping score.",
+    createdAt: "2026-06-23T00:00:00.000Z",
+    fav: true,
+    themes: ["Family"],
+  },
+  {
+    id: "2",
+    userId: SEED_USER.id,
+    body: "Long day. Just needed to get the noise out of my head before bed — nothing profound, no prompt, no oath. Writing it down so I stop carrying it around.",
+    createdAt: "2026-06-22T00:00:00.000Z",
+    fav: false,
+    themes: [],
+  },
+  {
+    id: "3",
+    userId: SEED_USER.id,
+    prompt: "What responsibility are you avoiding right now?",
+    body: "The call to my brother. I keep waiting for the right moment, but the waiting is the avoidance — there isn't a clean version of it.",
+    createdAt: "2026-06-20T00:00:00.000Z",
+    fav: true,
+    themes: ["Responsibility", "Family"],
+  },
+  {
+    id: "4",
+    userId: SEED_USER.id,
+    idealId: "ideal-3",
+    body: "Protecting even those I dislike — I felt this one today with a coworker I resent. I stayed fair. It cost me something and I want to remember that it did.",
+    createdAt: "2026-06-18T00:00:00.000Z",
+    fav: false,
+    themes: ["Courage"],
+  },
+  {
+    id: "5",
+    userId: SEED_USER.id,
+    title: "Morning pages",
+    body: "Wrote three pages of nothing in particular before work. Half of it was grocery lists. The other half surprised me — the honest part always hides underneath the boring part.",
+    createdAt: "2026-05-30T00:00:00.000Z",
+    fav: false,
+    themes: ["Growth"],
+  },
+  {
+    id: "6",
+    userId: SEED_USER.id,
+    oathId: "oath-1",
+    body: "My daughter wanted to show me something and I was half-there, phone in hand. She stopped asking. That stayed with me all evening.",
+    createdAt: "2026-05-24T00:00:00.000Z",
+    fav: false,
+    themes: ["Presence", "Family"],
+  },
+];
+
 export function AppDataProvider({ children }) {
   // Persisted so a future migration can detect which shape old data is in.
   useLocalStorage("jbd:schemaVersion", SCHEMA_VERSION);
@@ -164,7 +223,7 @@ export function AppDataProvider({ children }) {
   const [oaths, setOaths] = useLocalStorage("jbd:oaths", SEED_OATHS);
   const [journalEntries, setJournalEntries] = useLocalStorage(
     "jbd:journalEntries",
-    /** @type {JournalEntry[]} */ ([])
+    /** @type {JournalEntry[]} */ (SEED_JOURNAL)
   );
 
   const toggleAction = (oathId, actionId) => {
