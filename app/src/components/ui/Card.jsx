@@ -38,7 +38,6 @@ const Card = React.forwardRef((props, ref) => {
     onClick,
     onMouseDown,
     bodyRef,
-    clickable = false,
   } = props;
 
   // Fail fast: surface unknown props during development
@@ -68,7 +67,6 @@ const Card = React.forwardRef((props, ref) => {
       style={rootStyle}
       onClick={onClick}
       onMouseDown={onMouseDown}
-      clickable={clickable}
     >
       {title != null && (
         <div className="ant-card-head" style={styles.header}>

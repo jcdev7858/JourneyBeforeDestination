@@ -5,11 +5,6 @@
    Same focus language as the buttons: Order-color border + faint ring.
    ========================================================= */
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-}
 .fieldLabel {
   font-size: var(--fs-overline);
   letter-spacing: 1.2px;
@@ -50,6 +45,16 @@
   box-shadow:
     0 0 0 1px rgba(var(--accent-rgb), 0.4),
     0 0 18px rgba(var(--accent-rgb), 0.12);
+}
+
+/* words read as the serif voice even while editing */
+.inputTitle {
+  font-family: var(--font-display) !important;
+  font-size: 21px !important;
+  /* line-height: 1.35 !important;
+  padding: 14px 16px; */
+  /* min-height: 78px !important; */
+  resize: vertical;
 }
 
 .textarea {

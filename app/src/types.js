@@ -49,7 +49,7 @@
  * @typedef {Object} JournalEntry
  * @property {string} id
  * @property {string} userId              // the User.id this entry belongs to
- * @property {string} [prompt]
+ * @property {string} [promptId]
  * @property {string} [oathId]
  * @property {string} [idealId]
  * @property {string} [title]

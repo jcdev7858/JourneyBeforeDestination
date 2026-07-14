@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAppData } from "../../context/AppDataContext";
 import Card from "../ui/Card";
 import Flex from "../ui/Flex";
 import Modal from "../ui/Modal";
@@ -12,13 +13,14 @@ import { PencilLine, Star } from "lucide-react";
 
 function PromptCard() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { user } = useAppData();
 
   return (
     <>
       <Card className={styles.promptCard}>
         <Flex className={cardStyles.eyebrow}>
           <Text className={cardStyles.dot}></Text>
-          <Text>Today's reflection · Windrunner</Text>
+          <Text>{`Today's reflection · ${user.orderId}`}</Text>
         </Flex>
         <Title level={1} className={styles.promptText}>
           What responsibility are you avoiding right now?
@@ -36,7 +38,7 @@ function PromptCard() {
             Favorite
           </Button>
         </Flex>
-        <OrderGlyph order="windrunner" h={240} variant="watermark" />
+        <OrderGlyph order={user.orderId} h={240} variant="watermark" />
       </Card>
       <Modal
         open={isModalVisible}
