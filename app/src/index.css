@@ -150,3 +150,26 @@ a {
     animation: none;
   }
 }
+
+/* ---------- selective accent glow (color-coded to the Order) ----------
+   The same radial wash used at the top of the page, pulled inside a card.
+   Used sparingly — the hero prompt and the Order card — so it stays special.
+   The host must set position: relative + overflow: hidden (ui/Card does). */
+.glowAccent::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  width: 400px;
+  height: 280px;
+  top: -120px;
+  left: -70px;
+  background: radial-gradient(closest-side, rgba(var(--accent-rgb), 0.16), transparent 70%);
+  filter: blur(28px);
+}
+.glowAccent.glowBr::before {
+  top: auto;
+  left: auto;
+  bottom: -130px;
+  right: -80px;
+}

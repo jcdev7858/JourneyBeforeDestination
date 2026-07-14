@@ -8,9 +8,15 @@ import { useAppData } from "../context/AppDataContext";
 import { ArrowRight, Check } from "lucide-react";
 import styles from "./OathCard.module.css";
 
-const OathCard = (props) => {
+const OathCard = ({
+  oath,
+  clickable = false,
+  onClick,
+  maxActions = Infinity,
+  footMeta,
+  children,
+}) => {
   const { toggleAction, markKept, formatDate, formatRelativeTime } = useAppData();
-  const { oath, clickable = false, onClick, maxActions = Infinity, footMeta } = props;
   const completedCount = oath.actions.filter((a) => a.completed).length;
   const total = oath.actions.length;
   const hiddenCount = total - maxActions;
@@ -24,35 +30,15 @@ const OathCard = (props) => {
 
   function buildFootMeta() {
     if (oath.actions.length === 0)
-      return (
-        <Text className={styles.openHint}>
-          A practice · no checklist, just the habit ·
-          <span className={styles.oh}>
-            Open
-            <ArrowRight />
-          </span>
-        </Text>
-      );
+      return <Text className={styles.footText}>A practice · no checklist, just the habit</Text>;
     if (oath.status === "kept")
       return (
-        <Text className={styles.openHint}>
-          {`Fulfilled ${oath.keptAt && formatDate(oath.keptAt)} · all ${oath.actions.length} actions answered · `}
-          <span className={styles.oh}>
-            Open
-            <ArrowRight />
-          </span>
+        <Text className={styles.footText}>
+          {`Fulfilled ${oath.keptAt && formatDate(oath.keptAt)} · all ${oath.actions.length} actions answered`}
         </Text>
       );
     if (oath.status === "archived")
-      return (
-        <Text className={styles.openHint}>
-          {`Set aside ${formatDate(oath.archivedAt)} · `}
-          <span className={styles.oh}>
-            Open
-            <ArrowRight />
-          </span>
-        </Text>
-      );
+      return <Text className={styles.footText}>{`Set aside ${formatDate(oath.archivedAt)}`}</Text>;
 
     if (oath.actions.every((a) => a.completed)) {
       return (
@@ -67,19 +53,9 @@ const OathCard = (props) => {
 
     const statusText =
       footMeta ??
-      `Began ${oath.createdAt && formatRelativeTime(oath.createdAt)} · ${oath.actions.filter((a) => a.completed !== true).length} more actions · `;
+      `Began ${oath.createdAt && formatRelativeTime(oath.createdAt)} · ${oath.actions.filter((a) => a.completed !== true).length} more actions`;
 
-    return (
-      <Text className={styles.openHint}>
-        {statusText}
-        {clickable && (
-          <span className={styles.oh}>
-            Open
-            <ArrowRight />
-          </span>
-        )}
-      </Text>
-    );
+    return <Text className={styles.footText}>{statusText}</Text>;
   }
 
   return (
@@ -132,7 +108,7 @@ const OathCard = (props) => {
       <Flex gap={12} justify="space-between" align="center" wrap style={{ paddingTop: "20px" }}>
         {buildFootMeta()}
         <Flex gap={12} justify="flex-end" onClick={(e) => e.stopPropagation()}>
-          {props.children}
+          {children}
         </Flex>
       </Flex>
     </Card>

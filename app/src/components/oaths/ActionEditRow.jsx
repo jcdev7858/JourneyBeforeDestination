@@ -1,8 +1,8 @@
-import Flex from "./ui/Flex";
+import Flex from "../ui/Flex";
 import styles from "./ActionEditRow.module.css";
-import formStyles from "./ui/Form.module.css";
-import Button from "./ui/Button";
-import Check from "./ui/Check";
+import formStyles from "../ui/Form.module.css";
+import Button from "../ui/Button";
+import Check from "../ui/Check";
 import { Trash2 } from "lucide-react";
 
 const ActionEditRow = (props) => {

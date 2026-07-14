@@ -5,6 +5,7 @@ const ORDER_VARIANTS = {
   watermark: styles.glyphWatermark,
   corner: styles.glyphCorner,
   block: styles.glyphBlock,
+  empty: styles.glyphEmpty,
 };
 
 export default function OrderGlyph({ order, h, className, style, variant }) {

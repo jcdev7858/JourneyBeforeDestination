@@ -1,14 +1,15 @@
 import PageHead from "../components/PageHead";
 import SectionHead from "../components/SectionHead";
 import OathCard from "../components/OathCard";
-import OathMenu from "../components/OathMenu";
+import OathMenu from "../components/oaths/OathMenu";
+import OrderGlyph from "../components/OrderGlyph";
 import Button from "../components/ui/Button";
 import Flex from "../components/ui/Flex";
 import { useAppData } from "../context/AppDataContext";
 import { useState } from "react";
 import { RotateCcw, Check, Plus, Feather } from "lucide-react";
-import EmptyOathCard from "../components/EmptyOathCard";
-import OathEditor from "../components/OathEditor";
+import OathEditor from "../components/oaths/OathEditor";
+import EmptyCard from "../components/EmptyCard";
 
 export default function Oaths() {
   const { oaths, restoreOath, archiveOath, deleteOath, user } = useAppData();
@@ -63,7 +64,13 @@ export default function Oaths() {
             </OathCard>
           ))
         ) : (
-          <EmptyOathCard makeNewOath={() => setEditing("new")} />
+          <EmptyCard
+            title="No oaths yet"
+            text="Every Radiant begins with the same words and comes to mean something personal by them. Speak the First Ideal to start your path."
+            ctaLabel="Speak the First Ideal"
+            onCta={() => setEditing("new")}
+            icon={<OrderGlyph order={user.orderId} h={110} variant="empty" />}
+          />
         )}
       </Flex>
 

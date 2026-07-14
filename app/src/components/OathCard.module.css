@@ -122,7 +122,7 @@
   opacity: 0.7;
 }
 
-/* whole oath card is the open target — hover lifts + glows the Order accent.
+/* whole card is the open target — hover lifts + glows the Order accent.
    The footer then trims to Reflect (secondary) + the ⋯ overflow menu. */
 .cardLink {
   cursor: pointer;
@@ -158,33 +158,13 @@
   align-items: center;
   gap: 12px;
 }
-.openHint {
+.footText {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   font-size: var(--fs-body-sm);
   color: var(--text-faint);
   transition: color var(--dur-ui);
-
-  .oh {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    color: var(--text-muted);
-  }
-
-  svg {
-    width: 15px;
-    height: 15px;
-    transition: transform var(--dur-ui);
-  }
-}
-.cardLink:hover .openHint,
-.cardLink:hover .openHint .oh {
-  color: var(--accent);
-}
-.cardLink:hover .openHint svg {
-  transform: translateX(3px);
 }
 
 /* ⋯ overflow menu — rare, per-view oath actions (Archive, Delete, Restore).
@@ -270,53 +250,4 @@
 .actions.tickableList {
   gap: 8px;
   margin-top: var(--sp-5);
-}
-
-/* ---------- empty state (a designed feature, never a blank box) ---------- */
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: var(--sp-4);
-  padding: 48px var(--pad-card);
-}
-.emptyGlyph {
-  opacity: 0.5;
-  color: var(--accent);
-}
-.emptyTitle {
-  font-family: var(--font-display);
-  font-size: var(--fs-title);
-  color: var(--text);
-}
-.emptyText {
-  font-size: var(--fs-body-lg);
-  color: var(--text-muted);
-  max-width: 38ch;
-  display: block;
-  margin-bottom: 20px;
-  line-height: 1.55;
-}
-
-/* ---------- selective accent glow (color-coded to the Order) ----------
-   The same radial wash used at the top of the page, pulled inside a card.
-   Used sparingly — the hero prompt and the Order card — so it stays special. */
-.glowAccent::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  pointer-events: none;
-  width: 400px;
-  height: 280px;
-  top: -120px;
-  left: -70px;
-  background: radial-gradient(closest-side, rgba(var(--accent-rgb), 0.16), transparent 70%);
-  filter: blur(28px);
-}
-.glowAccent.glowBr::before {
-  top: auto;
-  left: auto;
-  bottom: -130px;
-  right: -80px;
 }
