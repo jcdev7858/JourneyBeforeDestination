@@ -1,0 +1,8 @@
+.themeLead {
+  font-size: var(--fs-overline);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  align-self: center;
+  margin-right: 2px;
+}

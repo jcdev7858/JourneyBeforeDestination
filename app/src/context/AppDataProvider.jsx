@@ -181,7 +181,7 @@ const SEED_JOURNAL = [
   {
     id: "3",
     userId: SEED_USER.id,
-    prompt: "What responsibility are you avoiding right now?",
+    promptId: "prompt-1",
     body: "The call to my brother. I keep waiting for the right moment, but the waiting is the avoidance — there isn't a clean version of it.",
     createdAt: "2026-06-20T00:00:00.000Z",
     fav: true,
@@ -265,8 +265,23 @@ export function AppDataProvider({ children }) {
   };
 
   const formatDate = (date) => {
+    if (!date) return "Unknown date"; // TODO: lookup if this is the right error handling for missing date, or if we should throw an error instead
+    try {
+      const d = new Date(date);
+      const formatter = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
+      return formatter.format(d);
+    } catch {
+      return "Unknown date";
+    }
+  };
+
+  const formatDateMDY = (date) => {
     const d = new Date(date);
-    const formatter = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
+    const formatter = new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
     return formatter.format(d);
   };
 
@@ -281,6 +296,24 @@ export function AppDataProvider({ children }) {
       return rtf.format(-weeksAgo, "week");
     }
     return rtf.format(-daysAgo, "day");
+  };
+
+  const createBacklinks = ({ oathId, promptId, idealId }) => {
+    if (!oathId && !promptId && !idealId) return [];
+    // destructure the links from the oath object we pass into the function?
+    const backlinks = [];
+    const oathTitle = oathId && oaths.find((o) => o.id === oathId)?.title;
+    if (oathTitle) backlinks.push({ type: "oath", title: oathTitle, id: oathId });
+    return backlinks;
+  };
+
+  const toggleFav = (entryId) => {
+    setJournalEntries((prevEntries) =>
+      prevEntries.map((entry) => {
+        if (entry.id !== entryId) return entry;
+        return { ...entry, fav: !entry.fav };
+      })
+    );
   };
 
   const value = {
@@ -298,7 +331,10 @@ export function AppDataProvider({ children }) {
     restoreOath,
     markKept,
     formatDate,
+    formatDateMDY,
     formatRelativeTime,
+    createBacklinks,
+    toggleFav,
   };
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>;
 }
