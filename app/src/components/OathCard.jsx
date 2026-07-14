@@ -5,7 +5,7 @@ import Flex from "../components/ui/Flex";
 import Button from "../components/ui/Button";
 import ActionItem from "../components/dashboard/ActionItem";
 import { useAppData } from "../context/AppDataContext";
-import { ArrowRight, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import styles from "./OathCard.module.css";
 
 const OathCard = ({
