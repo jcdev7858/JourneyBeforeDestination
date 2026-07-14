@@ -1,7 +1,7 @@
-import Title from "../components/ui/Title";
-import Card from "../components/ui/Card";
-import Flex from "../components/ui/Flex";
-import { useAppData } from "../context/AppDataContext";
+import Title from "../ui/Title";
+import Card from "../ui/Card";
+import Flex from "../ui/Flex";
+import { useAppData } from "../../context/AppDataContext";
 import { useState } from "react";
 import styles from "./IdealLadder.module.css";
 

@@ -1,14 +1,13 @@
-import Flex from "./ui/Flex";
-import Title from "./ui/Title";
-import Text from "./ui/Text";
-import Modal from "./ui/Modal";
-import styles from "./OathEditor.module.css";
-import modalStyles from "./ui/Modal.module.css";
-import formStyles from "./ui/Form.module.css";
+import Flex from "../ui/Flex";
+import Title from "../ui/Title";
+import Text from "../ui/Text";
+import Modal from "../ui/Modal";
+import modalStyles from "../ui/Modal.module.css";
+import formStyles from "../ui/Form.module.css";
 import ActionEditRow from "./ActionEditRow";
-import { useAppData } from "../context/AppDataContext";
+import { useAppData } from "../../context/AppDataContext";
 import { useState } from "react";
-import Button from "./ui/Button";
+import Button from "../ui/Button";
 import { Plus, Feather, Archive } from "lucide-react";
 
 const OathEditor = (props) => {
@@ -96,7 +95,7 @@ const OathEditor = (props) => {
           </Flex>
 
           <Flex className={modalStyles.modalBody}>
-            <Flex className={formStyles.field}>
+            <Flex vertical gap={"var(--sp-2)"}>
               <Text className={modalStyles.modalSublead}>
                 {`Archiving sets this oath aside — it leaves your active list but you can restore it anytime, and the reflections you wrote along the way stay in your journal.`}
               </Text>
@@ -139,10 +138,10 @@ const OathEditor = (props) => {
           </Flex>
 
           <Flex className={modalStyles.modalBody}>
-            <Flex className={formStyles.field}>
+            <Flex vertical gap={"var(--sp-2)"}>
               <label className={formStyles.fieldLabel}>The words</label>
               <textarea
-                className={`${formStyles.input} ${styles.inputOath}`}
+                className={`${formStyles.input} ${formStyles.inputTitle}`}
                 value={words}
                 onChange={(e) => setWords(e.target.value)}
                 placeholder="I will…"
@@ -150,7 +149,7 @@ const OathEditor = (props) => {
               />
             </Flex>
 
-            <Flex className={formStyles.field}>
+            <Flex vertical gap={"var(--sp-5)"}>
               <Flex align="baseline" justify="space-between" gap={12}>
                 <label className={formStyles.fieldLabel}>Actions</label>
                 <Text>How you will live it</Text>

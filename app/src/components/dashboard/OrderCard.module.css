@@ -3,6 +3,7 @@
   font-size: 30px;
   font-weight: 500;
   margin-bottom: 0 !important;
+  text-transform: capitalize;
 }
 /* the circular frame holding the small Order seal next to the Order name.
    Tinted by --accent: a faint inset + outer accent glow around the ring. */

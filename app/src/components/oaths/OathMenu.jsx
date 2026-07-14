@@ -1,6 +1,6 @@
-import Flex from "./ui/Flex";
-import Button from "./ui/Button";
-import Popover from "./ui/Popover";
+import Flex from "../ui/Flex";
+import Button from "../ui/Button";
+import Popover from "../ui/Popover";
 import styles from "./OathMenu.module.css";
 import { useState, useEffect, useRef } from "react";
 import { Archive, Trash, Ellipsis } from "lucide-react";
