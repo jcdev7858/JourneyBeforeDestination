@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="jbd-styles.css" />
+<link rel="stylesheet" href="radiantdex.css" />
 <style>
   html, body { margin: 0; min-height: 100%; background: #0b0f1c; }
   /* In a real browser the page flows and the window scrolls, so let .jbd grow
@@ -60,29 +61,13 @@
   <script type="text/babel" src="journal.jsx"></script>
   <script type="text/babel" src="reflection-editor.jsx"></script>
   <script type="text/babel" src="profile.jsx"></script>
+  <script type="text/babel" src="radiantdex-data.jsx"></script>
+  <script type="text/babel" src="radiantdex.jsx"></script>
 
   <script type="text/babel">
     const { useState } = React;
     const PAGE_NAMES = ['Dashboard', 'Dashboard v3', 'Oaths', 'Journal', 'RadiantDex', 'Profile'];
     const IDEAL_WORDS = 'I will protect even those I dislike, so long as it is right.';
-
-    function RadiantDexPage({ onNav }) {
-      return (
-        <PageShell active="RadiantDex" onNav={onNav}>
-          <div className="page-head">
-            <div className="page-eyebrow"><span className="dot"></span> The ten Orders · Windrunner</div>
-            <h1 className="page-title">RadiantDex</h1>
-          </div>
-          <section className="glass glow-accent" style={{ padding: 0 }}>
-            <div className="empty">
-              <OrderGlyph order="windrunner" h={60} className="empty-glyph" />
-              <div className="empty-title">Not in this bundle</div>
-              <div className="empty-text">The RadiantDex is its own screen — this preview ships the Oaths, Journal and Profile pages plus their editor modals.</div>
-            </div>
-          </section>
-        </PageShell>
-      );
-    }
 
     function ModalOverlay({ modal, onClose }) {
       if (!modal) return null;
@@ -99,8 +84,10 @@
     }
 
     function App() {
-      const [page, setPage] = useState('Oaths');
+      const [page, setPage] = useState('RadiantDex');
       const [modal, setModal] = useState(null);
+      const [oathsEmpty, setOathsEmpty] = useState(false);
+      const [journalEmpty, setJournalEmpty] = useState(false);
       // The pages call onNav with real page names AND with modal intents fired
       // from the Ideal ladder (borrow / reflect), oath cards (open → edit, and
       // Reflect → the reflection modal carrying the oath as context). Route both.
@@ -116,8 +103,8 @@
       const PAGES = {
         Dashboard: <DashboardA order="windrunner" scheme="stormlight" />,
         'Dashboard v3': <DashboardV3 order="windrunner" onNav={nav} />,
-        Oaths: <OathsPage onNav={nav} />,
-        Journal: <JournalPage onNav={nav} />,
+        Oaths: <OathsPage empty={oathsEmpty} onNav={nav} />,
+        Journal: <JournalPage empty={journalEmpty} onNav={nav} />,
         RadiantDex: <RadiantDexPage onNav={nav} />,
         Profile: <ProfilePage onNav={nav} />,
       };
@@ -132,6 +119,11 @@
             <select value={page} onChange={(e) => setPage(e.target.value)}>
               {PAGE_NAMES.map((n) => <option key={n} value={n}>{n}</option>)}
             </select>
+            <span className="demo-sep"></span>
+            <span className="grp"><span>Empty</span>
+              <button onClick={() => setOathsEmpty((v) => !v)}>{oathsEmpty ? 'Oaths ✓' : 'Oaths'}</button>
+              <button onClick={() => setJournalEmpty((v) => !v)}>{journalEmpty ? 'Journal ✓' : 'Journal'}</button>
+            </span>
             <span className="demo-sep"></span>
             <span className="grp"><span>Oath</span>
               <button onClick={() => setModal({ kind: 'oath', mode: 'new' })}>New</button>
