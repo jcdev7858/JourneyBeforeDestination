@@ -64,7 +64,9 @@
 /**
  * Static reference for one Order of the Knights Radiant — the "RadiantDex" lore
  * (data/orders.js). Deliberately excludes the ideals themselves; those live in
- * data/ideals.js as {@link Ideal}s, cross-referenced by order id.
+ * data/ideals.js as {@link Ideal}s, cross-referenced by order id. It also does
+ * NOT store its roster of characters — that's DERIVED by filtering
+ * data/characters.js on `orderId` (repo convention: derive, don't store).
  *
  * @typedef {Object} OrderRef
  * @property {string} id            // "windrunner" — matches the GLYPHS key + user.orderId
@@ -73,8 +75,37 @@
  * @property {string} spren         // the spren type they bond
  * @property {string[]} heralds     // associated Herald(s)
  * @property {string[]} surges      // the two Surges / powers
- * @property {string[]} notableMembers
  * @property {string} description   // summary of the order's role/character
+ */
+
+/**
+ * One book of the Stormlight Archive (data/books.js). The `order` integer is the
+ * canonical reading sequence — the axis the (future) spoiler gate compares
+ * against, and the vocabulary behind User.booksRead / booksWantToRead slugs.
+ *
+ * @typedef {Object} Book
+ * @property {string} id            // slug, e.g. "wok" — used in booksRead + Character.books/spoilerLevel
+ * @property {number} order         // 1-based reading position; book N is "before" book N+1
+ * @property {string} title         // display title, e.g. "The Way of Kings"
+ * @property {string} abbr          // short label for tags/chips, e.g. "WoK"
+ */
+
+/**
+ * One character in the RadiantDex (data/characters.js) — an exemplar of an
+ * Order's ideals in action. Lean by design (room to add lore fields later).
+ * Belongs to exactly one Order via `orderId` (the FK on the "many" side).
+ *
+ * @typedef {Object} Character
+ * @property {string} id            // slug, e.g. "kaladin" — route param + builds the Coppermind URL
+ * @property {string} name          // display name
+ * @property {string} orderId       // FK → OrderRef.id
+ * @property {string} role          // one-line "what they are", e.g. "Bridgeman turned Windrunner"
+ * @property {string} exemplifies   // the ideal/trait they model — the aspirational hook
+ * @property {string} summary       // ORIGINAL spoiler-safe prose (never Coppermind text verbatim)
+ * @property {string[]} books       // Book.id slugs they appear in
+ * @property {string} spoilerLevel  // Book.id — earliest book by which this entry is safe to show fully
+ * @property {string[]} tags        // browsable/filterable labels
+ * @property {string|null} image    // local path e.g. "/characters/kaladin.jpg", or null → Order-glyph fallback
  */
 
 /**
