@@ -2,34 +2,11 @@ import Flex from "../ui/Flex";
 import Button from "../ui/Button";
 import Popover from "../ui/Popover";
 import styles from "./OathMenu.module.css";
-import { useState, useEffect, useRef } from "react";
+import { usePopover } from "../../hooks/usePopover";
 import { Archive, Trash, Ellipsis } from "lucide-react";
 
-const OathMenu = (props) => {
-  const { setArchive, setDelete } = props;
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const handleClick = (e) => {
-      if (!ref.current.contains(e.target)) setOpen(false);
-    };
-
-    const handleKey = (e) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-
-    document.addEventListener("click", handleClick);
-    document.addEventListener("keydown", handleKey);
-
-    return () => {
-      document.removeEventListener("click", handleClick);
-      document.removeEventListener("keydown", handleKey);
-    };
-  }, [open]);
-
+const OathMenu = ({ setArchive, setDelete }) => {
+  const { open, setOpen, ref } = usePopover();
   const content = (
     <Flex vertical>
       {setArchive && (

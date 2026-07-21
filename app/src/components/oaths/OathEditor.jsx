@@ -97,7 +97,8 @@ const OathEditor = (props) => {
           <Flex className={modalStyles.modalBody}>
             <Flex vertical gap={"var(--sp-2)"}>
               <Text className={modalStyles.modalSublead}>
-                {`Archiving sets this oath aside — it leaves your active list but you can restore it anytime, and the reflections you wrote along the way stay in your journal.`}
+                Archiving sets this oath aside — it leaves your active list but you can restore it
+                anytime, and the reflections you wrote along the way stay in your journal.
               </Text>
               <Flex className={modalStyles.modalQuote}>{oath.title || "Unspoken oath"}</Flex>
             </Flex>
