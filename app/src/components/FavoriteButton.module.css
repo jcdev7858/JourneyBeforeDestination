@@ -1,0 +1,29 @@
+.entryFav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  color: var(--text-faint);
+  flex-shrink: 0;
+  transition:
+    color var(--dur-ui),
+    border-color var(--dur-ui);
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+  &:hover,
+  &.on {
+    color: var(--stormlight);
+    border-color: rgba(var(--stormlight-rgb), 0.4);
+    box-shadow: 0 0 0 1px rgba(var(--stormlight-rgb), 0.18);
+  }
+  &.on svg {
+    fill: var(--stormlight);
+  }
+}
