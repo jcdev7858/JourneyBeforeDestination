@@ -23,27 +23,32 @@ export default function Journal() {
   const [searchTerm, setSearchTerm] = useState("");
   const [editing, setEditing] = useState(null);
 
-  const searchResults = journalEntries.filter((e) => {
-    const title = e.title ? e.title.toLowerCase() : "";
-    if (searchTerm === "") return e;
+  const publishedEntries = journalEntries.filter((e) => e.status === "published");
 
+  const searchResults = publishedEntries.filter((e) => {
+    if (searchTerm === "") return true;
+    const title = e.title ? e.title.toLowerCase() : "";
     const body = e.body.toLowerCase();
-    if (title.includes(searchTerm) || body.includes(searchTerm)) return e;
+    return title.includes(searchTerm) || body.includes(searchTerm);
   });
 
   let filteredEntries;
   switch (activeTypeFilter) {
     case "Prompted":
-      filteredEntries = searchResults.filter((e) => e.promptId);
+      filteredEntries = searchResults.filter((e) => e.promptIds?.length);
       break;
     case "Linked":
-      filteredEntries = searchResults.filter((e) => e.oathId || e.idealId || e.promptId);
+      filteredEntries = searchResults.filter(
+        (e) => e.oathIds?.length || e.idealIds?.length || e.promptIds?.length
+      );
       break;
     case "Favorites":
       filteredEntries = searchResults.filter((e) => e.fav);
       break;
     case "Free":
-      filteredEntries = searchResults.filter((e) => !e.oathId && !e.idealId && !e.promptId);
+      filteredEntries = searchResults.filter(
+        (e) => !e.oathIds?.length && !e.idealIds?.length && !e.promptIds?.length
+      );
       break;
     case "All":
       filteredEntries = searchResults;
@@ -64,7 +69,12 @@ export default function Journal() {
       // groupBy keys each entry by its formatted month ("June 2026")
       Object.entries(Object.groupBy(themedEntries, (e) => formatDate(e.createdAt)))
         // turn the bucket object into rows we can render
-        .map(([month, entries]) => ({ month, entries })),
+        .map(([month, entries]) => ({
+          month,
+          entries,
+          date: entries[0].createdAt,
+        }))
+        .sort((a, b) => b.date.localeCompare(a.date)),
     [themedEntries]
   );
   const themes = useMemo(
@@ -85,13 +95,14 @@ export default function Journal() {
         <ReflectionEditor
           entry={editing === "new" ? undefined : editing}
           closeModal={() => setEditing(null)}
+          themes={themes}
         />
       )}
 
       <SectionHead
         title="Entries"
         cta="New Entry"
-        onClick={() => setEditing(true)}
+        onClick={() => setEditing("new")}
         icon={<Feather />}
         primary
       />

@@ -99,6 +99,7 @@
   /* app-level layout (NOT from the handoff artboard — the real-app shell) */
   --maxw: 980px; /* centered content width */
   --section-gap: 30px; /* TODO: collapse into --gap-card when Layout is reconciled */
+  --z-popover: 10; /* popovers / dropdowns / tooltips */
 
   /* motion -------------------------------------------------------------- */
   --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);

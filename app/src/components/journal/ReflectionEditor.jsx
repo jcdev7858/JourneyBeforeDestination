@@ -3,55 +3,98 @@ import Title from "../ui/Title";
 import Text from "../ui/Text";
 import Modal from "../ui/Modal";
 import Button from "../ui/Button";
-import styles from "./ReflectionEditor.module.css";
 import modalStyles from "../ui/Modal.module.css";
 import formStyles from "../ui/Form.module.css";
+import AttachChip from "./AttachChip";
+import FavoriteButton from "../FavoriteButton";
+import { idealsForOrder } from "../../data/ideals";
+import { promptsForOrder } from "../../data/prompts";
 import { useAppData } from "../../context/AppDataContext";
 import { useState } from "react";
-import { Plus, Feather, Archive } from "lucide-react";
+import { Feather, Archive, Hash, Link, BookOpen } from "lucide-react";
 
-const ReflectionEditor = ({ entry, closeModal }) => {
-  const { user, formatDate } = useAppData();
+const SUGGESTED_THEMES = [
+  "Family",
+  "Growth",
+  "Courage",
+  "Gratitude",
+  "Responsibility",
+  "Presence",
+  "Relationships",
+];
+
+const ATTACHMENT_TYPES = {
+  theme: { icon: <Hash /> },
+  oath: { icon: <Link /> },
+  ideal: { icon: <Feather /> },
+  prompt: { icon: <BookOpen /> },
+};
+
+const ReflectionEditor = ({ entry, closeModal, themes }) => {
+  const { user, oaths, formatDate, addEntry, updateEntry, archiveEntry, resolveAttachments } =
+    useAppData();
   const isNew = !entry;
   const [title, setTitle] = useState(isNew ? "" : entry.title);
   const [body, setBody] = useState(isNew ? "" : entry.body);
+  const [fav, setFav] = useState(isNew ? false : entry.fav);
   const [confirm, setConfirm] = useState(false);
-  // const hasCtx = themes.length || oaths.length || ideals.length || prompt;
 
-  // const toggleDraft = (id) => {
-  //   setActions((prev) =>
-  //     prev.map((draft) => (draft.id === id ? { ...draft, completed: !draft.completed } : draft))
-  //   );
-  // };
+  const oathOptions = oaths.map((o) => ({
+    type: "oath",
+    label: o.title,
+    id: o.id,
+  }));
+  const idealOptions = idealsForOrder(user.orderId).map((i) => ({
+    type: "ideal",
+    label: i.text,
+    id: i.id,
+  }));
+  const promptOptions = promptsForOrder(user.orderId).map((p) => ({
+    type: "prompt",
+    label: p.text,
+    id: p.id,
+  }));
+  const themeOptions = Array.from(new Set([...SUGGESTED_THEMES, ...themes])).map((t) => ({
+    type: "theme",
+    label: t,
+    id: t,
+  }));
+  const [attachments, setAttachments] = useState(isNew ? [] : () => resolveAttachments(entry));
 
-  // const renameDraft = (id, newText) => {
-  //   setActions((prev) =>
-  //     prev.map((draft) => (draft.id === id ? { ...draft, title: newText } : draft))
-  //   );
-  // };
+  const handleAddOption = (o) => {
+    setAttachments((prev) => {
+      if (prev.some((a) => a.id === o.id)) return prev;
+      return [...prev, o];
+    });
+  };
 
-  // const handleSave = () => {
-  //   isNew
-  //     ? addOath({
-  //         id: crypto.randomUUID(),
-  //         userId: user.id,
-  //         title: words,
-  //         status: "active",
-  //         archivedAt: null,
-  //         createdAt: new Date().toISOString(),
-  //         actions: actions,
-  //       })
-  //     : updateOath(oath.id, { title: words, actions });
-  //   closeModal();
-  // };
+  const handleRemoveOption = (o) => {
+    setAttachments((prev) => prev.filter((a) => a.id !== o.id));
+  };
 
-  // const addDraftAction = () => {
-  //   setActions((prev) => [...prev, makeEmptyAction()]);
-  // };
+  const handleSave = () => {
+    const oathIds = attachments.filter((a) => a.type === "oath").map((a) => a.id);
+    const idealIds = attachments.filter((a) => a.type === "ideal").map((a) => a.id);
+    const promptIds = attachments.filter((a) => a.type === "prompt").map((a) => a.id);
+    const themes = attachments.filter((a) => a.type === "theme").map((a) => a.id);
 
-  // const deleteDraft = (id) => {
-  //   setActions((prev) => prev.filter((draft) => id !== draft.id));
-  // };
+    isNew
+      ? addEntry({
+          id: crypto.randomUUID(),
+          userId: user.id,
+          oathIds,
+          idealIds,
+          promptIds,
+          themes,
+          title,
+          body,
+          fav,
+          status: "published",
+          createdAt: new Date().toISOString(),
+        })
+      : updateEntry(entry.id, { title, body, oathIds, idealIds, promptIds, themes, fav });
+    closeModal();
+  };
 
   return (
     <Modal
@@ -80,10 +123,10 @@ const ReflectionEditor = ({ entry, closeModal }) => {
             <Flex vertical>
               <div className={modalStyles.modalEyebrow}>
                 <span className={modalStyles.dot}></span>
-                {` ${user.orderId} · Oath`}
+                {` Journal · ${user.orderId}`}
               </div>
               <Title level={2} className={modalStyles.modalTitle}>
-                Archive this oath?
+                Archive this entry?
               </Title>
             </Flex>
           </Flex>
@@ -91,9 +134,15 @@ const ReflectionEditor = ({ entry, closeModal }) => {
           <Flex className={modalStyles.modalBody}>
             <Flex vertical gap={"var(--sp-5)"}>
               <Text className={modalStyles.modalSublead}>
-                {`Archiving sets this oath aside — it leaves your active list but you can restore it anytime, and the reflections you wrote along the way stay in your journal.`}
+                This removes the entry from your journal. Archived entries can still be viewed or
+                recovered from your profile.
               </Text>
-              <Flex className={modalStyles.modalQuote}>{entry.title || "Unspoken oath"}</Flex>
+              <Flex vertical>
+                <Text className={modalStyles.modalQuote}>{entry.title || "Untitled entry"}</Text>
+                <Text className={modalStyles.modalQuoteBody}>
+                  {`${entry.body.slice(0, 150) + "..."}` || "No thoughts were put down."}
+                </Text>
+              </Flex>
             </Flex>
           </Flex>
 
@@ -107,7 +156,7 @@ const ReflectionEditor = ({ entry, closeModal }) => {
                 size="large"
                 icon={<Archive />}
                 onClick={() => {
-                  // archiveOath(entry.id);
+                  archiveEntry(entry.id);
                   closeModal();
                 }}
               >
@@ -148,13 +197,52 @@ const ReflectionEditor = ({ entry, closeModal }) => {
               />
             </Flex>
 
+            <Flex gap={"var(--sp-2)"} align={"center"} wrap>
+              {attachments.length > 0 &&
+                attachments.map((a) => (
+                  <AttachChip
+                    key={a.id}
+                    icon={ATTACHMENT_TYPES[a.type].icon}
+                    label={a.label}
+                    onRemove={() => handleRemoveOption(a)}
+                  />
+                ))}
+            </Flex>
+
             <Flex vertical gap={"var(--sp-5)"}>
-              <Flex gap={"var(--sp-2)"}>
+              <Flex gap={"var(--sp-2)"} align={"center"}>
                 <label className={formStyles.fieldLabel}>Add Context</label>
+                <AttachChip
+                  icon={<Hash />}
+                  label="Themes"
+                  options={themeOptions}
+                  onSelect={handleAddOption}
+                />
+                {oathOptions.length > 0 && (
+                  <AttachChip
+                    icon={<Link />}
+                    label="Oath"
+                    options={oathOptions}
+                    onSelect={handleAddOption}
+                  />
+                )}
+                <AttachChip
+                  icon={<Feather />}
+                  label="Ideal"
+                  options={idealOptions}
+                  onSelect={handleAddOption}
+                />
+                <AttachChip
+                  icon={<BookOpen />}
+                  label="Prompt"
+                  options={promptOptions}
+                  onSelect={handleAddOption}
+                />
               </Flex>
 
               <Flex className={modalStyles.modalFoot}>
                 {!isNew && (
+                  // TODO: make place for Archived entries to live
                   <Button
                     type="archive"
                     size="large"
@@ -163,15 +251,25 @@ const ReflectionEditor = ({ entry, closeModal }) => {
                       setConfirm(true);
                     }}
                   >
-                    Archive Oath
+                    Archive Entry
                   </Button>
                 )}
                 <Flex className={modalStyles.footRight}>
+                  <FavoriteButton
+                    id={isNew ? "" : entry.id}
+                    fav={fav}
+                    toggle={() => setFav(!fav)}
+                  />
                   <Button size="large" onClick={closeModal}>
                     Cancel
                   </Button>
-                  <Button type="primary" size="large" icon={<Feather />}>
-                    Speak it
+                  <Button
+                    type="primary"
+                    size="large"
+                    icon={<Feather />}
+                    onClick={() => handleSave()}
+                  >
+                    Save Entry
                   </Button>
                 </Flex>
               </Flex>
