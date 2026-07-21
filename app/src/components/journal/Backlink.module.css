@@ -4,47 +4,16 @@
   gap: 8px;
   font-size: 12.5px;
   color: var(--text-muted);
-  margin-top: 14px;
-  padding: 8px 13px;
-  border-radius: 9px;
+  padding: 7px 12px;
+  border-radius: 25px;
   border: 1px solid var(--border);
-  background: rgba(var(--stormlight-rgb), 0.04);
+  background: rgba(255, 255, 255, 0.02);
   max-width: 100%;
 
   svg {
     width: 14px;
     height: 14px;
-    color: var(--stormlight);
+    color: var(--text-muted);
     flex-shrink: 0;
-  }
-
-  &.ideal {
-    color: var(--radiant-gold);
-    border-color: rgba(216, 184, 120, 0.4);
-    background: rgba(216, 184, 120, 0.09);
-
-    svg {
-      color: var(--radiant-gold);
-    }
-  }
-
-  &.oath {
-    color: var(--stormlight);
-    border-color: rgba(var(--stormlight-rgb), 0.4);
-    background: rgba(var(--stormlight-rgb), 0.09);
-
-    svg {
-      color: var(--stormlight);
-    }
-  }
-
-  &.prompt {
-    color: var(--text);
-    border-color: var(--border-strong);
-    background: rgba(255, 255, 255, 0.035);
-
-    svg {
-      color: var(--text);
-    }
   }
 }

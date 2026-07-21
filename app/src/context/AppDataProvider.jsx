@@ -1,6 +1,9 @@
 // @ts-check
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { AppDataContext } from "./AppDataContext";
+import { IDEALS } from "../data/ideals";
+import { PROMPTS } from "../data/prompts";
+
 /** @import { User, Oath, JournalEntry } from "../types.js" */
 
 const SCHEMA_VERSION = 1;
@@ -162,56 +165,79 @@ const SEED_JOURNAL = [
   {
     id: "1",
     userId: SEED_USER.id,
-    oathId: "oath-1",
-    idealId: "ideal-3",
+    oathIds: ["oath-1"],
+    idealIds: ["windrunner-3"],
+    promptIds: [],
     title: "Keeping score",
     body: "Covered a shift for someone without expecting anything back. It felt lighter than I thought it would — no ledger to balance. I keep noticing how much of my week I spend keeping score.",
     createdAt: "2026-06-23T00:00:00.000Z",
     fav: true,
+    status: "published",
     themes: ["Family"],
   },
   {
     id: "2",
     userId: SEED_USER.id,
+    oathIds: [],
+    idealIds: [],
+    promptIds: [],
+    title: "",
     body: "Long day. Just needed to get the noise out of my head before bed — nothing profound, no prompt, no oath. Writing it down so I stop carrying it around.",
     createdAt: "2026-06-22T00:00:00.000Z",
     fav: false,
+    status: "published",
     themes: [],
   },
   {
     id: "3",
     userId: SEED_USER.id,
-    promptId: "prompt-1",
+    oathIds: [],
+    idealIds: [],
+    promptIds: ["prompt-1"],
+    title: "",
     body: "The call to my brother. I keep waiting for the right moment, but the waiting is the avoidance — there isn't a clean version of it.",
     createdAt: "2026-06-20T00:00:00.000Z",
     fav: true,
+    status: "published",
     themes: ["Responsibility", "Family"],
   },
   {
     id: "4",
     userId: SEED_USER.id,
-    idealId: "ideal-3",
+    oathIds: [],
+    idealIds: ["windrunner-3"],
+    promptIds: [],
+    title: "",
     body: "Protecting even those I dislike — I felt this one today with a coworker I resent. I stayed fair. It cost me something and I want to remember that it did.",
     createdAt: "2026-06-18T00:00:00.000Z",
     fav: false,
+    status: "published",
     themes: ["Courage"],
   },
   {
     id: "5",
     userId: SEED_USER.id,
+    oathIds: [],
+    idealIds: ["windrunner-3"],
+    promptIds: [],
     title: "Morning pages",
     body: "Wrote three pages of nothing in particular before work. Half of it was grocery lists. The other half surprised me — the honest part always hides underneath the boring part.",
     createdAt: "2026-05-30T00:00:00.000Z",
     fav: false,
+    status: "published",
     themes: ["Growth"],
   },
   {
     id: "6",
     userId: SEED_USER.id,
-    oathId: "oath-1",
+    oathIds: ["oath-1"],
+    idealIds: [],
+    promptIds: [],
+    title: "",
     body: "My daughter wanted to show me something and I was half-there, phone in hand. She stopped asking. That stayed with me all evening.",
     createdAt: "2026-05-24T00:00:00.000Z",
     fav: false,
+    status: "published",
     themes: ["Presence", "Family"],
   },
 ];
@@ -264,6 +290,18 @@ export function AppDataProvider({ children }) {
     updateOath(oathId, { status: "kept", keptAt: new Date().toISOString() });
   };
 
+  const addEntry = (newEntry) => {
+    setJournalEntries((prev) => [...prev, newEntry]);
+  };
+
+  const updateEntry = (entryId, patch) => {
+    setJournalEntries((prev) => prev.map((e) => (e.id === entryId ? { ...e, ...patch } : e)));
+  };
+
+  const archiveEntry = (entryId) => {
+    updateEntry(entryId, { status: "archived", archivedAt: new Date().toISOString() });
+  };
+
   const formatDate = (date) => {
     if (!date) return "Unknown date"; // TODO: lookup if this is the right error handling for missing date, or if we should throw an error instead
     try {
@@ -298,12 +336,30 @@ export function AppDataProvider({ children }) {
     return rtf.format(-daysAgo, "day");
   };
 
-  const createBacklinks = ({ oathId, promptId, idealId }) => {
-    if (!oathId && !promptId && !idealId) return [];
-    // destructure the links from the oath object we pass into the function?
+  const resolveAttachments = ({ oathIds, promptIds, idealIds, themes }) => {
     const backlinks = [];
-    const oathTitle = oathId && oaths.find((o) => o.id === oathId)?.title;
-    if (oathTitle) backlinks.push({ type: "oath", title: oathTitle, id: oathId });
+    backlinks.push(
+      ...oathIds.map((oathId) => ({
+        type: "oath",
+        label: oaths.find((o) => o.id === oathId)?.title,
+        id: oathId,
+      })),
+      ...promptIds.map((promptId) => ({
+        type: "prompt",
+        label: PROMPTS.find((o) => o.id === promptId)?.text,
+        id: promptId,
+      })),
+      ...idealIds.map((idealId) => ({
+        type: "ideal",
+        label: IDEALS.find((o) => o.id === idealId)?.text,
+        id: idealId,
+      })),
+      ...themes.map((theme) => ({
+        type: "theme",
+        label: theme,
+        id: theme,
+      }))
+    );
     return backlinks;
   };
 
@@ -330,10 +386,13 @@ export function AppDataProvider({ children }) {
     archiveOath,
     restoreOath,
     markKept,
+    addEntry,
+    updateEntry,
+    archiveEntry,
     formatDate,
     formatDateMDY,
     formatRelativeTime,
-    createBacklinks,
+    resolveAttachments,
     toggleFav,
   };
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>;
