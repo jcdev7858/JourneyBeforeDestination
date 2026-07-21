@@ -140,6 +140,12 @@
   padding-left: 16px;
   border-left: 2px solid rgba(var(--accent-rgb), 0.5);
 }
+.modalQuoteBody {
+  color: var(--text-muted);
+  padding-top: 10px;
+  padding-left: 16px;
+  border-left: 2px solid rgba(var(--accent-rgb), 0.5);
+}
 .modalFoot {
   display: flex;
   align-items: center;

@@ -49,14 +49,54 @@
  * @typedef {Object} JournalEntry
  * @property {string} id
  * @property {string} userId              // the User.id this entry belongs to
- * @property {string} [promptId]
- * @property {string} [oathId]
- * @property {string} [idealId]
+ * @property {string[]} [promptIds]
+ * @property {string[]} [oathIds]
+ * @property {string[]} [idealIds]
  * @property {string} [title]
  * @property {string} body
  * @property {string} createdAt           // ISO date
  * @property {boolean} fav
+ * @property {string} status
+ * @property {string} [archivedAt]          // ISO date
  * @property {string[]} themes
+ */
+
+/**
+ * Static reference for one Order of the Knights Radiant — the "RadiantDex" lore
+ * (data/orders.js). Deliberately excludes the ideals themselves; those live in
+ * data/ideals.js as {@link Ideal}s, cross-referenced by order id.
+ *
+ * @typedef {Object} OrderRef
+ * @property {string} id            // "windrunner" — matches the GLYPHS key + user.orderId
+ * @property {string} name          // display name, e.g. "Windrunners"
+ * @property {string[]} values      // the attributes/values the order embodies
+ * @property {string} spren         // the spren type they bond
+ * @property {string[]} heralds     // associated Herald(s)
+ * @property {string[]} surges      // the two Surges / powers
+ * @property {string[]} notableMembers
+ * @property {string} description   // summary of the order's role/character
+ */
+
+/**
+ * One ideal (oath) on an order's ladder (data/ideals.js). A JournalEntry may
+ * reference one by `idealId` (=== Ideal.id).
+ *
+ * @typedef {Object} Ideal
+ * @property {string} id            // order-scoped, "<order>-<rank>", e.g. "windrunner-3"
+ * @property {string} order         // the OrderRef.id this ideal belongs to
+ * @property {number} rank          // 1 = the shared First Ideal, then 2..5
+ * @property {string} text          // the canonical oath, or a prompt when wording isn't fixed
+ */
+
+/**
+ * One reflection prompt (data/prompts.js) — shown on the Dashboard and
+ * attachable in the reflection editor. A JournalEntry may reference one by
+ * `promptId` (=== Prompt.id).
+ *
+ * @typedef {Object} Prompt
+ * @property {string} id            // "prompt-<n>", e.g. "prompt-1"
+ * @property {string} text          // the prompt itself, shown to the user
+ * @property {string} [order]       // OrderRef.id when themed to one order; omitted = general
  */
 
 /**

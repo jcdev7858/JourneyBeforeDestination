@@ -43,23 +43,28 @@ const Popover = forwardRef((props, ref) => {
     <div
       ref={ref}
       className={`ant-popover ${className || ""}`.trim()}
-      style={style}
+      style={{ position: "absolute", inset: 0, ...style }}
       onClick={onClick}
     >
       <div
         className={`ant-popover-container ${classNames.container || ""}`.trim()}
         style={{
-          background: "rgba(13, 13, 18, 0.96)",
+          background: "rgba(18, 24, 38, 0.98)",
           borderRadius: "var(--radius-sm)",
           border: "1px solid var(--border-strong)",
-          boxShadow: "0 12px 34px -14px rgba(0, 0, 0, 0.85)",
+          boxShadow: "0 26px 60px -20px rgba(0, 0, 0, 0.85)",
+          backdropFilter: "blur(20px)",
           padding: 6,
           textAlign,
           minWidth: "196px",
+          maxWidth: "78vw",
+          maxHeight: "min(320px, 45vh)",
+          overflowY: "auto",
+          overscrollBehavior: "contain",
           bottom: "calc(100% + 8px)",
-          right: 0,
+          left: 0,
           position: "absolute",
-          zIndex: 20,
+          zIndex: 200,
           ...styles.container,
         }}
       >
