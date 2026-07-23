@@ -73,7 +73,7 @@
  * @property {string} name          // display name, e.g. "Windrunners"
  * @property {string[]} values      // the attributes/values the order embodies
  * @property {string} spren         // the spren type they bond
- * @property {string[]} heralds     // associated Herald(s)
+ * @property {string[]} herald     // associated Herald(s)
  * @property {string[]} surges      // the two Surges / powers
  * @property {string} description   // summary of the order's role/character
  */
@@ -128,6 +128,20 @@
  * @property {string} id            // "prompt-<n>", e.g. "prompt-1"
  * @property {string} text          // the prompt itself, shown to the user
  * @property {string} [order]       // OrderRef.id when themed to one order; omitted = general
+ */
+
+/**
+ * QUOTES — short lines tied to RadiantDex characters, meant to sit alongside
+ * a character's entry as material for reflection: read it, then "Borrow this
+ * quote" into a journal entry, same pattern as the Ideal Ladder's borrow/
+ * reflect actions.
+ *
+ * @typedef {Object} Quote
+ * @property {string} id
+ * @property {string} characterId   // matches Character.id in characters.js
+ * @property {string} text
+ * @property {string} context
+ * @property {string} source        // book slug from data/books.js
  */
 
 /**

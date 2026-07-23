@@ -113,6 +113,50 @@
   background: var(--bg);
 }
 
+/* ---------- per-Order accent (data-order on the layout/page root) ----------
+   NOTE: Skybreaker + Edgedancer (neutral gems) currently use their gem accent
+   too; the spec says they should fall back to stormlight — revisit later. */
+[data-order="windrunner"] {
+  --accent: #7cc4e8;
+  --accent-rgb: 124, 196, 232;
+}
+[data-order="elsecaller"] {
+  --accent: #6cc1d2;
+  --accent-rgb: 108, 193, 210;
+}
+[data-order="truthwatcher"] {
+  --accent: #6fc4a0;
+  --accent-rgb: 111, 196, 160;
+}
+[data-order="bondsmith"] {
+  --accent: #e6cd86;
+  --accent-rgb: 230, 205, 134;
+}
+[data-order="stoneward"] {
+  --accent: #e7a079;
+  --accent-rgb: 231, 160, 121;
+}
+[data-order="dustbringer"] {
+  --accent: #e58b80;
+  --accent-rgb: 229, 139, 128;
+}
+[data-order="lightweaver"] {
+  --accent: #df8398;
+  --accent-rgb: 223, 131, 152;
+}
+[data-order="willshaper"] {
+  --accent: #c79ad8;
+  --accent-rgb: 199, 154, 216;
+}
+[data-order="skybreaker"] {
+  --accent: #a7adc4;
+  --accent-rgb: 167, 173, 196;
+}
+[data-order="edgedancer"] {
+  --accent: #e9ddcb;
+  --accent-rgb: 233, 221, 203;
+}
+
 body {
   font-family: var(--font-body);
   color: var(--text);
