@@ -22,7 +22,6 @@
 .order-card-top { display: flex; align-items: center; gap: 14px; }
 .order-card-ring { width: 54px; height: 54px; flex-shrink: 0; }
 .order-card-name { font-family: var(--font-display); font-weight: 500; font-size: var(--fs-heading); color: var(--text); }
-.order-card-home { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(var(--accent-rgb), 0.4); border-radius: 100px; padding: 3px 9px; white-space: nowrap; }
 .order-card-desc { font-size: var(--fs-body-sm); color: var(--text-muted); line-height: 1.55; flex: 1; }
 .order-card-values { display: flex; flex-wrap: wrap; gap: 8px; }
 .order-card-count { font-size: 12px; color: var(--text-faint); }
@@ -70,16 +69,8 @@
 .dex-meta-label svg { width: 12px; height: 12px; }
 .dex-meta-value { font-family: var(--font-display); font-size: 18px; color: var(--text); }
 
-/* compact, readonly Ideals ladder echo (the full interactive ladder lives on Oaths) */
-.mini-ladder { display: flex; flex-direction: column; }
-.mini-rung { display: flex; gap: 16px; padding: 13px 0; border-top: 1px solid var(--border); }
-.mini-rung:first-child { border-top: none; }
-.mini-rung-rail { display: flex; flex-direction: column; align-items: center; width: 10px; flex-shrink: 0; padding-top: 3px; }
-.mini-rung-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-strong); flex-shrink: 0; }
-.mini-rung.home .mini-rung-dot { background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep)); box-shadow: 0 0 10px rgba(var(--stormlight-rgb), 0.7); }
-.mini-rung-ord { font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 3px; }
-.mini-rung-text { font-family: var(--font-display); font-size: 17px; line-height: 1.4; color: var(--text-muted); }
-.mini-rung.home .mini-rung-text { color: var(--text); }
+/* compact, readonly Ideals ladder echo — superseded by reusing IdealLadder
+   directly (Specs/Claude/jbd-pages-handoff/oaths.jsx) with pinnedOrder/hideControls */
 
 /* ---------- Character detail ---------- */
 .dex-hero { display: flex; align-items: flex-start; gap: 28px; }
@@ -98,7 +89,25 @@
 .dex-hero-chip { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--text-muted); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; }
 .dex-hero-chip svg { width: 13px; height: 13px; }
 
-.dex-exemplifies { font-family: var(--font-display); font-size: 26px; line-height: var(--lh-quote); color: var(--text); padding-left: 20px; border-left: 2px solid rgba(var(--accent-rgb), 0.5); margin: 0 0 20px; max-width: 66ch; }
+.dex-exemplifies { font-size: var(--fs-overline); letter-spacing: 1.1px; text-transform: uppercase; color: var(--text-faint); margin: 0 0 8px; }
+
+/* ---------- Sayings / quotes (the identity anchor of the character page) ----------
+   A rail down a single glass section, not a card grid — scales to a character
+   with 5-6 meaningful quotes (Kaladin, Dalinar) without turning into a wall of
+   boxes. Citation (context) is always shown; "Reflect on this" only reveals on
+   row hover/focus so the default view reads as a citation list, not a UI. */
+.say-rail-row { display: flex; gap: 18px; }
+.say-rail-line { display: flex; flex-direction: column; align-items: center; width: 10px; flex-shrink: 0; }
+.say-rail-dot { width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep)); box-shadow: 0 0 10px rgba(var(--stormlight-rgb), 0.65); margin-top: 9px; flex-shrink: 0; }
+.say-rail-stem { flex: 1; width: 1px; background: linear-gradient(rgba(var(--stormlight-rgb), 0.5), rgba(var(--stormlight-rgb), 0.08)); margin-top: 6px; }
+.say-rail-content { padding-bottom: 28px; flex: 1; min-width: 0; }
+.say-rail-text { font-family: var(--font-display); font-size: 22px; line-height: var(--lh-quote); color: var(--text); max-width: 58ch; }
+.say-rail-meta { font-size: 12.5px; color: var(--text-faint); margin-top: 8px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.say-rail-reflect { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; opacity: 0; transition: opacity var(--dur-ui), color var(--dur-ui); }
+.say-rail-row:hover .say-rail-reflect { opacity: 1; }
+.say-rail-reflect:hover { color: var(--stormlight); }
+.say-rail-reflect svg { width: 12px; height: 12px; transition: transform var(--dur-ui); }
+.say-rail-reflect:hover svg { transform: translateX(3px); }
 
 .dex-char-body { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--gap-card); align-items: start; }
 .dex-summary-text { font-size: 16px; color: var(--text-muted); line-height: 1.75; max-width: 62ch; }

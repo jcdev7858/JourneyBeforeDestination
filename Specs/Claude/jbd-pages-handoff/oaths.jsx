@@ -237,11 +237,16 @@ function LadderPopover({ className, label, children }) {
   );
 }
 
-function IdealLadder({ homeOrder = 'windrunner', onBorrow, onReflect }) {
+function IdealLadder({ homeOrder = 'windrunner', onBorrow, onReflect, pinnedOrder, hideControls, title = 'The Five Ideals' }) {
   // Stored state (the ONLY things persisted for the ladder): which books the
   // reader has read, and which of their own Ideals they've spoken. Revealed is
   // always derived from booksRead — never stored — so it can't drift.
-  const [order, setOrder] = React.useState(homeOrder);
+  //
+  // pinnedOrder + hideControls (added for RadiantDex's Order detail reuse):
+  // pins the ladder to one Order with no switcher and no books-read popover —
+  // same component, same rung behavior, just the two controls stripped. Give
+  // the caller a `key` on pinnedOrder change (it's only read on mount).
+  const [order, setOrder] = React.useState(pinnedOrder || homeOrder);
   const [booksRead, setBooksRead] = React.useState(['b1', 'b2']);
   const [spoken, setSpoken] = React.useState([homeOrder + ':0', homeOrder + ':1']);
   const [revealing, setRevealing] = React.useState([]);
@@ -278,7 +283,8 @@ function IdealLadder({ homeOrder = 'windrunner', onBorrow, onReflect }) {
           left, the Order switcher + Books-read input (each collapsed behind an
           icon button that opens a popover) on the right */}
       <div className="section-head ladder-head">
-        <h2>The Five Ideals</h2>
+        <h2>{title}</h2>
+        {!hideControls && (
         <div className="ladder-controls">
         <LadderPopover className="ls-orders" label={({ open, toggle }) => (
           <button className={'ladder-switch-btn' + (open ? ' open' : '')} aria-expanded={open} aria-haspopup="true" onClick={toggle}>
@@ -329,6 +335,7 @@ function IdealLadder({ homeOrder = 'windrunner', onBorrow, onReflect }) {
           )}
         </LadderPopover>
         </div>
+        )}
       </div>
 
       <div className="ladder-context">
@@ -570,4 +577,4 @@ function OathsPage({ empty, onNav }) {
   );
 }
 
-Object.assign(window, { OathsPage });
+Object.assign(window, { OathsPage, IdealLadder });

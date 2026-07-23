@@ -98,6 +98,7 @@
         else if (n === 'oath-editor') setModal({ kind: 'oath', mode: 'edit' });
         else if (n === 'reflect-ideal') setModal({ kind: 'refl', mode: 'new', contextPrompt: (payload && payload.words) || IDEAL_WORDS, contextLabel: 'Reflecting on the ' + ((payload && payload.ord) || 'Third Ideal') + ' · Windrunner' });
         else if (n === 'reflect') setModal({ kind: 'refl', mode: 'new', contextPrompt: (payload && payload.words) || '', contextLabel: 'Reflecting on your oath · Windrunner' });
+        else if (n === 'reflect-quote') setModal({ kind: 'refl', mode: 'new', contextPrompt: (payload && payload.text) || '', contextLabel: "Reflecting on " + ((payload && payload.charName) || 'a saying') + "'s words · Windrunner" });
       };
 
       const PAGES = {

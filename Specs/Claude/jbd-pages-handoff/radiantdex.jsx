@@ -3,6 +3,13 @@
    spoiler-aware treatment: gated entries are obscured via the Women's Script with an
    inline reading-progress control to reveal — DESIGNED here, not enforced (v1 of the
    real build ships un-gated; see 2026-07-21-radiantdex-data-and-page-design.md §3.2).
+
+   Sayings (new): each character carries a `quotes` array (radiantdex-data.jsx →
+   app/src/data/characters.js) — this is now the page's main event, a stacked
+   list (not cards) so it holds up whether a character has 2 quotes or 6. Each
+   row's "Reflect on this" opens the reflection editor with the quote as
+   context (same onNav('reflect-quote', …) pattern as 'reflect-ideal'). Display
+   order is authored order — no per-user reorder, nothing to store.
    → app terms: app/src/pages/RadiantDex.jsx, routes /radiantdex, /radiantdex/order/:orderId,
    /radiantdex/:slug. Data from app/src/data/{books,orders,characters,ideals}.js (ported in
    radiantdex-data.jsx for this sandbox). Gate is DERIVED from spoilerLevel vs. progress —
@@ -50,9 +57,9 @@ function OrderCard({ order, onOpen, featured }) {
         <div className="order-card-top-row">
           <div className="order-ring order-card-ring"><Glyph order={order.id} h={34} /></div>
           <div style={{ minWidth: 0 }}>
+            <div className="page-eyebrow"><span className="dot"></span> Your path</div>
             <div className="order-card-top">
               <div className="order-card-name">{order.name}</div>
-              <span className="order-card-home">Your path</span>
             </div>
             <p className="order-card-desc">{order.description}</p>
           </div>
@@ -140,10 +147,9 @@ function RadiantDexIndex({ progress, onSetProgress, onOpenOrder, onOpenChar }) {
 }
 
 /* ---------- order detail ---------- */
-function OrderDetail({ orderId, progress, onBack, onOpenChar }) {
+function OrderDetail({ orderId, progress, onBack, onOpenChar, onBorrow, onReflect }) {
   const order = ORDERS[orderId];
   const roster = charactersByOrder(orderId);
-  const ideals = idealsForOrder(orderId);
   const isHome = orderId === HOME_ORDER;
   return (
     <React.Fragment>
@@ -167,19 +173,9 @@ function OrderDetail({ orderId, progress, onBack, onOpenChar }) {
         </div>
       </section>
 
-      <section className="glass rise" style={{ marginTop: 'var(--gap-card)', animationDelay: '0.12s' }}>
-        <div className="section-head"><h2>The Ideals ladder</h2>{isHome && <span className="section-count">Full ladder on the Oaths page</span>}</div>
-        <div className="mini-ladder">
-          {ideals.map((ideal, i) => (
-            <div className={'mini-rung' + (isHome ? ' home' : '')} key={ideal.id}>
-              <div className="mini-rung-rail"><div className="mini-rung-dot"></div></div>
-              <div>
-                <div className="mini-rung-ord">{i === 0 ? 'First Ideal · shared' : ORDINAL_WORDS[i] + ' Ideal'}</div>
-                <div className="mini-rung-text">{ideal.text}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+      <section className="glass glow-accent rise" style={{ marginTop: 'var(--gap-card)', animationDelay: '0.12s', '--accent': order.accent, '--accent-rgb': order.accentRgb, '--accent-deep': order.accentDeep }}>
+        <Glyph order={orderId} h={150} className="glyph-corner" />
+        <IdealLadder key={orderId} homeOrder={HOME_ORDER} pinnedOrder={orderId} hideControls title="The Ideals ladder" onBorrow={onBorrow} onReflect={onReflect} />
       </section>
 
       <section className="rise" style={{ marginTop: 'var(--gap-card)', animationDelay: '0.19s' }}>
@@ -191,10 +187,44 @@ function OrderDetail({ orderId, progress, onBack, onOpenChar }) {
     </React.Fragment>
   );
 }
-const ORDINAL_WORDS = ['First', 'Second', 'Third', 'Fourth', 'Fifth'];
+
+/* ---------- Sayings: a stacked rail of a character's quotes. Citation (context)
+   is always shown; "Reflect on this" and the connecting rail are hover/focus
+   affordances so the default view reads as a citation list, not a row of
+   buttons. Display order is authored order — no per-user reorder, nothing to
+   store. Glow + corner glyph are the character's own Order accent (matches
+   Dashboard/Order/Profile); the rail dots + stems stay the constant stormlight
+   blue, same token as the Journal cadence grid and the ladder's home rung. */
+function QuotesSection({ char, onReflect }) {
+  if (!char.quotes || !char.quotes.length) return null;
+  const order = ORDERS[char.orderId];
+  return (
+    <section className="glass glow-accent rise" style={{ marginTop: 'var(--gap-card)', animationDelay: '0.09s', '--accent': order.accent, '--accent-rgb': order.accentRgb, '--accent-deep': order.accentDeep }}>
+      <Glyph order={char.orderId} h={150} className="glyph-corner" />
+      <div className="section-head"><h2>Sayings</h2><span className="section-count">{char.quotes.length} {char.quotes.length === 1 ? 'quote' : 'quotes'}</span></div>
+      <div className="say-rail">
+        {char.quotes.map((q, i) => {
+          const book = BOOKS_BY_ID[q.book];
+          return (
+            <div className="say-rail-row" key={q.id}>
+              <div className="say-rail-line"><span className="say-rail-dot"></span>{i < char.quotes.length - 1 && <span className="say-rail-stem"></span>}</div>
+              <div className="say-rail-content">
+                <div className="say-rail-text">&ldquo;{q.text}&rdquo;</div>
+                <div className="say-rail-meta">
+                  <span>{q.context}{book ? ' — ' + book.title : ''}</span>
+                  <button className="say-rail-reflect" onClick={() => onReflect(q)}>Reflect on this <PIcon d={ICONS.arrow} sw={2} /></button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
 
 /* ---------- character detail ---------- */
-function CharacterDetail({ charId, progress, onSetProgress, onBack, onOpenOrder, onOpenChar }) {
+function CharacterDetail({ charId, progress, onSetProgress, onBack, onOpenOrder, onOpenChar, onReflectQuote }) {
   const char = CHARACTERS_BY_ID[charId];
   const order = ORDERS[char.orderId];
   const gated = isGated(char, progress);
@@ -234,6 +264,10 @@ function CharacterDetail({ charId, progress, onSetProgress, onBack, onOpenOrder,
         </div>
       </section>
 
+      {!gated && (
+        <QuotesSection key={char.id} char={char} onReflect={(q) => onReflectQuote && onReflectQuote({ text: q.text, charName: char.name })} />
+      )}
+
       {gated ? (
         <section className="glass rise" style={{ marginTop: 'var(--gap-card)', animationDelay: '0.12s' }}>
           <div className="dex-gate">
@@ -251,8 +285,9 @@ function CharacterDetail({ charId, progress, onSetProgress, onBack, onOpenOrder,
       ) : (
         <React.Fragment>
           <div className="dex-char-body" style={{ marginTop: 'var(--gap-card)' }}>
-            <section className="glass rise" style={{ animationDelay: '0.12s' }}>
-              <div className="dex-exemplifies">&ldquo;{char.exemplifies}&rdquo;</div>
+            <section className="glass rise" style={{ animationDelay: '0.16s' }}>
+              <div className="dex-exemplifies">Exemplifies</div>
+              <p className="dex-summary-text" style={{ marginBottom: 6 }}>{char.exemplifies}</p>
               <p className="dex-summary-text">{char.summary}</p>
               <div style={{ marginTop: 26 }}>
                 <a className="btn btn-secondary coppermind-link" href={'https://coppermind.net/wiki/' + char.id} target="_blank" rel="noreferrer">
@@ -301,13 +336,16 @@ function RadiantDexPage({ onNav }) {
       {view.kind === 'order' && (
         <OrderDetail orderId={view.orderId} progress={progress}
           onBack={() => setView({ kind: 'index' })}
-          onOpenChar={(id) => setView({ kind: 'character', charId: id })} />
+          onOpenChar={(id) => setView({ kind: 'character', charId: id })}
+          onBorrow={(it) => onNav && onNav('oath-new-ideal', it)}
+          onReflect={(it) => onNav && onNav('reflect-ideal', it)} />
       )}
       {view.kind === 'character' && (
         <CharacterDetail charId={view.charId} progress={progress} onSetProgress={setProgress}
           onBack={() => setView({ kind: 'index' })}
           onOpenOrder={(id) => setView({ kind: 'order', orderId: id })}
-          onOpenChar={(id) => setView({ kind: 'character', charId: id })} />
+          onOpenChar={(id) => setView({ kind: 'character', charId: id })}
+          onReflectQuote={(payload) => onNav && onNav('reflect-quote', payload)} />
       )}
       </div>
     </PageShell>
