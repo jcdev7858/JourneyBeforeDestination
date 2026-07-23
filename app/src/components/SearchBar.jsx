@@ -16,6 +16,7 @@ const SearchBar = ({ toggleFilters, setSearch }) => {
         className={styles.searchTune}
         icon={<SlidersHorizontal />}
         onClick={toggleFilters}
+        type="secondary"
       ></Button>
     </Flex>
   );

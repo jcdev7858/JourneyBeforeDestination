@@ -1,0 +1,52 @@
+.charCardTop {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.cardRing {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+}
+.orderRing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 14px rgba(var(--accent-rgb), 0.12),
+    0 0 18px rgba(var(--accent-rgb), 0.14);
+  flex-shrink: 0;
+}
+.charCardName {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 19px;
+  color: var(--text);
+}
+.charCardRole {
+  font-size: 12.5px;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+.charCardHook {
+  font-size: var(--fs-body-sm);
+  color: var(--text-muted);
+  line-height: 1.55;
+  flex: 1;
+  padding-top: 16px;
+  display: block;
+}
+.charCardTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.tagSm {
+  font-size: 11px;
+  color: var(--text-faint);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 3px 10px;
+}

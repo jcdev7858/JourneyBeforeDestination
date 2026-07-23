@@ -1,0 +1,117 @@
+/* RadiantDex page-component layer — additive to jbd-styles.css, same token/accent discipline.
+   → app terms: app/src/pages/RadiantDex.jsx (+ a per-route split if the real build wants
+   RadiantDexIndex / OrderDetail / CharacterDetail as separate components). */
+
+.dex-page { max-width: 1000px; margin: 0 auto; }
+
+.dex-back { display: inline-flex; align-items: center; gap: 7px; font-size: var(--fs-body-sm); color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 2px; margin-bottom: 18px; transition: color var(--dur-ui); }
+.dex-back svg { width: 15px; height: 15px; }
+.dex-back:hover { color: var(--accent); }
+
+/* ---------- reading-progress control (shared header of the RadiantDex) ---------- */
+.dex-progress { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.dex-progress-label { font-size: var(--fs-overline); letter-spacing: 1.1px; text-transform: uppercase; color: var(--text-faint); }
+.books.clickable .book { cursor: pointer; background: rgba(255,255,255,0.015); }
+.books.clickable .book:hover { border-color: var(--border-strong); color: var(--text); }
+.books.clickable .book:focus-visible { outline: none; box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.4); }
+
+/* ---------- Order cards (the spine) ---------- */
+.dex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--gap-card); }
+.order-card { display: flex; flex-direction: column; gap: 16px; cursor: pointer; transition: border-color var(--dur-ui), box-shadow var(--dur-ui), transform var(--dur-ui); }
+.order-card:hover, .char-card:hover { border-color: var(--accent); box-shadow: inset 0 1px 0 var(--rim), 0 26px 60px -30px rgba(0,0,0,0.85), 0 0 0 1px rgba(var(--accent-rgb),0.35), 0 0 34px -6px rgba(var(--accent-rgb),0.25); transform: translateY(-2px); }
+.order-card-top { display: flex; align-items: center; gap: 14px; }
+.order-card-ring { width: 54px; height: 54px; flex-shrink: 0; }
+.order-card-name { font-family: var(--font-display); font-weight: 500; font-size: var(--fs-heading); color: var(--text); }
+.order-card-desc { font-size: var(--fs-body-sm); color: var(--text-muted); line-height: 1.55; flex: 1; }
+.order-card-values { display: flex; flex-wrap: wrap; gap: 8px; }
+.order-card-count { font-size: 12px; color: var(--text-faint); }
+
+/* the reader's own Order — a featured hero card, full width, echoing the
+   Order-detail hero (glyph watermark, ring, meta row) so it reads as a real
+   preview of that page rather than a bigger version of the grid card */
+.order-card.featured { grid-column: 1 / -1; flex-direction: column; align-items: stretch; gap: 22px; padding: var(--pad-hero); position: relative; overflow: hidden; }
+.order-card.featured .order-card-top-row { display: flex; align-items: flex-start; gap: 26px; }
+.order-card.featured .order-card-ring { width: 78px; height: 78px; flex-shrink: 0; }
+.order-card.featured .order-card-name { font-size: 32px; }
+.order-card.featured .order-card-desc { max-width: 62ch; margin-top: 10px; }
+.order-card.featured .dex-meta-row { margin-top: 0; }
+.order-card.featured .card-launch { align-self: flex-start; }
+
+/* ---------- Character cards ---------- */
+.char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: var(--gap-card); }
+.char-card { display: flex; flex-direction: column; gap: 14px; cursor: pointer; transition: border-color var(--dur-ui), box-shadow var(--dur-ui), transform var(--dur-ui); }
+.char-card-top { display: flex; align-items: center; gap: 13px; }
+.char-card-ring { width: 46px; height: 46px; flex-shrink: 0; }
+.char-card-name { font-family: var(--font-display); font-weight: 500; font-size: 19px; color: var(--text); }
+.char-card-role { font-size: 12.5px; color: var(--text-faint); margin-top: 2px; }
+.char-card-hook { font-size: var(--fs-body-sm); color: var(--text-muted); line-height: 1.55; flex: 1; }
+.char-card-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.tag-sm { font-size: 11px; color: var(--text-faint); border: 1px solid var(--border); border-radius: 100px; padding: 3px 10px; }
+
+/* ---------- gated treatment (spoiler-safe existence, obscured via Women's Script) ---------- */
+.gated-note { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--text-faint); }
+.gated-note svg { width: 13px; height: 13px; flex-shrink: 0; }
+.char-card.gated .char-card-ring { opacity: 0.45; filter: grayscale(1); }
+.char-card.gated .char-card-name-script { color: var(--text-faint); opacity: 0.85; }
+.char-card.gated .char-card-name-script svg { height: 17px; width: auto; display: block; }
+
+.dex-gate { border: 1px dashed var(--border-strong); border-radius: var(--radius-sm); padding: 26px 28px; display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+.dex-gate-script { color: var(--text-muted); opacity: 0.85; }
+.dex-gate-script svg { height: 22px; width: auto; display: block; }
+.dex-gate-script + .dex-gate-script { margin-top: 4px; }
+.dex-gate-hint { font-size: var(--fs-body-sm); color: var(--text-muted); line-height: 1.6; max-width: 52ch; }
+.dex-gate-hint strong { color: var(--text); font-weight: 500; }
+
+/* ---------- Order detail ---------- */
+.dex-meta-row { display: flex; flex-wrap: wrap; gap: 20px 34px; margin-top: 18px; }
+.dex-meta-item { display: flex; flex-direction: column; gap: 6px; }
+.dex-meta-label { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; letter-spacing: 1.1px; text-transform: uppercase; color: var(--accent); }
+.dex-meta-label svg { width: 12px; height: 12px; }
+.dex-meta-value { font-family: var(--font-display); font-size: 18px; color: var(--text); }
+
+/* compact, readonly Ideals ladder echo — superseded by reusing IdealLadder
+   directly (Specs/Claude/jbd-pages-handoff/oaths.jsx) with pinnedOrder/hideControls */
+
+/* ---------- Character detail ---------- */
+.dex-hero { display: flex; align-items: flex-start; gap: 28px; }
+.dex-hero-text { display: flex; align-items: flex-start; gap: 28px; min-width: 0; flex: 1; }
+.dex-hero-ring { width: 88px; height: 88px; flex-shrink: 0; }
+.dex-hero-role { font-size: 19px; color: var(--text-muted); margin-top: 8px; }
+.dex-hero-order-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 16px; font-size: var(--fs-body); color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; }
+.dex-hero-order-link:hover { text-decoration: underline; }
+.dex-portrait { width: 200px; height: 240px; flex-shrink: 0; margin-left: auto; border-radius: var(--radius-sm); position: relative; overflow: hidden;
+  background: repeating-linear-gradient(135deg, rgba(var(--accent-rgb), 0.07) 0px, rgba(var(--accent-rgb), 0.07) 2px, transparent 2px, transparent 14px), rgba(255,255,255,0.02);
+  border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; }
+.dex-portrait.gated { opacity: 0.5; filter: grayscale(1); }
+.dex-portrait-caption { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 10.5px; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-faint); }
+
+.dex-hero-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.dex-hero-chip { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--text-muted); border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px; }
+.dex-hero-chip svg { width: 13px; height: 13px; }
+
+.dex-exemplifies { font-size: var(--fs-overline); letter-spacing: 1.1px; text-transform: uppercase; color: var(--text-faint); margin: 0 0 8px; }
+
+/* ---------- Sayings / quotes (the identity anchor of the character page) ----------
+   A rail down a single glass section, not a card grid — scales to a character
+   with 5-6 meaningful quotes (Kaladin, Dalinar) without turning into a wall of
+   boxes. Citation (context) is always shown; "Reflect on this" only reveals on
+   row hover/focus so the default view reads as a citation list, not a UI. */
+.say-rail-row { display: flex; gap: 18px; }
+.say-rail-line { display: flex; flex-direction: column; align-items: center; width: 10px; flex-shrink: 0; }
+.say-rail-dot { width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep)); box-shadow: 0 0 10px rgba(var(--stormlight-rgb), 0.65); margin-top: 9px; flex-shrink: 0; }
+.say-rail-stem { flex: 1; width: 1px; background: linear-gradient(rgba(var(--stormlight-rgb), 0.5), rgba(var(--stormlight-rgb), 0.08)); margin-top: 6px; }
+.say-rail-content { padding-bottom: 28px; flex: 1; min-width: 0; }
+.say-rail-text { font-family: var(--font-display); font-size: 22px; line-height: var(--lh-quote); color: var(--text); max-width: 58ch; }
+.say-rail-meta { font-size: 12.5px; color: var(--text-faint); margin-top: 8px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.say-rail-reflect { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; opacity: 0; transition: opacity var(--dur-ui), color var(--dur-ui); }
+.say-rail-row:hover .say-rail-reflect { opacity: 1; }
+.say-rail-reflect:hover { color: var(--stormlight); }
+.say-rail-reflect svg { width: 12px; height: 12px; transition: transform var(--dur-ui); }
+.say-rail-reflect:hover svg { transform: translateX(3px); }
+
+.dex-char-body { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--gap-card); align-items: start; }
+.dex-summary-text { font-size: 16px; color: var(--text-muted); line-height: 1.75; max-width: 62ch; }
+.dex-side-label { font-size: var(--fs-overline); letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 12px; }
+.dex-side-label:not(:first-child) { margin-top: 22px; }
+.char-books-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.coppermind-link { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }

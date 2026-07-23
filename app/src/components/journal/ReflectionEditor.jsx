@@ -38,7 +38,6 @@ const ReflectionEditor = ({ entry, closeModal, themes }) => {
   const [body, setBody] = useState(isNew ? "" : entry.body);
   const [fav, setFav] = useState(isNew ? false : entry.fav);
   const [confirm, setConfirm] = useState(false);
-
   const oathOptions = oaths.map((o) => ({
     type: "oath",
     label: o.title,
@@ -260,7 +259,7 @@ const ReflectionEditor = ({ entry, closeModal, themes }) => {
                     fav={fav}
                     toggle={() => setFav(!fav)}
                   />
-                  <Button size="large" onClick={closeModal}>
+                  <Button size="large" type="ghost" onClick={closeModal}>
                     Cancel
                   </Button>
                   <Button

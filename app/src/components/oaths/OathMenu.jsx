@@ -6,7 +6,7 @@ import { usePopover } from "../../hooks/usePopover";
 import { Archive, Trash, Ellipsis } from "lucide-react";
 
 const OathMenu = ({ setArchive, setDelete }) => {
-  const { open, setOpen, ref } = usePopover();
+  const { open, setOpen, ref, popRef } = usePopover();
   const content = (
     <Flex vertical>
       {setArchive && (
@@ -31,9 +31,10 @@ const OathMenu = ({ setArchive, setDelete }) => {
       <Button
         className={styles.oathMenuTrigger}
         icon={<Ellipsis />}
+        type="ghost"
         onClick={() => setOpen((v) => !v)}
       ></Button>
-      <Popover content={content} open={open} />
+      <Popover content={content} open={open} anchorRef={ref} align="end" ref={popRef} />
     </div>
   );
 };
