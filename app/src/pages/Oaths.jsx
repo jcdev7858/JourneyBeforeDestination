@@ -52,7 +52,7 @@ export default function Oaths() {
                     Practice today
                   </Button>
                 )}
-                <Button type="secondary" size="large" icon={<Feather />}>
+                <Button type="ghost" size="large" icon={<Feather />}>
                   Reflect
                 </Button>
                 <OathMenu
@@ -80,7 +80,7 @@ export default function Oaths() {
           {kept.map((oath) => (
             // show only kept oaths
             <OathCard oath={oath} key={oath.id} clickable onClick={() => setEditing(oath)}>
-              <Button type="secondary" size="large" icon={<Feather />}>
+              <Button type="ghost" size="large" icon={<Feather />}>
                 Reflect
               </Button>
               <OathMenu
@@ -100,7 +100,7 @@ export default function Oaths() {
             // show only active oaths
             <OathCard oath={oath} key={oath.id} clickable onClick={() => setEditing(oath)}>
               <Button
-                type="secondary"
+                type="ghost"
                 size="large"
                 icon={<RotateCcw />}
                 onClick={() => restoreOath(oath.id)}

@@ -191,7 +191,7 @@ const OathEditor = (props) => {
                   </Button>
                 )}
                 <Flex className={modalStyles.footRight}>
-                  <Button size="large" onClick={closeModal}>
+                  <Button size="large" type="ghost" onClick={closeModal}>
                     Cancel
                   </Button>
                   <Button type="primary" size="large" icon={<Feather />} onClick={handleSave}>
