@@ -25,6 +25,7 @@ const KNOWN_PROPS = new Set([
   "onMouseDown",
   "bodyRef",
   "clickable",
+  "data-order",
 ]);
 
 const Card = React.forwardRef((props, ref) => {
@@ -38,6 +39,8 @@ const Card = React.forwardRef((props, ref) => {
     onClick,
     onMouseDown,
     bodyRef,
+    clickable,
+    ...htmlProps
   } = props;
 
   // Fail fast: surface unknown props during development
@@ -52,7 +55,24 @@ const Card = React.forwardRef((props, ref) => {
     }
   }
 
-  const classes = [className, cardStyles.card].filter(Boolean).join(" ");
+  const suspicious = Object.keys(htmlProps).filter(
+    (k) =>
+      !k.startsWith("on") &&
+      !k.startsWith("data-") &&
+      !k.startsWith("aria-") &&
+      !["className", "id", "role", "tabIndex", "title", "hidden", "dir", "lang"].includes(k)
+  );
+  if (suspicious.length) {
+    console.error(
+      `[ui/Card] Unexpected props: ${suspicious.join(", ")}. ` +
+        "Flex passes standard HTML div attributes only. " +
+        "Clean up the call site."
+    );
+  }
+
+  const classes = [className, cardStyles.card, clickable && cardStyles.cardLink]
+    .filter(Boolean)
+    .join(" ");
 
   const rootStyle = {
     ...(variant === "borderless" && { border: "none" }),
@@ -67,6 +87,7 @@ const Card = React.forwardRef((props, ref) => {
       style={rootStyle}
       onClick={onClick}
       onMouseDown={onMouseDown}
+      {...htmlProps}
     >
       {title != null && (
         <div className="ant-card-head" style={styles.header}>

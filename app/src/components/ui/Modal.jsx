@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useAppData } from "../../context/AppDataContext";
 import ReactDOM from "react-dom";
 import modalStyles from "./Modal.module.css";
 import { glassmorphic as gm } from "../../utils/glassmorphic.js";
@@ -55,6 +56,8 @@ const Modal = (props) => {
     maskBlur = false,
     glassmorphic = true,
   } = props;
+
+  const { user } = useAppData();
 
   // Fail fast: surface unknown props during development
   if (!import.meta.env.PROD) {
@@ -145,7 +148,11 @@ const Modal = (props) => {
   return ReactDOM.createPortal(
     <>
       <div style={maskStyle} onClick={maskClosable ? onCancel : undefined} />
-      <div style={wrapStyle} onClick={maskClosable ? onCancel : undefined}>
+      <div
+        style={wrapStyle}
+        onClick={maskClosable ? onCancel : undefined}
+        data-order={user.orderId}
+      >
         <div style={contentStyle} onClick={(e) => e.stopPropagation()}>
           {noiseOverlay}
           {closable && (
