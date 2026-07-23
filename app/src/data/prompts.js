@@ -22,7 +22,10 @@ export const PROMPTS = [
   // General — fit any order
   { id: "prompt-1", text: "What responsibility are you avoiding right now?" },
   { id: "prompt-2", text: "Where did you choose the harder right over the easier wrong today?" },
-  { id: "prompt-3", text: "What is one small step you can take, even if the destination is far off?" },
+  {
+    id: "prompt-3",
+    text: "What is one small step you can take, even if the destination is far off?",
+  },
   { id: "prompt-4", text: "Who needed you today, and did you show up?" },
   { id: "prompt-5", text: "What weakness are you pretending isn't there?" },
   { id: "prompt-6", text: "What truth about yourself are you not ready to say out loud?" },
@@ -76,4 +79,15 @@ export function promptsForOrder(orderId) {
 /** Look up a single prompt by its id (e.g. resolving JournalEntry.promptId). */
 export function promptById(id) {
   return PROMPTS.find((p) => p.id === id);
+}
+
+export function pickPromptForToday(pool) {
+  const today = new Date().toLocaleDateString();
+  let sum = 0;
+
+  for (const char of today) {
+    sum += char.charCodeAt(0);
+  }
+
+  return pool[sum % pool.length];
 }
