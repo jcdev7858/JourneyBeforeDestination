@@ -12,7 +12,7 @@ const SCHEMA_VERSION = 1;
 const SEED_USER = {
   id: "user-1",
   name: "Daniel Rhodes",
-  orderId: "windrunner",
+  orderId: "dustbringer",
   booksRead: [],
   booksWantToRead: [],
   createdAt: "2026-02-01T00:00:00.000Z",

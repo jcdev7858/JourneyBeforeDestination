@@ -8,26 +8,12 @@ import { useAppData } from "../context/AppDataContext";
 import { Check } from "lucide-react";
 import styles from "./OathCard.module.css";
 
-const OathCard = ({
-  oath,
-  clickable = false,
-  onClick,
-  maxActions = Infinity,
-  footMeta,
-  children,
-}) => {
+const OathCard = ({ oath, clickable, onClick, maxActions = Infinity, footMeta, children }) => {
   const { toggleAction, markKept, formatDate, formatRelativeTime } = useAppData();
   const completedCount = oath.actions.filter((a) => a.completed).length;
   const total = oath.actions.length;
   const hiddenCount = total - maxActions;
   const statusClasses = [styles.oathStatus, styles[oath.status]].filter(Boolean).join(" ");
-  const classes = [
-    oath.status === "archived" ? styles.archivedCard : undefined,
-    clickable && styles.cardLink,
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   function buildFootMeta() {
     if (oath.actions.length === 0)
       return <Text className={styles.footText}>A practice · no checklist, just the habit</Text>;
@@ -59,7 +45,12 @@ const OathCard = ({
   }
 
   return (
-    <Card key={oath.id} className={classes} clickable onClick={onClick}>
+    <Card
+      key={oath.id}
+      className={oath.status === "archived" ? styles.archivedCard : undefined}
+      clickable={clickable}
+      onClick={onClick}
+    >
       <Flex className={styles.oathTop}>
         <Title level={3} className={styles.oathText}>
           {oath.title}

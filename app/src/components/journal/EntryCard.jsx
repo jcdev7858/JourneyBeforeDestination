@@ -7,7 +7,7 @@ import FavoriteButton from "../FavoriteButton";
 import styles from "./EntryCard.module.css";
 import { promptById } from "../../data/prompts";
 
-const EntryCard = ({ e, onClick, clickable = false }) => {
+const EntryCard = ({ e, onClick, clickable }) => {
   const { formatDateMDY, resolveAttachments, toggleFav } = useAppData();
   const postType = e.promptIds?.length
     ? "prompt"
@@ -20,7 +20,7 @@ const EntryCard = ({ e, onClick, clickable = false }) => {
   const backlinks = resolveAttachments(e);
 
   return (
-    <Card clickable onClick={onClick} className={clickable && styles.cardLink}>
+    <Card clickable={clickable} onClick={onClick} className={clickable && styles.cardLink}>
       <Flex className={styles.entryHead}>
         <Flex align="start" gap={9} vertical>
           <Text className={`${styles.entryBadge} ${styles[postType]}`}>{postType}</Text>

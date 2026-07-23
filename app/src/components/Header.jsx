@@ -13,7 +13,7 @@ export default function Header() {
         </NavLink>
         <NavLink to="/oaths">Oaths</NavLink>
         <NavLink to="/journal">Journal</NavLink>
-        <NavLink to="/radiantdex">RadiantDex</NavLink>
+        <NavLink to="/dex">RadiantDex</NavLink>
         <NavLink to="/profile">Profile</NavLink>
       </nav>
     </header>
