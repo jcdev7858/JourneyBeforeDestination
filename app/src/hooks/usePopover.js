@@ -2,13 +2,18 @@ import { useState, useEffect, useRef } from "react";
 
 export function usePopover() {
   const [open, setOpen] = useState(false);
+  // ref  -> the trigger wrapper (anchor we position against)
+  // popRef -> the popover panel itself (may be portaled out of the wrapper)
   const ref = useRef(null);
+  const popRef = useRef(null);
 
   useEffect(() => {
     if (!open) return;
 
     const handleClick = (e) => {
-      if (!ref.current.contains(e.target)) setOpen(false);
+      const inTrigger = ref.current?.contains(e.target);
+      const inPopover = popRef.current?.contains(e.target);
+      if (!inTrigger && !inPopover) setOpen(false);
     };
 
     const handleKey = (e) => {
@@ -27,5 +32,5 @@ export function usePopover() {
     };
   }, [open]);
 
-  return { open, setOpen, ref };
+  return { open, setOpen, ref, popRef };
 }

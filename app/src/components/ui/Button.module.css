@@ -28,13 +28,14 @@
   }
 }
 .btnPrimary {
-  background: var(--stormlight);
+  background: var(--accent);
   color: #0b1120;
-  border-color: var(--stormlight);
-  box-shadow: 0 0 24px rgba(124, 196, 232, 0.3);
+  border-color: var(--accent);
+  box-shadow: 0 0 24px var(--accent-rgb);
 
   &:hover {
     box-shadow: 0 0 36px rgba(var(--accent-rgb), 0.52);
+    border-color: var(--accent);
   }
 
   &:focus-visible {

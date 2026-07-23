@@ -158,6 +158,7 @@
   .footRight {
     display: flex;
     gap: 12px;
+    align-items: center;
     margin-left: auto;
   }
 }
