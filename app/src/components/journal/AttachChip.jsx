@@ -6,7 +6,7 @@ import { X } from "lucide-react";
 import { usePopover } from "../../hooks/usePopover";
 
 const AttachChip = ({ icon, label, options, onSelect, onRemove }) => {
-  const { open, setOpen, ref } = usePopover();
+  const { open, setOpen, ref, popRef } = usePopover();
 
   const content = (
     <Flex vertical>
@@ -42,7 +42,7 @@ const AttachChip = ({ icon, label, options, onSelect, onRemove }) => {
           onClick={(e) => (e.stopPropagation(), onRemove())}
         ></Button>
       )}
-      {!onRemove && <Popover content={content} open={open} />}
+      {!onRemove && <Popover content={content} open={open} anchorRef={ref} ref={popRef} />}
     </div>
   );
 };

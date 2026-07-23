@@ -9,6 +9,10 @@
  * data/ideals.js as a flat list (used by the ideals ladder + the reflection
  * "add context" popover). Cross-reference by order id.
  *
+ * It also does NOT store its roster of characters. That's DERIVED from
+ * data/characters.js via charactersByOrder(orderId) (repo convention: derive,
+ * don't store — a stored member list can drift out of sync with the characters).
+ *
  * Source of truth for the copy: Features/orders-reference.js (crawled reference).
  *
  * @typedef {import("../types").OrderRef} OrderRef
@@ -20,9 +24,8 @@ export const ORDERS = {
     name: "Windrunners",
     values: ["Protection", "Leadership"],
     spren: "Honorspren",
-    heralds: ["Jezrien"],
+    herald: ["Jezrien"],
     surges: ["Adhesion", "Gravitation"],
-    notableMembers: ["Kaladin", "Sigzil", "Bridge Four"],
     description:
       "Windrunners serve as soldiers, scouts, and transporters, excelling in combat and weapon mastery. They are defined by protecting those who cannot protect themselves.",
   },
@@ -31,9 +34,8 @@ export const ORDERS = {
     name: "Skybreakers",
     values: ["Justice", "Morality"],
     spren: "Highspren",
-    heralds: ["Nale"],
+    herald: ["Nale"],
     surges: ["Gravitation", "Division"],
-    notableMembers: ["Szeth", "Nale"],
     description:
       "Tasked with upholding law and ensuring Knights Radiant don't abuse their powers, though they clash with the more liberal orders. Disciplined, exacting, and bound to a code.",
   },
@@ -42,9 +44,8 @@ export const ORDERS = {
     name: "Dustbringers",
     values: ["Responsibility", "Control"],
     spren: "Ashspren",
-    heralds: ["Chanarach"],
+    herald: ["Chanarach"],
     surges: ["Division", "Abrasion"],
-    notableMembers: ["Malata"],
     description:
       "Engineers and builders who view destructive forces as interconnected with creation. Unique in gaining powers progressively through their ideals; value precision, responsibility, and self-mastery.",
   },
@@ -53,9 +54,8 @@ export const ORDERS = {
     name: "Edgedancers",
     values: ["Remembrance", "Compassion"],
     spren: "Cultivationspren",
-    heralds: ["Vedel"],
+    herald: ["Vedel"],
     surges: ["Abrasion", "Progression"],
-    notableMembers: ["Lift"],
     description:
       "Healers and caregivers who prioritize aiding common folk over combat, often settling in towns to support communities. They remember the ordinary people around them.",
   },
@@ -64,9 +64,8 @@ export const ORDERS = {
     name: "Truthwatchers",
     values: ["Truth", "Insight"],
     spren: "Mistspren",
-    heralds: ["Paliah"],
+    herald: ["Paliah"],
     surges: ["Progression", "Illumination"],
-    notableMembers: ["Renarin", "Rlain"],
     description:
       "Scholarly academics who investigate truth through knowledge, science, and uncovering abuses of power. They seek the truth and share it.",
   },
@@ -75,9 +74,8 @@ export const ORDERS = {
     name: "Lightweavers",
     values: ["Creativity", "Honesty"],
     spren: "Cryptics",
-    heralds: ["Shalash"],
+    herald: ["Shalash"],
     surges: ["Illumination", "Transformation (Soulcasting)"],
-    notableMembers: ["Shallan"],
     description:
       "Spies and artists using illusions; their ideals center on distinguishing their true selves from their deceptions. They must understand and speak the truths about themselves.",
   },
@@ -86,9 +84,8 @@ export const ORDERS = {
     name: "Elsecallers",
     values: ["Potential", "Wisdom"],
     spren: "Inkspren",
-    heralds: ["Battar"],
+    herald: ["Battar"],
     surges: ["Transformation (Soulcasting)", "Transportation"],
-    notableMembers: ["Jasnah"],
     description:
       "Wise tacticians and leaders focused on reaching their potential, valuable for logistics through Soulcasting and Shadesmar access.",
   },
@@ -97,9 +94,8 @@ export const ORDERS = {
     name: "Willshapers",
     values: ["Freedom", "Ingenuity"],
     spren: "Reachers (lightspren)",
-    heralds: ["Kalak"],
+    herald: ["Kalak"],
     surges: ["Transportation", "Cohesion"],
-    notableMembers: ["Eshonai", "Venli"],
     description:
       "Crafters, builders, and radical thinkers opposing tyranny; used militarily to reinforce structures and rescue captives. They value freedom above all.",
   },
@@ -108,9 +104,8 @@ export const ORDERS = {
     name: "Stonewards",
     values: ["Reliability", "Dependability"],
     spren: "Peakspren",
-    heralds: ["Talenel"],
+    herald: ["Talenel"],
     surges: ["Cohesion", "Tension"],
-    notableMembers: ["Zu"],
     description:
       "Dependable foot soldiers and team players with enthusiasm, though prone to overcommitment. They are there for others when they are needed.",
   },
@@ -119,9 +114,8 @@ export const ORDERS = {
     name: "Bondsmiths",
     values: ["Unity", "Leadership"],
     spren: "The Stormfather, the Nightwatcher, or the Sibling",
-    heralds: ["Ishar"],
+    herald: ["Ishar"],
     surges: ["Tension", "Adhesion"],
-    notableMembers: ["Dalinar", "Navani"],
     description:
       "Only three Bondsmiths can exist at once, due to their unique spren. Rare and deeply valued leaders among the Radiants, they work to bring about unity.",
   },

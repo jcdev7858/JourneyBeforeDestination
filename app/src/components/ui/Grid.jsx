@@ -82,7 +82,7 @@ const Grid = (props) => {
     if (unknown.length) {
       console.error(
         `[ui/Grid] Unknown props: ${unknown.join(", ")}. ` +
-          "This component doesn't support these props. Clean up the call site.",
+          "This component doesn't support these props. Clean up the call site."
       );
     }
   }
@@ -100,7 +100,7 @@ const Grid = (props) => {
       if (!import.meta.env.PROD) {
         console.error(
           "[ui/Grid] Direct children must be <Grid.Cell>. " +
-            `Got <${child.type?.displayName || child.type?.name || child.type}>.`,
+            `Got <${child.type?.displayName || child.type?.name || child.type}>.`
         );
       }
       return;
@@ -109,9 +109,7 @@ const Grid = (props) => {
     const { index } = child.props;
     if (index == null) {
       if (!import.meta.env.PROD) {
-        console.error(
-          "[ui/Grid] <Grid.Cell> requires an index prop (1-indexed).",
-        );
+        console.error("[ui/Grid] <Grid.Cell> requires an index prop (1-indexed).");
       }
       return;
     }
@@ -121,16 +119,12 @@ const Grid = (props) => {
       if (index < 1 || index > totalCells) {
         console.error(
           `[ui/Grid] Cell index ${index} is out of range. ` +
-            `Valid range: 1-${totalCells} (${cols}×${rows} grid).`,
+            `Valid range: 1-${totalCells} (${cols}×${rows} grid).`
         );
       }
-      const unknownCell = Object.keys(child.props).filter(
-        (k) => !KNOWN_CELL_PROPS.has(k),
-      );
+      const unknownCell = Object.keys(child.props).filter((k) => !KNOWN_CELL_PROPS.has(k));
       if (unknownCell.length) {
-        console.error(
-          `[ui/Grid.Cell] Unknown props on cell ${index}: ${unknownCell.join(", ")}.`,
-        );
+        console.error(`[ui/Grid.Cell] Unknown props on cell ${index}: ${unknownCell.join(", ")}.`);
       }
     }
 
@@ -142,9 +136,7 @@ const Grid = (props) => {
   // ==========================================================================
   const gridStyle = {
     display: "grid",
-    gridTemplateColumns: cellSize
-      ? `repeat(${cols}, ${cellSize}px)`
-      : `repeat(${cols}, 1fr)`,
+    gridTemplateColumns: cellSize ? `repeat(${cols}, ${cellSize}px)` : `repeat(${cols}, 1fr)`,
     gridTemplateRows: cellSize ? `repeat(${rows}, ${cellSize}px)` : undefined,
     gap: gutter,
     ...style,
@@ -155,8 +147,8 @@ const Grid = (props) => {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    minWidth: 0,
-    minHeight: 0,
+    minWidth: 260,
+    minHeight: "1fr",
     ...baseCellStyle,
   };
 
