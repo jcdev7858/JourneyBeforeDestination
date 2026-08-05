@@ -1,19 +1,29 @@
 import { useAppData } from "../context/AppDataContext";
 import { ORDERS } from "../data/orders";
 import { CHARACTERS } from "../data/characters";
+import { Shield, Star, Zap, Sword } from "lucide-react";
 import Flex from "../components/ui/Flex";
 import PageHead from "../components/PageHead";
 import SectionHead from "../components/SectionHead";
 import DexOrderCard from "../components/radiantdex/DexOrderCard";
 import DexFeatureCard from "../components/radiantdex/DexFeatureCard";
 import CharacterCard from "../components/radiantdex/CharacterCard";
+import { Link } from "react-router-dom";
+import OrderGlyph from "../components/OrderGlyph";
+import styles from "./RadiantDex.module.css";
 
 export default function RadiantDex() {
   const { user } = useAppData();
   const otherOrders = Object.values(ORDERS).filter((o) => o.id !== user.orderId);
+  const metaItems = [
+    { icon: <Shield />, label: "Values", value: ORDERS[user.orderId].values.join(", ") },
+    { icon: <Star />, label: "Spren", value: ORDERS[user.orderId].spren },
+    { icon: <Zap />, label: "Surges", value: ORDERS[user.orderId].surges.join(", ") },
+    { icon: <Sword />, label: "Herald", value: ORDERS[user.orderId].herald },
+  ];
 
   return (
-    <Flex gap={"var(--sp-5)"} vertical>
+    <Flex gap={"var(--section-gap)"} vertical>
       <PageHead
         title="RadiantDex"
         eyebrow="The Ten Orders"
@@ -21,34 +31,58 @@ export default function RadiantDex() {
         user={user}
       />
 
-      <SectionHead title="The Ten Orders" />
-
+      <div className="rise" style={{ animationDelay: "100ms" }}>
+        <SectionHead title="The Ten Orders" />
+        <Link
+          to={`./order/${user.orderId}`}
+          style={{ textDecoration: "none", gridColumn: "1 / -1" }}
+        >
+          <DexFeatureCard
+            name={ORDERS[user.orderId].name}
+            description={ORDERS[user.orderId].description}
+            orderId={user.orderId}
+            meta={metaItems}
+            eyebrow="Your Path"
+            media={<OrderGlyph order={user.orderId} h={200} variant="corner" />}
+            footer="View your order"
+            clickable
+          />
+        </Link>
+      </div>
       <div
+        className={`${styles.grid3} rise`}
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-          gap: "var(--gap-card)",
+          animationDelay: "200ms",
         }}
       >
-        <DexFeatureCard order={ORDERS[user.orderId]} onOpen />
         {otherOrders.map((o) => (
-          <DexOrderCard order={o} key={o.id} onOpen />
+          <Link
+            to={`./order/${o.id}`}
+            style={{ textDecoration: "none", display: "grid" }}
+            key={o.id}
+          >
+            <DexOrderCard order={o} />
+          </Link>
         ))}
       </div>
 
-      <SectionHead title="Browse by character" />
-
-      <div
+      <Flex
+        className="rise"
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-          gap: "var(--gap-card)",
+          animationDelay: "300ms",
         }}
+        vertical
       >
-        {CHARACTERS.map((c) => (
-          <CharacterCard char={c} key={c.id} onOpen />
-        ))}
-      </div>
+        <SectionHead title="Browse by character" />
+
+        <div className={styles.grid3}>
+          {CHARACTERS.map((c) => (
+            <Link to={`./${c.id}`} style={{ textDecoration: "none", display: "grid" }} key={c.id}>
+              <CharacterCard char={c} />
+            </Link>
+          ))}
+        </div>
+      </Flex>
     </Flex>
   );
 }
