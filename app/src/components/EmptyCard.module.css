@@ -11,12 +11,13 @@
   font-family: var(--font-display);
   font-size: var(--fs-title);
   color: var(--text);
+  max-width: 32ch;
 }
 .emptyText {
   font-size: var(--fs-body-lg);
   color: var(--text-muted);
   max-width: 38ch;
   display: block;
-  margin-bottom: 20px;
+  margin: 0 auto 20px;
   line-height: 1.55;
 }

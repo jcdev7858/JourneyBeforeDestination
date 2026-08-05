@@ -25,7 +25,9 @@ function PromptCard({ prompt, onRespond, onFav }) {
           Favorite
         </Button>
       </Flex>
-      <OrderGlyph order={user.orderId} h={240} variant="watermark" />
+      <div className="clipLayer">
+        <OrderGlyph order={user.orderId} h={240} variant="watermark" />
+      </div>
     </Card>
   );
 }

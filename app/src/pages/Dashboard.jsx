@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAppData } from "../context/AppDataContext";
 import { promptsForOrder, pickPromptForToday } from "../data/prompts";
+import { ORDERS } from "../data/orders";
 import PromptCard from "../components/dashboard/PromptCard";
 import OrderCard from "../components/dashboard/OrderCard";
 import ActiveOathCard from "../components/dashboard/ActiveOathCard";
@@ -27,7 +28,7 @@ export default function Dashboard() {
         <PromptCard prompt={todaysPrompt} onRespond={setEditing} onFav />
       </div>
       <div className={`${layoutStyles.grid2} rise`} style={{ animationDelay: "200ms" }}>
-        <OrderCard />
+        <OrderCard order={ORDERS[user.orderId]} />
         <ActiveOathCard />
       </div>
       <div className="rise" style={{ animationDelay: "300ms" }}>

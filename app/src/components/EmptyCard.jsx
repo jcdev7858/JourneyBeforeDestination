@@ -5,10 +5,10 @@ import Text from "./ui/Text";
 import Button from "./ui/Button";
 import { Feather } from "lucide-react";
 
-const EmptyCard = ({ icon, title, text, ctaLabel, onCta }) => {
+const EmptyCard = ({ media, icon, title, text, ctaLabel, onCta }) => {
   return (
-    <Card className={`${styles.empty} ${icon ? "glowAccent glowBr" : ""}`}>
-      {icon}
+    <Card className={`${styles.empty} ${media ? "glowAccent glowBr" : ""}`}>
+      {media}
       {title && (
         <Title level={3} className={styles.emptyTitle}>
           {title}
@@ -16,7 +16,7 @@ const EmptyCard = ({ icon, title, text, ctaLabel, onCta }) => {
       )}
       {text && <Text className={styles.emptyText}>{text}</Text>}
       {ctaLabel && (
-        <Button type="primary" size="large" icon={<Feather />} onClick={onCta}>
+        <Button type="primary" size="large" icon={icon || <Feather />} onClick={onCta}>
           {ctaLabel}
         </Button>
       )}

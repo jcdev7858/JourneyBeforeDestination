@@ -52,6 +52,7 @@
  * @property {string[]} [promptIds]
  * @property {string[]} [oathIds]
  * @property {string[]} [idealIds]
+ * @property {string[]} [quoteIds]
  * @property {string} [title]
  * @property {string} body
  * @property {string} createdAt           // ISO date
@@ -106,6 +107,7 @@
  * @property {string} spoilerLevel  // Book.id — earliest book by which this entry is safe to show fully
  * @property {string[]} tags        // browsable/filterable labels
  * @property {string|null} image    // local path e.g. "/characters/kaladin.jpg", or null → Order-glyph fallback
+ * @property {string|null} imgCaption
  */
 
 /**

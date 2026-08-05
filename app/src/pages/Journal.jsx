@@ -16,7 +16,7 @@ import EmptyCard from "../components/EmptyCard";
 const ENTRY_KINDS = ["Free", "Prompted", "Linked", "Favorites"];
 
 export default function Journal() {
-  const { user, formatDate, journalEntries } = useAppData();
+  const { user, themes, formatDate, journalEntries } = useAppData();
   const [activeTypeFilter, setActiveTypeFilter] = useState("All");
   const [activeThemeFilter, setActiveThemeFilter] = useState("All");
   const [filterVisible, setFilterVisible] = useState(false);
@@ -76,10 +76,6 @@ export default function Journal() {
         }))
         .sort((a, b) => b.date.localeCompare(a.date)),
     [themedEntries]
-  );
-  const themes = useMemo(
-    () => Array.from(new Set(journalEntries.flatMap((e) => e.themes))),
-    [journalEntries]
   );
 
   return (
@@ -147,7 +143,6 @@ export default function Journal() {
               {m.entries.map((e, i) => (
                 <div key={e.id} className={styles.tlEntry}>
                   <Flex className={styles.tlRail} vertical align="center">
-                    {/* hide the top line on the very first entry of the feed */}
                     <Flex
                       className={`${styles.tlLine} ${mi === 0 && i === 0 ? styles.hidden : ""}`}
                     ></Flex>
@@ -168,7 +163,7 @@ export default function Journal() {
           text="Free thoughts, prompts, oaths and Ideals all land here once you write them. Nothing's been set down yet."
           ctaLabel="New Entry"
           onCta={() => setEditing("new")}
-          icon={<OrderGlyph order={user.orderId} h={110} variant="empty" />}
+          media={<OrderGlyph order={user.orderId} h={110} variant="empty" />}
         />
       )}
     </Flex>

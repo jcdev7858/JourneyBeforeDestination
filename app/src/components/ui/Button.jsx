@@ -96,12 +96,14 @@ const Button = (props) => {
   const isSecondary = type === "secondary";
   const isGhost = type === "ghost";
   const isArchive = type === "archive";
+  const isLink = type === "link";
   const classes = [
     styles.btn,
     isPrimary && styles.btnPrimary,
     isSecondary && styles.btnSecondary,
     isGhost && styles.btnGhost,
     isArchive && styles.btnArchive,
+    isLink && styles.btnLink,
     danger && styles.btnDanger,
     className,
   ]
