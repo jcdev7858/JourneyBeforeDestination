@@ -10,13 +10,21 @@ import { useState } from "react";
 import { RotateCcw, Check, Plus, Feather } from "lucide-react";
 import OathEditor from "../components/oaths/OathEditor";
 import EmptyCard from "../components/EmptyCard";
+import ReflectionEditor from "../components/journal/ReflectionEditor";
 
 export default function Oaths() {
-  const { oaths, restoreOath, archiveOath, deleteOath, user } = useAppData();
+  const { oaths, themes, restoreOath, archiveOath, deleteOath, user } = useAppData();
   const [editing, setEditing] = useState(null);
+  const [reflecting, setReflecting] = useState(null);
+  const [attached, setAttached] = useState([]);
   const active = oaths.filter((o) => o.status === "active");
   const kept = oaths.filter((o) => o.status === "kept");
   const archived = oaths.filter((o) => o.status === "archived");
+
+  const handleOnReflect = (oath) => {
+    setReflecting("new");
+    setAttached((prev) => [...prev, { type: "oath", label: oath.title, id: oath.id }]);
+  };
 
   return (
     <Flex vertical gap={"var(--sp-5)"}>
@@ -30,6 +38,15 @@ export default function Oaths() {
         <OathEditor
           oath={editing === "new" ? undefined : editing}
           closeModal={() => setEditing(null)}
+        />
+      )}
+
+      {reflecting && (
+        <ReflectionEditor
+          entry={reflecting === "new" ? undefined : reflecting}
+          closeModal={() => (setReflecting(null), setAttached([]))}
+          themes={themes}
+          attached={attached}
         />
       )}
 
@@ -52,7 +69,12 @@ export default function Oaths() {
                     Practice today
                   </Button>
                 )}
-                <Button type="ghost" size="large" icon={<Feather />}>
+                <Button
+                  type="ghost"
+                  size="large"
+                  icon={<Feather />}
+                  onClick={() => handleOnReflect(oath)}
+                >
                   Reflect
                 </Button>
                 <OathMenu
@@ -69,7 +91,7 @@ export default function Oaths() {
             text="Every Radiant begins with the same words and comes to mean something personal by them. Speak the First Ideal to start your path."
             ctaLabel="Speak the First Ideal"
             onCta={() => setEditing("new")}
-            icon={<OrderGlyph order={user.orderId} h={110} variant="empty" />}
+            media={<OrderGlyph order={user.orderId} h={110} variant="empty" />}
           />
         )}
       </Flex>
@@ -80,7 +102,12 @@ export default function Oaths() {
           {kept.map((oath) => (
             // show only kept oaths
             <OathCard oath={oath} key={oath.id} clickable onClick={() => setEditing(oath)}>
-              <Button type="ghost" size="large" icon={<Feather />}>
+              <Button
+                type="ghost"
+                size="large"
+                icon={<Feather />}
+                onClick={() => setReflecting("new")}
+              >
                 Reflect
               </Button>
               <OathMenu

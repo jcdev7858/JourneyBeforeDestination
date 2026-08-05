@@ -2,7 +2,9 @@
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { AppDataContext } from "./AppDataContext";
 import { IDEALS } from "../data/ideals";
+import { fullQuoteLabel } from "../data/quotes";
 import { PROMPTS } from "../data/prompts";
+import { useMemo } from "react";
 
 /** @import { User, Oath, JournalEntry } from "../types.js" */
 
@@ -12,7 +14,7 @@ const SCHEMA_VERSION = 1;
 const SEED_USER = {
   id: "user-1",
   name: "Daniel Rhodes",
-  orderId: "dustbringer",
+  orderId: "bondsmith",
   booksRead: [],
   booksWantToRead: [],
   createdAt: "2026-02-01T00:00:00.000Z",
@@ -168,6 +170,7 @@ const SEED_JOURNAL = [
     oathIds: ["oath-1"],
     idealIds: ["windrunner-3"],
     promptIds: [],
+    quoteIds: [],
     title: "Keeping score",
     body: "Covered a shift for someone without expecting anything back. It felt lighter than I thought it would — no ledger to balance. I keep noticing how much of my week I spend keeping score.",
     createdAt: "2026-06-23T00:00:00.000Z",
@@ -181,6 +184,7 @@ const SEED_JOURNAL = [
     oathIds: [],
     idealIds: [],
     promptIds: [],
+    quoteIds: ["kaladin-1"],
     title: "",
     body: "Long day. Just needed to get the noise out of my head before bed — nothing profound, no prompt, no oath. Writing it down so I stop carrying it around.",
     createdAt: "2026-06-22T00:00:00.000Z",
@@ -194,6 +198,7 @@ const SEED_JOURNAL = [
     oathIds: [],
     idealIds: [],
     promptIds: ["prompt-1"],
+    quoteIds: [],
     title: "",
     body: "The call to my brother. I keep waiting for the right moment, but the waiting is the avoidance — there isn't a clean version of it.",
     createdAt: "2026-06-20T00:00:00.000Z",
@@ -207,6 +212,7 @@ const SEED_JOURNAL = [
     oathIds: [],
     idealIds: ["windrunner-3"],
     promptIds: [],
+    quoteIds: [],
     title: "",
     body: "Protecting even those I dislike — I felt this one today with a coworker I resent. I stayed fair. It cost me something and I want to remember that it did.",
     createdAt: "2026-06-18T00:00:00.000Z",
@@ -220,6 +226,7 @@ const SEED_JOURNAL = [
     oathIds: [],
     idealIds: ["windrunner-3"],
     promptIds: [],
+    quoteIds: [],
     title: "Morning pages",
     body: "Wrote three pages of nothing in particular before work. Half of it was grocery lists. The other half surprised me — the honest part always hides underneath the boring part.",
     createdAt: "2026-05-30T00:00:00.000Z",
@@ -233,6 +240,7 @@ const SEED_JOURNAL = [
     oathIds: ["oath-1"],
     idealIds: [],
     promptIds: [],
+    quoteIds: [],
     title: "",
     body: "My daughter wanted to show me something and I was half-there, phone in hand. She stopped asking. That stayed with me all evening.",
     createdAt: "2026-05-24T00:00:00.000Z",
@@ -336,8 +344,9 @@ export function AppDataProvider({ children }) {
     return rtf.format(-daysAgo, "day");
   };
 
-  const resolveAttachments = ({ oathIds, promptIds, idealIds, themes }) => {
+  const resolveAttachments = ({ oathIds, promptIds, idealIds, quoteIds, themes }) => {
     const backlinks = [];
+
     backlinks.push(
       ...oathIds.map((oathId) => ({
         type: "oath",
@@ -346,13 +355,18 @@ export function AppDataProvider({ children }) {
       })),
       ...promptIds.map((promptId) => ({
         type: "prompt",
-        label: PROMPTS.find((o) => o.id === promptId)?.text,
+        label: PROMPTS.find((p) => p.id === promptId)?.text,
         id: promptId,
       })),
       ...idealIds.map((idealId) => ({
         type: "ideal",
-        label: IDEALS.find((o) => o.id === idealId)?.text,
+        label: IDEALS.find((i) => i.id === idealId)?.text,
         id: idealId,
+      })),
+      ...quoteIds.map((quoteId) => ({
+        type: "quote",
+        label: fullQuoteLabel(quoteId),
+        id: quoteId,
       })),
       ...themes.map((theme) => ({
         type: "theme",
@@ -372,10 +386,16 @@ export function AppDataProvider({ children }) {
     );
   };
 
+  const themes = useMemo(
+    () => Array.from(new Set(journalEntries.flatMap((e) => e.themes))),
+    [journalEntries]
+  );
+
   const value = {
     user,
     setUser,
     oaths,
+    themes,
     setOaths,
     journalEntries,
     setJournalEntries,
