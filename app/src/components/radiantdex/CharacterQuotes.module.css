@@ -1,0 +1,90 @@
+.sectionHead {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-heading);
+  line-height: var(--lh-heading);
+}
+/* ---------- Sayings / quotes (the identity anchor of the character page) ----------
+  A rail down a single glass section, not a card grid — scales to a character
+  with 5-6 meaningful quotes (Kaladin, Dalinar) without turning into a wall of
+  boxes. Citation (context) is always shown; "Reflect on this" only reveals on
+  row hover/focus so the default view reads as a citation list, not a UI. */
+.sayRailRow {
+  display: flex;
+  gap: 18px;
+}
+.sayRailLine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 10px;
+  flex-shrink: 0;
+}
+.sayRailDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep));
+  box-shadow: 0 0 10px rgba(var(--stormlight-rgb), 0.65);
+  margin-top: 9px;
+  flex-shrink: 0;
+}
+.sayRailStem {
+  flex: 1;
+  width: 1px;
+  background: linear-gradient(rgba(var(--stormlight-rgb), 0.5), rgba(var(--stormlight-rgb), 0.08));
+  margin-top: 6px;
+}
+.sayRailContent {
+  padding-bottom: 28px;
+  flex: 1;
+  min-width: 0;
+}
+.sayRailText {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: var(--lh-quote);
+  color: var(--text);
+  max-width: 58ch;
+}
+.sayRailMeta {
+  font-size: 12.5px;
+  color: var(--text-faint);
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.sayRailReflect {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0;
+  transition:
+    opacity var(--dur-ui),
+    color var(--dur-ui);
+
+  &:hover {
+    color: var(--stormlight);
+  }
+
+  & svg {
+    width: 12px;
+    height: 12px;
+    transition: transform var(--dur-ui);
+  }
+
+  &:hover svg {
+    transform: translateX(3px);
+  }
+}
+.sayRailRow:hover .sayRailReflect {
+  opacity: 1;
+}

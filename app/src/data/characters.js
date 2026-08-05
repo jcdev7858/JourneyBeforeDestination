@@ -29,6 +29,8 @@
  * @typedef {import("../types").Character} Character
  * @type {Character[]}
  */
+
+// TODO: really take time to flesh out the details in this character list, and images (https://coppermind.net/wiki/Call_to_Adventure:_The_Stormlight_Archive)
 export const CHARACTERS = [
   {
     id: "kaladin",
@@ -41,7 +43,8 @@ export const CHARACTERS = [
     books: ["wok", "wor", "ob", "row", "wat"],
     spoilerLevel: "wok",
     tags: ["bridge four", "windrunner", "soldier", "leader"],
-    image: null,
+    image: "/characters/kaladin.jpg",
+    imgCaption: "The Next Ideal, from Call to Adventure: The Stormlight Archive",
   },
   {
     id: "shallan",
@@ -54,7 +57,8 @@ export const CHARACTERS = [
     books: ["wok", "wor", "ob", "row", "wat"],
     spoilerLevel: "wor",
     tags: ["lightweaver", "scholar", "artist"],
-    image: null,
+    image: "/characters/shallan.jpg",
+    imgCaption: null,
   },
   {
     id: "dalinar",
@@ -67,7 +71,8 @@ export const CHARACTERS = [
     books: ["wok", "wor", "ob", "row", "wat"],
     spoilerLevel: "wor",
     tags: ["bondsmith", "highprince", "leader"],
-    image: null,
+    image: "/characters/dalinar.jpg",
+    imgCaption: null,
   },
   {
     id: "adolin",
@@ -80,7 +85,8 @@ export const CHARACTERS = [
     books: ["wok", "wor", "ob", "row", "wat"],
     spoilerLevel: "wok",
     tags: ["duelist", "kholin", "loyalty"],
-    image: null,
+    image: "/characters/adolin.jpg",
+    imgCaption: null,
   },
   {
     id: "syl",
@@ -93,7 +99,8 @@ export const CHARACTERS = [
     books: ["wok", "wor", "ob", "row", "wat"],
     spoilerLevel: "wok",
     tags: ["spren", "honorspren", "windrunner"],
-    image: null,
+    image: "/characters/syl.jpg",
+    imgCaption: null,
   },
   {
     id: "jasnah",
@@ -107,6 +114,7 @@ export const CHARACTERS = [
     spoilerLevel: "wok",
     tags: ["elsecaller", "scholar", "queen"],
     image: null,
+    imgCaption: null,
   },
   {
     id: "szeth",
@@ -120,6 +128,7 @@ export const CHARACTERS = [
     spoilerLevel: "wor",
     tags: ["skybreaker", "assassin", "law"],
     image: null,
+    imgCaption: null,
   },
   {
     id: "navani",
@@ -132,7 +141,8 @@ export const CHARACTERS = [
     books: ["wok", "wor", "ob", "row", "wat"],
     spoilerLevel: "row",
     tags: ["bondsmith", "engineer", "queen"],
-    image: null,
+    image: "/characters/navani.jpg",
+    imgCaption: null,
   },
   {
     id: "lift",
@@ -146,6 +156,7 @@ export const CHARACTERS = [
     spoilerLevel: "wor",
     tags: ["edgedancer", "street", "compassion"],
     image: null,
+    imgCaption: null,
   },
   {
     id: "renarin",
@@ -160,10 +171,11 @@ export const CHARACTERS = [
     spoilerLevel: "ob",
     tags: ["truthwatcher", "kholin", "insight"],
     image: null,
+    imgCaption: null,
   },
   {
-    id: "teft",
-    name: "Teft",
+    id: "relis_ruthar",
+    name: "Relis Ruthar",
     orderId: "windrunner",
     role: "Bridge Four veteran and Windrunner",
     exemplifies: "Owning your failures and standing back up",
@@ -173,6 +185,7 @@ export const CHARACTERS = [
     spoilerLevel: "wor",
     tags: ["bridge four", "windrunner", "veteran"],
     image: null,
+    imgCaption: null,
   },
   {
     id: "rock",
@@ -186,6 +199,7 @@ export const CHARACTERS = [
     spoilerLevel: "wok",
     tags: ["bridge four", "cook", "friendship"],
     image: null,
+    imgCaption: null,
   },
   {
     id: "lopen",
@@ -199,6 +213,7 @@ export const CHARACTERS = [
     spoilerLevel: "wor",
     tags: ["bridge four", "windrunner", "humor"],
     image: null,
+    imgCaption: null,
   },
   {
     id: "moash",
@@ -212,6 +227,7 @@ export const CHARACTERS = [
     spoilerLevel: "ob",
     tags: ["bridge four", "cautionary", "resentment"],
     image: null,
+    imgCaption: null,
   },
   {
     id: "wit",
@@ -225,6 +241,7 @@ export const CHARACTERS = [
     spoilerLevel: "wok",
     tags: ["storyteller", "wit", "mystery"],
     image: null,
+    imgCaption: null,
   },
 ];
 
@@ -232,9 +249,7 @@ export const CHARACTERS = [
  * Characters keyed by id, for direct lookup: CHARACTERS_BY_ID["kaladin"].
  * @type {Record<string, Character>}
  */
-export const CHARACTERS_BY_ID = Object.fromEntries(
-  CHARACTERS.map((c) => [c.id, c])
-);
+export const CHARACTERS_BY_ID = Object.fromEntries(CHARACTERS.map((c) => [c.id, c]));
 
 /**
  * An Order's roster, DERIVED (not stored on the order). Pass an order id, get

@@ -1,0 +1,9 @@
+.sideLabel {
+  font-size: var(--fs-overline);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-top: 30px;
+  margin-bottom: 12px;
+  display: block;
+}

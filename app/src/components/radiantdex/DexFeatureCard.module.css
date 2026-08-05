@@ -1,4 +1,4 @@
-/* the reader's own Order — a featured hero card, full width, echoing the
+/* the reader's own Order — a featured ` card, full width, echoing the
    Order-detail hero (glyph watermark, ring, meta row) so it reads as a real
    preview of that page rather than a bigger version of the grid card */
 .featured {
@@ -16,6 +16,10 @@
     gap: 26px;
   }
 
+  .cardHeroBody {
+    flex: 1;
+  }
+
   .cardRing {
     width: 78px;
     height: 78px;
@@ -27,6 +31,7 @@
     font-weight: 500;
     color: var(--text);
     font-size: 32px;
+    line-height: 1.1;
   }
 
   .cardDesc {
@@ -76,6 +81,22 @@
   flex-wrap: wrap;
   gap: 20px 34px;
   margin-top: 18px;
+}
+
+.dexImgCol {
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  max-width: 300px;
+}
+
+.dexHeroRole {
+  font-size: 19px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.2;
 }
 
 .orderRing {
