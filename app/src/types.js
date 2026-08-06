@@ -20,7 +20,6 @@
  * @property {string} name
  * @property {string|null} orderId        // null if the user skipped Order selection
  * @property {string[]} booksRead         // book slugs
- * @property {string[]} booksWantToRead   // book slugs
  * @property {string} createdAt           // ISO date
  */
 

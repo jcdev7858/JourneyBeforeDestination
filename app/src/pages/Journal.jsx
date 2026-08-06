@@ -1,6 +1,7 @@
 import { useAppData } from "../context/AppDataContext";
 import { useMemo, useState } from "react";
 import { Feather } from "lucide-react";
+import { useReflection } from "../hooks/useReflection";
 import PageHead from "../components/PageHead";
 import SectionHead from "../components/SectionHead";
 import EntryCard from "../components/journal/EntryCard";
@@ -17,14 +18,15 @@ const ENTRY_KINDS = ["Free", "Prompted", "Linked", "Favorites"];
 
 export default function Journal() {
   const { user, themes, formatDate, journalEntries } = useAppData();
+  const { reflecting, attached, openEntry, startReflection, closeReflection } = useReflection();
   const [activeTypeFilter, setActiveTypeFilter] = useState("All");
   const [activeThemeFilter, setActiveThemeFilter] = useState("All");
   const [filterVisible, setFilterVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [editing, setEditing] = useState(null);
 
-  const publishedEntries = journalEntries.filter((e) => e.status === "published");
-
+  const publishedEntries = journalEntries
+    .filter((e) => e.status === "published")
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   const searchResults = publishedEntries.filter((e) => {
     if (searchTerm === "") return true;
     const title = e.title ? e.title.toLowerCase() : "";
@@ -87,18 +89,19 @@ export default function Journal() {
         user={user}
       />
 
-      {editing && (
+      {reflecting && (
         <ReflectionEditor
-          entry={editing === "new" ? undefined : editing}
-          closeModal={() => setEditing(null)}
+          entry={reflecting === "new" ? undefined : reflecting}
+          closeModal={closeReflection}
           themes={themes}
+          attached={attached}
         />
       )}
 
       <SectionHead
         title="Entries"
         cta="New Entry"
-        onClick={() => setEditing("new")}
+        onClick={() => startReflection()}
         icon={<Feather />}
         primary
       />
@@ -150,7 +153,7 @@ export default function Journal() {
                     <Flex className={styles.tlLine}></Flex>
                   </Flex>
                   <Flex className={styles.tlBody} vertical>
-                    <EntryCard e={e} clickable onClick={() => setEditing(e)} />
+                    <EntryCard e={e} clickable onClick={() => openEntry(e)} />
                   </Flex>
                 </div>
               ))}
@@ -162,7 +165,7 @@ export default function Journal() {
           title="Nothing here yet"
           text="Free thoughts, prompts, oaths and Ideals all land here once you write them. Nothing's been set down yet."
           ctaLabel="New Entry"
-          onCta={() => setEditing("new")}
+          onCta={() => startReflection()}
           media={<OrderGlyph order={user.orderId} h={110} variant="empty" />}
         />
       )}

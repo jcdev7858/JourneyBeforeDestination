@@ -8,23 +8,18 @@ import Flex from "../components/ui/Flex";
 import { useAppData } from "../context/AppDataContext";
 import { useState } from "react";
 import { RotateCcw, Check, Plus, Feather } from "lucide-react";
+import { useReflection } from "../hooks/useReflection";
 import OathEditor from "../components/oaths/OathEditor";
 import EmptyCard from "../components/EmptyCard";
 import ReflectionEditor from "../components/journal/ReflectionEditor";
 
 export default function Oaths() {
   const { oaths, themes, restoreOath, archiveOath, deleteOath, user } = useAppData();
+  const { reflecting, attached, startReflection, closeReflection } = useReflection();
   const [editing, setEditing] = useState(null);
-  const [reflecting, setReflecting] = useState(null);
-  const [attached, setAttached] = useState([]);
   const active = oaths.filter((o) => o.status === "active");
   const kept = oaths.filter((o) => o.status === "kept");
   const archived = oaths.filter((o) => o.status === "archived");
-
-  const handleOnReflect = (oath) => {
-    setReflecting("new");
-    setAttached((prev) => [...prev, { type: "oath", label: oath.title, id: oath.id }]);
-  };
 
   return (
     <Flex vertical gap={"var(--sp-5)"}>
@@ -44,7 +39,7 @@ export default function Oaths() {
       {reflecting && (
         <ReflectionEditor
           entry={reflecting === "new" ? undefined : reflecting}
-          closeModal={() => (setReflecting(null), setAttached([]))}
+          closeModal={closeReflection}
           themes={themes}
           attached={attached}
         />
@@ -73,7 +68,7 @@ export default function Oaths() {
                   type="ghost"
                   size="large"
                   icon={<Feather />}
-                  onClick={() => handleOnReflect(oath)}
+                  onClick={() => startReflection({ type: "oath", label: oath.title, id: oath.id })}
                 >
                   Reflect
                 </Button>
@@ -106,7 +101,7 @@ export default function Oaths() {
                 type="ghost"
                 size="large"
                 icon={<Feather />}
-                onClick={() => setReflecting("new")}
+                onClick={() => startReflection({ type: "oath", label: oath.title, id: oath.id })}
               >
                 Reflect
               </Button>

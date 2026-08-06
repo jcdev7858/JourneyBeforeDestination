@@ -6,6 +6,7 @@ import styles from "./CharacterQuotes.module.css";
 import { Feather } from "lucide-react";
 import { BOOKS_BY_ID } from "../../data/books";
 import { CHARACTERS_BY_ID } from "../../data/characters";
+import { fullQuoteLabel } from "../../data/quotes";
 import OrderGlyph from "../OrderGlyph";
 
 const CharacterQuotes = ({ quotes, onReflect }) => {
@@ -34,7 +35,12 @@ const CharacterQuotes = ({ quotes, onReflect }) => {
                   {q.context}
                   {book ? " — " + book.title : ""}
                 </Text>
-                <button className={styles.sayRailReflect} onClick={() => onReflect(q)}>
+                <button
+                  className={styles.sayRailReflect}
+                  onClick={() =>
+                    onReflect({ type: "quote", label: fullQuoteLabel(q.id), id: q.id })
+                  }
+                >
                   Reflect on this <Feather />
                 </button>
               </Flex>
