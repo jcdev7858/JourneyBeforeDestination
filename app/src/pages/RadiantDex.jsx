@@ -8,6 +8,7 @@ import SectionHead from "../components/SectionHead";
 import DexOrderCard from "../components/radiantdex/DexOrderCard";
 import DexFeatureCard from "../components/radiantdex/DexFeatureCard";
 import CharacterCard from "../components/radiantdex/CharacterCard";
+import ReadingProgress from "../components/dashboard/ReadingProgress";
 import { Link } from "react-router-dom";
 import OrderGlyph from "../components/OrderGlyph";
 import styles from "./RadiantDex.module.css";
@@ -83,6 +84,10 @@ export default function RadiantDex() {
           ))}
         </div>
       </Flex>
+
+      <div className="rise" style={{ animationDelay: "400ms" }}>
+        <ReadingProgress footer="This gates which RadiantDex entries are revealed above. Set it to wherever you've actually read." />
+      </div>
     </Flex>
   );
 }

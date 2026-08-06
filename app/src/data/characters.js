@@ -174,8 +174,8 @@ export const CHARACTERS = [
     imgCaption: null,
   },
   {
-    id: "relis_ruthar",
-    name: "Relis Ruthar",
+    id: "teft",
+    name: "Teft",
     orderId: "windrunner",
     role: "Bridge Four veteran and Windrunner",
     exemplifies: "Owning your failures and standing back up",

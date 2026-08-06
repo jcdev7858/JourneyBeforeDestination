@@ -6,9 +6,9 @@ import Button from "../ui/Button";
 import Eyebrow from "../Eyebrow";
 import styles from "./PromptCard.module.css";
 import OrderGlyph from "../OrderGlyph";
-import { PencilLine, Star } from "lucide-react";
+import { PencilLine } from "lucide-react";
 
-function PromptCard({ prompt, onRespond, onFav }) {
+function PromptCard({ prompt, onRespond }) {
   const { user } = useAppData();
 
   return (
@@ -18,11 +18,13 @@ function PromptCard({ prompt, onRespond, onFav }) {
         {prompt.text}
       </Title>
       <Flex className={styles.promptActions}>
-        <Button type="primary" size="large" icon={<PencilLine />} onClick={() => onRespond(true)}>
+        <Button
+          type="primary"
+          size="large"
+          icon={<PencilLine />}
+          onClick={() => onRespond({ type: "prompt", label: prompt.text, id: prompt.id })}
+        >
           Respond
-        </Button>
-        <Button size="large" icon={<Star />}>
-          Favorite
         </Button>
       </Flex>
       <div className="clipLayer">

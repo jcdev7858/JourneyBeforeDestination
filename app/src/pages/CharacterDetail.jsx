@@ -1,8 +1,8 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
 import { CHARACTERS_BY_ID, charactersByOrder } from "../data/characters";
 import { ORDERS } from "../data/orders";
 import { useAppData } from "../context/AppDataContext";
+import { useReflection } from "../hooks/useReflection";
 import Flex from "../components/ui/Flex";
 import DexFeatureCard from "../components/radiantdex/DexFeatureCard";
 import CharacterCard from "../components/radiantdex/CharacterCard";
@@ -18,14 +18,13 @@ import { Shield, BookOpen, Zap, ArrowLeft, ArrowRight } from "lucide-react";
 import DexPortrait from "../components/radiantdex/DexPortrait";
 import { BOOKS_BY_ID } from "../data/books";
 import { capitalize } from "../utils/strings";
-import { quotesByCharacter, fullQuoteLabel } from "../data/quotes";
+import { quotesByCharacter } from "../data/quotes";
 
 const CharacterDetail = () => {
   const { characterId } = useParams();
   const navigate = useNavigate();
   const { themes } = useAppData();
-  const [reflecting, setReflecting] = useState(null);
-  const [attached, setAttached] = useState([]);
+  const { reflecting, attached, startReflection, closeReflection } = useReflection();
   const char = CHARACTERS_BY_ID[characterId];
 
   // URL param is user-controlled (/dex/anything) — guard before touching char.*
@@ -42,7 +41,7 @@ const CharacterDetail = () => {
     );
   }
 
-  const orderMates = charactersByOrder(char.orderId).filter((c) => c.id !== char.id);
+  const orderMates = charactersByOrder(char.orderId);
   const firstAppears = BOOKS_BY_ID[char.books[0]];
   const appearsIn = char.books.map((id) => BOOKS_BY_ID[id]);
   const order = ORDERS[char.orderId];
@@ -53,20 +52,12 @@ const CharacterDetail = () => {
     { icon: <Zap />, label: "Surges", value: order.surges.join(", ") },
   ];
 
-  const handleOnReflect = (quote) => {
-    setReflecting("new");
-    setAttached((prev) => [
-      ...prev,
-      { type: "quote", label: fullQuoteLabel(quote.id), id: quote.id },
-    ]);
-  };
-
   return (
     <Flex gap={"var(--section-gap)"} vertical>
       {reflecting && (
         <ReflectionEditor
           entry={reflecting === "new" ? undefined : reflecting}
-          closeModal={() => (setReflecting(null), setAttached([]))}
+          closeModal={closeReflection}
           themes={themes}
           attached={attached}
         />
@@ -93,7 +84,7 @@ const CharacterDetail = () => {
 
       {quotes.length > 0 && (
         <Flex className="rise" style={{ animationDelay: "200ms" }} vertical>
-          <CharacterQuotes quotes={quotes} onReflect={(q) => handleOnReflect(q)} />
+          <CharacterQuotes quotes={quotes} onReflect={startReflection} />
         </Flex>
       )}
 
@@ -110,23 +101,24 @@ const CharacterDetail = () => {
         <CharacterMetaCard char={char} books={appearsIn} />
       </div>
 
-      <Flex className="rise" style={{ animationDelay: "400ms" }} vertical>
-        <SectionHead title={`Also walking the ${capitalize(order.id)} path`} />
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-            gap: "var(--gap-card)",
-          }}
-        >
-          {orderMates.map((c) => (
-            <Link to={`./${c.id}`} style={{ textDecoration: "none", display: "grid" }} key={c.id}>
-              <CharacterCard char={c} />
-            </Link>
-          ))}
-        </div>
-      </Flex>
+      {orderMates.length > 0 && (
+        <Flex className="rise" style={{ animationDelay: "400ms" }} vertical>
+          <SectionHead title={`Also walking the ${capitalize(order.id)} path`} />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+              gap: "var(--gap-card)",
+            }}
+          >
+            {orderMates.map((c) => (
+              <Link to={`./${c.id}`} style={{ textDecoration: "none", display: "grid" }} key={c.id}>
+                <CharacterCard char={c} />
+              </Link>
+            ))}
+          </div>
+        </Flex>
+      )}
     </Flex>
   );
 };

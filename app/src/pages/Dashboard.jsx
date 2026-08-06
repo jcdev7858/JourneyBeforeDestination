@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { useAppData } from "../context/AppDataContext";
 import { promptsForOrder, pickPromptForToday } from "../data/prompts";
 import { ORDERS } from "../data/orders";
+import { useReflection } from "../hooks/useReflection";
 import PromptCard from "../components/dashboard/PromptCard";
 import OrderCard from "../components/dashboard/OrderCard";
 import ActiveOathCard from "../components/dashboard/ActiveOathCard";
@@ -10,22 +10,22 @@ import ReadingProgress from "../components/dashboard/ReadingProgress";
 import layoutStyles from "../components/Layout.module.css";
 
 export default function Dashboard() {
-  const { user } = useAppData();
-  const [editing, setEditing] = useState(null);
+  const { user, themes } = useAppData();
+  const { reflecting, attached, startReflection, closeReflection } = useReflection();
   const todaysPrompt = pickPromptForToday(promptsForOrder(user.orderId));
 
   return (
     <>
-      {editing && (
+      {reflecting && (
         <ReflectionEditor
-          entry={editing === "new" ? undefined : editing}
-          closeModal={() => setEditing(null)}
-          themes={[]}
+          entry={reflecting === "new" ? undefined : reflecting}
+          closeModal={closeReflection}
+          themes={themes}
+          attached={attached}
         />
       )}
-      {/* TODO: Fix the respond & fav buttons not working. has to do with not passing themes in */}
       <div className="rise" style={{ animationDelay: "100ms" }}>
-        <PromptCard prompt={todaysPrompt} onRespond={setEditing} onFav />
+        <PromptCard prompt={todaysPrompt} onRespond={startReflection} />
       </div>
       <div className={`${layoutStyles.grid2} rise`} style={{ animationDelay: "200ms" }}>
         <OrderCard order={ORDERS[user.orderId]} />

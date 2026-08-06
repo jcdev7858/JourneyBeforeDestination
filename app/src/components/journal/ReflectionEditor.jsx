@@ -210,17 +210,18 @@ const ReflectionEditor = ({ entry, attached, closeModal, themes }) => {
               />
             </Flex>
 
-            <Flex gap={"var(--sp-2)"} align={"center"} wrap>
-              {attachments.length > 0 &&
-                attachments.map((a) => (
+            {attachments.length > 0 && (
+              <Flex gap={"var(--sp-2)"} align={"center"} wrap>
+                {attachments.map((a) => (
                   <AttachChip
                     key={a.id}
-                    icon={ATTACHMENT_TYPES[a.type].icon}
+                    icon={ATTACHMENT_TYPES[a.type]?.icon}
                     label={a.label}
                     onRemove={() => handleRemoveOption(a)}
                   />
                 ))}
-            </Flex>
+              </Flex>
+            )}
 
             <Flex vertical gap={"var(--sp-5)"}>
               <Flex gap={"var(--sp-2)"} align={"center"}>

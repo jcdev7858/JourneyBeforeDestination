@@ -15,8 +15,7 @@ const SEED_USER = {
   id: "user-1",
   name: "Daniel Rhodes",
   orderId: "bondsmith",
-  booksRead: [],
-  booksWantToRead: [],
+  booksRead: ["wok", "wor", "ob"],
   createdAt: "2026-02-01T00:00:00.000Z",
 };
 
