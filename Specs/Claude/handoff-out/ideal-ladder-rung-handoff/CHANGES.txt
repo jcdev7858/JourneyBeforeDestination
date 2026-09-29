@@ -1,0 +1,69 @@
+CHANGES.txt — Ideal-ladder rung: idle empty space + gem alignment
+Unzip at repo root; files sit at their real repo-relative paths and replace
+the existing ones. CSS-only change — no JSX, no markup, no token changes.
+
+===========================================================================
+CHANGED
+===========================================================================
+
+Specs/Claude/jbd-pages-handoff/jbd-styles.css
+
+  1) .rung-actions no longer reserves an idle band of empty space, and the
+     ladder no longer reflows on hover.
+     Was: the actions row sat in normal flow at full height with
+     margin-top:14px, hidden only by opacity:0 — so every rung carried a
+     blank band under its words whenever you weren't hovering.
+     Now: the row is taken OUT OF FLOW (position:absolute, left:0,
+     bottom:2px inside the rung body) and lives in the gap the ladder already
+     keeps between rungs. Only opacity animates on :hover / :focus-within.
+     Rung heights are therefore constant — nothing grows or shrinks as the
+     pointer travels down the rail.
+     Requires .rung-body { position: relative } (added).
+     → app: IdealLadder.module.css, .rungBody / .rungActions. Deliberately
+     NOT a height/max-height collapse: that version was measurably jumpy as
+     each rung expanded and the card resized under the cursor. Don't
+     reintroduce a JS height measure either.
+
+  2) Rung spacing retuned for the out-of-flow row.
+     .rung-body padding-bottom: 26px → 31px, and .rung:last-child .rung-body
+     0 → 24px (the last rung needs room for its own actions).
+     The 31px is proximity-tuned, not arbitrary: it puts the revealed row
+     ~8px under its OWN Ideal's words and ~2px above the next rung's ordinal,
+     so the actions read as belonging to the Ideal above them without
+     opening a large void in the resting state.
+     → app: keep the two values together; changing the gap without moving
+     `bottom` re-breaks the grouping.
+
+  3) The rail gem now lines up with the Ideal's words.
+     Added: .rung-line.top { flex: 0 0 32px; }
+     Was: the top rail segment was flex:1, so .rung-node floated to the
+     vertical center of a rung whose height varies (spoken note, hidden-rung
+     hint, script block) and rarely coincided with anything. Pinning the
+     spacer puts the gem's center on the first line of .rung-words.
+     The 32px is the sum of the rung's own rhythm: .rung-ordinal row (~22px)
+     + its 7px margin-bottom + half a .rung-words line (~15.6px) − half the
+     rotated node's bbox (~12.7px).
+     → app: IdealLadder.module.css. Prefer deriving it from the same type
+     tokens the rhythm comes from (--fs-overline / --fs-heading /
+     --lh-heading) rather than re-hardcoding 32px, since a type-scale change
+     silently breaks the alignment.
+
+Specs/Claude/jbd-pages-handoff/preview.html
+  - Unchanged from the last handoff; included so the CSS can be opened and
+    checked in isolation (it is the file that loads jbd-styles.css).
+
+===========================================================================
+CAVEATS
+===========================================================================
+  - Load order unchanged: jbd-styles.css must load before the page scripts.
+  - The @media (hover: none) branch still forces .rung-actions visible on
+    touch; with the row out of flow it now overlays the gap permanently
+    rather than adding height. Worth a look on a real device before ship.
+  - A rung whose actions wrap to two lines (very narrow viewport) will
+    overrun the 31px gap, since the row no longer contributes height. The
+    row is three short links; verify at your smallest breakpoint.
+  - Changes are confined to the ladder blocks of jbd-styles.css; no other
+    selectors touched, so this applies cleanly on top of the previous
+    ladder-header handoff.
+  - No new tokens; nothing to upstream to index.css. No colors changed —
+    the stormlight/accent rule is untouched.

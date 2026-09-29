@@ -310,9 +310,9 @@
 .cad-spark .meta em { font-family: var(--font-display); font-style: italic; color: var(--text-muted); }
 
 /* =========================================================
-   SHARED PRIMITIVES for the other pages (Oaths, Journal, Profile, RadiantDex).
-   Same focus language as the buttons: Order-color border + faint ring.
-   ========================================================= */
+  SHARED PRIMITIVES for the other pages (Oaths, Journal, Profile, RadiantDex).
+  Same focus language as the buttons: Order-color border + faint ring.
+  ========================================================= */
 
 /* ---------- form fields ---------- */
 .field { display: flex; flex-direction: column; gap: var(--sp-2); }
@@ -346,12 +346,13 @@
 .empty-glyph { opacity: 0.5; color: var(--accent); }
 .empty-title { font-family: var(--font-display); font-size: var(--fs-heading); color: var(--text); }
 .empty-text { font-size: var(--fs-body); color: var(--text-muted); max-width: 38ch; line-height: 1.55; }
+.empty-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
 
 
 /* =========================================================
-   ░░  PAGE-COMPONENT LAYER  ░░  (Oaths · Journal · Profile · modals)
-   Everything below was added on top of the v2 base. It introduces no new
-   colors — every glow is stormlight or the Order accent at the pinned band.
+  ░░  PAGE-COMPONENT LAYER  ░░  (Oaths · Journal · Profile · modals)
+  Everything below was added on top of the v2 base. It introduces no new
+  colors — every glow is stormlight or the Order accent at the pinned band.
    ========================================================= */
 
 /* ---------- page header (non-dashboard pages lead with a title, not a hero prompt) ---------- */
@@ -367,12 +368,12 @@
 .section-head .section-count { font-size: var(--fs-body-sm); color: var(--text-faint); white-space: nowrap; }
 
 /* =========================================================
-   OATHS — the Ideals ladder + oath cards
+  OATHS — the Ideals ladder + oath cards
    ========================================================= */
 
 /* The Ideals ladder: a vertical progression of the Five Ideals. Sworn rungs
-   carry an infused stormlight gem and a lit rail; the current rung wears the
-   Order accent; unspoken rungs are faint. The rail is the constant light. */
+  carry an infused stormlight gem and a lit rail; the current rung wears the
+  Order accent; unspoken rungs are faint. The rail is the constant light. */
 .ladder { display: flex; flex-direction: column; }
 .rung { display: grid; grid-template-columns: 40px 1fr; column-gap: 20px; }
 .rung-rail { position: relative; display: flex; flex-direction: column; align-items: center; }
@@ -385,8 +386,10 @@
 .rung.sworn .rung-node { background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep)); border-color: rgba(174,224,251,0.6); box-shadow: 0 0 14px rgba(var(--stormlight-rgb), 0.7), inset 0 0 6px rgba(255,255,255,0.4); }
 .rung.current .rung-node { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 16px rgba(var(--accent-rgb), 0.6); }
 .rung.unspoken .rung-node { opacity: 0.5; }
-.rung-body { padding-bottom: 26px; min-width: 0; }
-.rung:last-child .rung-body { padding-bottom: 0; }
+.rung-body { padding-bottom: 31px; min-width: 0; position: relative; }
+/* Gem sits on the Ideal's words, not centered in the rung's varying height. */
+.rung-line.top { flex: 0 0 32px; }
+.rung:last-child .rung-body { padding-bottom: 24px; }
 .rung-ordinal { font-size: var(--fs-overline); letter-spacing: 1.4px; text-transform: uppercase; color: var(--text-faint); margin-bottom: 7px; display: flex; align-items: center; gap: 10px; }
 .rung.current .rung-ordinal { color: var(--accent); }
 .rung-ordinal .tag { font-size: 10px; letter-spacing: 1px; padding: 2px 8px; border-radius: 100px; border: 1px solid var(--border-strong); color: var(--text-muted); }
@@ -396,19 +399,19 @@
 .rung-note { font-size: var(--fs-body-sm); color: var(--text-muted); margin-top: 8px; }
 
 /* ---------- Ideal ladder: the REVELATION model (Hidden / Revealed / Spoken) ----------
-   Replaces the sworn/current/unspoken progress states. The rail lights only
-   through SPOKEN rungs (how far you've walked); Revealed is legible-but-quiet;
-   Hidden is obscured behind the Women's script or the Order glyph. Nothing is
-   counted or completion-gated. Order chips + a books-read strip page across and
+  Replaces the sworn/current/unspoken progress states. The rail lights only
+  through SPOKEN rungs (how far you've walked); Revealed is legible-but-quiet;
+  Hidden is obscured behind the Women's script or the Order glyph. Nothing is
+  counted or completion-gated. Order chips + a books-read strip page across and
    derive reveal; the whole ladder recolors to whichever Order is being viewed. */
 .ladder-wrap { display: block; }
 
 /* ---------- ladder control bar ----------
-   The Order switcher (10 chips) and Books-read input (5 toggles) used to be
-   two wrapping rows that dominated the header. They now collapse behind two
-   compact trigger buttons that each open a glass popover, sitting inside the
-   card's section head (title left, pills right).
-   → app: components/IdealLadder.jsx uses a small <Popover> primitive; these
+  The Order switcher (10 chips) and Books-read input (5 toggles) used to be
+  two wrapping rows that dominated the header. They now collapse behind two
+  compact trigger buttons that each open a glass popover, sitting inside the
+  card's section head (title left, pills right).
+  → app: components/IdealLadder.jsx uses a small <Popover> primitive; these
      become classes in IdealLadder.module.css (camelCase). --dur-ui = --dur-ui token. */
 .section-head.ladder-head { align-items: center; flex-wrap: wrap; row-gap: 12px; margin-bottom: 18px; }
 .ladder-controls { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -550,9 +553,12 @@
 .rung.interactive .rung-words { transition: color var(--dur-ui); }
 .rung.current.interactive:hover .rung-words { color: var(--accent); }
 .rung.unspoken.interactive:hover .rung-words { color: var(--text-muted); }
-.rung-actions { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px; opacity: 0; transform: translateY(-3px); transition: opacity var(--dur-ui), transform var(--dur-ui); }
-.rung.interactive:hover .rung-actions, .rung.interactive:focus-within .rung-actions { opacity: 1; transform: none; }
-@media (hover: none) { .rung-actions { opacity: 1; transform: none; } }
+/* Actions live in the gap the ladder already keeps between rungs (out of flow),
+   so nothing reflows as the pointer moves down the rail — the row only fades.
+   No idle band of reserved space, and no growing/shrinking card. */
+.rung-actions { position: absolute; left: 0; bottom: 2px; display: flex; flex-wrap: wrap; gap: 18px; opacity: 0; transition: opacity var(--dur-ui); }
+.rung.interactive:hover .rung-actions, .rung.interactive:focus-within .rung-actions { opacity: 1; }
+@media (hover: none) { .rung-actions { opacity: 1; } }
 .rung-link { font-family: var(--font-body); font-size: 12.5px; font-weight: 500; letter-spacing: 0.2px; display: inline-flex; align-items: center; gap: 6px; color: var(--text-faint); background: none; border: none; cursor: pointer; padding: 2px 0; transition: color var(--dur-ui); }
 .rung-link svg { width: 14px; height: 14px; transition: transform var(--dur-ui); }
 .rung-link:hover svg, .rung-link:focus-visible svg { transform: translateX(2px); }
@@ -778,19 +784,16 @@
 .pop-item.on { color: var(--accent); }
 
 /* ---------- removable context pills (attached oath / ideal / prompt / theme) ----------
-   Each tone carries the color it already owns: oath links + prompts read as
-   stormlight-neutral, ideals keep their reference gold, themes stay quiet. */
+   One neutral tone for every kind — oath vs. ideal vs. prompt read by their
+   icon glyph, not by color. Color here would just repeat the entry badge. */
 .ctx-cluster { display: flex; flex-wrap: wrap; gap: 8px; }
-.link-pill { display: inline-flex; align-items: center; gap: 7px; max-width: 100%; font-size: 12.5px; line-height: 1.3; padding: 7px 8px 7px 12px; border-radius: 100px; border: 1px solid; }
+.link-pill { display: inline-flex; align-items: center; gap: 7px; max-width: 100%; font-size: 12.5px; line-height: 1.3; padding: 7px 8px 7px 12px; border-radius: 100px; border: 1px solid; color: var(--text-muted); border-color: var(--border); background: rgba(255,255,255,0.025); }
 .link-pill svg { width: 13px; height: 13px; flex-shrink: 0; }
 .link-pill-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 30ch; }
 .link-pill-x { display: inline-flex; width: 18px; height: 18px; border-radius: 50%; border: 0; background: transparent; color: inherit; cursor: pointer; opacity: 0.65; align-items: center; justify-content: center; flex-shrink: 0; }
 .link-pill-x svg { width: 11px; height: 11px; }
 .link-pill-x:hover { opacity: 1; background: rgba(255,255,255,0.12); }
-.link-pill-oath   { color: var(--stormlight); border-color: rgba(var(--stormlight-rgb), 0.4); background: rgba(var(--stormlight-rgb), 0.09); }
-.link-pill-ideal  { color: var(--radiant-gold); border-color: rgba(216,184,120,0.4); background: rgba(216,184,120,0.09); }
-.link-pill-prompt { color: var(--text); border-color: var(--border-strong); background: rgba(255,255,255,0.035); }
-.link-pill-theme  { color: var(--text-muted); border-color: var(--border); background: rgba(255,255,255,0.02); }
+.link-pill-prompt { color: var(--text); }
 
 /* live word count in the composer foot */
 .word-count { font-size: 12px; color: var(--text-faint); }
@@ -813,10 +816,10 @@
 .entry-badge-oath   { color: var(--stormlight); border-color: rgba(var(--stormlight-rgb), 0.4); background: rgba(var(--stormlight-rgb), 0.09); }
 .entry-badge-ideal  { color: var(--radiant-gold); border-color: rgba(216,184,120,0.4); background: rgba(216,184,120,0.09); }
 .entry-title { font-family: var(--font-display); font-size: 23px; font-weight: 500; line-height: 1.25; color: var(--text); }
-.backlink { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-muted); margin-top: 14px; padding: 8px 13px; border-radius: 9px; border: 1px solid var(--border); background: rgba(var(--stormlight-rgb), 0.04); max-width: 100%; }
-.backlink svg { width: 14px; height: 14px; color: var(--stormlight); flex-shrink: 0; }
-.backlink.ideal { background: rgba(216,184,120,0.05); }
-.backlink.ideal svg { color: var(--radiant-gold); }
+/* backlinks stay neutral — the entry badge above is the one colored signal per
+   card; oath vs. ideal reads from the icon (link vs. feather), not a hue. */
+.backlink { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-muted); margin-top: 14px; padding: 8px 13px; border-radius: 9px; border: 1px solid var(--border); background: rgba(255,255,255,0.025); max-width: 100%; }
+.backlink svg { width: 14px; height: 14px; color: var(--text-faint); flex-shrink: 0; }
 
 /* =========================================================
    ░░  FULL COMPOSER (optional superset of Option B)  ░░

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JBD · Pages & Modals — Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="jbd-styles.css" />
+<link rel="stylesheet" href="radiantdex.css" />
+<style>
+  html, body { margin: 0; min-height: 100%; background: #0b0f1c; }
+  /* In a real browser the page flows and the window scrolls, so let .jbd grow
+     to its content instead of the canvas's fixed-height artboard. */
+  .jbd { height: auto !important; min-height: 100vh; }
+
+  /* ----- preview chrome (NOT part of the design system) ----- */
+  .demo-bar {
+    position: fixed; z-index: 80; left: 50%; bottom: 22px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center;
+    max-width: calc(100vw - 40px);
+    padding: 9px 14px; border-radius: 100px;
+    background: rgba(12,16,26,0.82); backdrop-filter: blur(14px);
+    border: 1px solid rgba(124,196,232,0.22);
+    box-shadow: 0 18px 50px -18px rgba(0,0,0,0.8);
+    font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 12px; color: #8b95ad;
+  }
+  .demo-bar .demo-label { font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: #5b647d; }
+  .demo-bar .demo-sep { width: 1px; height: 18px; background: rgba(124,196,232,0.18); }
+  .demo-bar select {
+    appearance: none; background: rgba(255,255,255,0.04); color: #e9e5d7; border: 1px solid rgba(124,196,232,0.22);
+    border-radius: 100px; padding: 6px 28px 6px 13px; font: inherit; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 11 11' fill='none' stroke='%238b95ad' stroke-width='1.6'%3E%3Cpath d='M2 4l3.5 3.5L9 4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 11px center;
+  }
+  .demo-bar .grp { display: inline-flex; align-items: center; gap: 5px; }
+  .demo-bar .grp > span { color: #5b647d; }
+  .demo-bar button {
+    background: transparent; color: #8b95ad; border: 1px solid rgba(124,196,232,0.18);
+    border-radius: 100px; padding: 5px 11px; font: inherit; cursor: pointer; transition: all .15s;
+  }
+  .demo-bar button:hover { color: #e9e5d7; border-color: rgba(124,196,232,0.45); }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script src="womens-script/womens-script.js"></script>
+
+  <script type="text/babel" src="glyph.jsx"></script>
+  <script type="text/babel" src="pageshell.jsx"></script>
+  <script type="text/babel" src="dashA.jsx"></script>
+  <script type="text/babel" src="dashC.jsx"></script>
+  <script type="text/babel" src="oaths.jsx"></script>
+  <script type="text/babel" src="oath-editor.jsx"></script>
+  <script type="text/babel" src="journal.jsx"></script>
+  <script type="text/babel" src="reflection-editor.jsx"></script>
+  <script type="text/babel" src="profile.jsx"></script>
+  <script type="text/babel" src="radiantdex-data.jsx"></script>
+  <script type="text/babel" src="radiantdex.jsx"></script>
+
+  <script type="text/babel">
+    const { useState } = React;
+    const PAGE_NAMES = ['Dashboard', 'Dashboard v3', 'Oaths', 'Journal', 'RadiantDex', 'Profile'];
+    const IDEAL_WORDS = 'I will protect even those I dislike, so long as it is right.';
+
+    function ModalOverlay({ modal, onClose }) {
+      if (!modal) return null;
+      let body = null;
+      if (modal.kind === 'oath') body = <OathEditorModal mode={modal.mode} startConfirm={modal.confirm} seedWords={modal.seedWords} fromIdeal={modal.fromIdeal} onClose={onClose} />;
+      if (modal.kind === 'refl') body = <ReflectionEditorModal mode={modal.mode} startConfirm={modal.confirm} contextPrompt={modal.contextPrompt} contextLabel={modal.contextLabel} onClose={onClose} />;
+      return (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 60 }}>
+          <div className="scrim" onClick={onClose}>
+            <div onClick={(e) => e.stopPropagation()} style={{ width: '100%', maxWidth: 580, display: 'flex' }}>{body}</div>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [page, setPage] = useState('RadiantDex');
+      const [modal, setModal] = useState(null);
+      const [oathsEmpty, setOathsEmpty] = useState(false);
+      const [journalEmpty, setJournalEmpty] = useState(false);
+      // The pages call onNav with real page names AND with modal intents fired
+      // from the Ideal ladder (borrow / reflect), oath cards (open → edit, and
+      // Reflect → the reflection modal carrying the oath as context). Route both.
+      const nav = (n, payload) => {
+        if (PAGE_NAMES.includes(n)) { setPage(n); return; }
+        if (n === 'oath-new') setModal({ kind: 'oath', mode: 'new' });
+        else if (n === 'oath-new-ideal') setModal({ kind: 'oath', mode: 'new', seedWords: (payload && payload.words) || IDEAL_WORDS, fromIdeal: (payload && payload.ord) || 'Third Ideal' });
+        else if (n === 'oath-editor') setModal({ kind: 'oath', mode: 'edit' });
+        else if (n === 'reflect-ideal') setModal({ kind: 'refl', mode: 'new', contextPrompt: (payload && payload.words) || IDEAL_WORDS, contextLabel: 'Reflecting on the ' + ((payload && payload.ord) || 'Third Ideal') + ' · Windrunner' });
+        else if (n === 'reflect') setModal({ kind: 'refl', mode: 'new', contextPrompt: (payload && payload.words) || '', contextLabel: 'Reflecting on your oath · Windrunner' });
+        else if (n === 'reflect-quote') setModal({ kind: 'refl', mode: 'new', contextPrompt: (payload && payload.text) || '', contextLabel: "Reflecting on " + ((payload && payload.charName) || 'a saying') + "'s words · Windrunner" });
+      };
+
+      const PAGES = {
+        Dashboard: <DashboardA order="windrunner" scheme="stormlight" />,
+        'Dashboard v3': <DashboardV3 order="windrunner" onNav={nav} />,
+        Oaths: <OathsPage empty={oathsEmpty} onNav={nav} />,
+        Journal: <JournalPage empty={journalEmpty} onNav={nav} />,
+        RadiantDex: <RadiantDexPage onNav={nav} />,
+        Profile: <ProfilePage onNav={nav} />,
+      };
+
+      return (
+        <React.Fragment>
+          {PAGES[page]}
+          <ModalOverlay modal={modal} onClose={() => setModal(null)} />
+
+          <div className="demo-bar">
+            <span className="demo-label">Preview</span>
+            <select value={page} onChange={(e) => setPage(e.target.value)}>
+              {PAGE_NAMES.map((n) => <option key={n} value={n}>{n}</option>)}
+            </select>
+            <span className="demo-sep"></span>
+            <span className="grp"><span>Empty</span>
+              <button onClick={() => setOathsEmpty((v) => !v)}>{oathsEmpty ? 'Oaths ✓' : 'Oaths'}</button>
+              <button onClick={() => setJournalEmpty((v) => !v)}>{journalEmpty ? 'Journal ✓' : 'Journal'}</button>
+            </span>
+            <span className="demo-sep"></span>
+            <span className="grp"><span>Oath</span>
+              <button onClick={() => setModal({ kind: 'oath', mode: 'new' })}>New</button>
+              <button onClick={() => setModal({ kind: 'oath', mode: 'edit' })}>Edit</button>
+              <button onClick={() => setModal({ kind: 'oath', mode: 'new', seedWords: IDEAL_WORDS, fromIdeal: 'Third Ideal' })}>Borrow Ideal</button>
+              <button onClick={() => setModal({ kind: 'oath', mode: 'edit', confirm: true })}>Archive</button>
+            </span>
+            <span className="grp"><span>Reflection</span>
+              <button onClick={() => setModal({ kind: 'refl', mode: 'new' })}>New</button>
+              <button onClick={() => setModal({ kind: 'refl', mode: 'edit' })}>Edit</button>
+              <button onClick={() => setModal({ kind: 'refl', mode: 'new', contextPrompt: IDEAL_WORDS, contextLabel: 'Reflecting on the Third Ideal · Windrunner' })}>On Ideal</button>
+              <button onClick={() => setModal({ kind: 'refl', mode: 'edit', confirm: true })}>Delete</button>
+            </span>
+          </div>
+        </React.Fragment>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
