@@ -5,7 +5,7 @@ import Flex from "../ui/Flex";
 import Text from "../ui/Text";
 import styles from "./DexOrderCard.module.css";
 
-const DexOrderCard = ({ order, onOpen }) => {
+const DexOrderCard = ({ order }) => {
   return (
     <Card clickable data-order={order.id}>
       <Flex align="center" gap={14}>

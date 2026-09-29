@@ -29,21 +29,25 @@
  * @typedef {import("../types").Quote} Quote
  */
 
+import { capitalize } from "../utils/strings";
+import { CHARACTERS_BY_ID } from "./characters";
+
+// TODO: verify all of these quotes and context. Add new quotes
+
 export const QUOTES = [
   // ---- Kaladin (windrunner) ----
   {
     id: "kaladin-1",
     characterId: "kaladin",
     text: "Honor is dead. But I'll see what I can do.",
-    context:
-      "Finishing Syl's words to Dalinar before entering the rigged arena duel — Words of Radiance",
+    context: "Finishing Syl's words to Dalinar before entering the rigged arena duel",
     source: "wor",
   },
   {
     id: "kaladin-2",
     characterId: "kaladin",
     text: "I will protect those who cannot protect themselves.",
-    context: "Windrunner Second Ideal, sworn defending the bridgemen — The Way of Kings",
+    context: "Windrunner Second Ideal, sworn defending the bridgemen",
     source: "wok",
   },
   {
@@ -51,23 +55,21 @@ export const QUOTES = [
     characterId: "kaladin",
     text: "Somebody has to start. Somebody has to step forward and do what is right, because it is right.",
     context:
-      "His father Lirin's words to him as a boy, recalled as Bridge Four turns back for Dalinar — The Way of Kings",
+      "His father Lirin's words to him as a boy, recalled as Bridge Four turns back for Dalinar",
     source: "wok",
   },
   {
     id: "kaladin-4",
     characterId: "kaladin",
     text: "...but the sky and the winds are mine. I claim them, as I now claim your life.",
-    context:
-      "Facing Szeth mid-duel after saving Dalinar from being Lashed into the sky — Words of Radiance",
+    context: "Facing Szeth mid-duel after saving Dalinar from being Lashed into the sky",
     source: "wor",
   },
   {
     id: "kaladin-5",
     characterId: "kaladin",
     text: "I will protect even those I hate, so long as it is right.",
-    context:
-      "Windrunner Third Ideal, sworn stopping Moash and Graves from killing the king — Words of Radiance",
+    context: "Windrunner Third Ideal, sworn stopping Moash and Graves from killing the king",
     source: "wor",
   },
   {
@@ -83,7 +85,7 @@ export const QUOTES = [
     id: "syl-1",
     characterId: "syl",
     text: "That's what they all were, silly.",
-    context: "Answering Kaladin's confession, in the chasms, that he's broken — Words of Radiance",
+    context: "Answering Kaladin's confession, in the chasms, that he's broken",
     source: "wor",
   },
 
@@ -92,35 +94,35 @@ export const QUOTES = [
     id: "dalinar-1",
     characterId: "dalinar",
     text: "Life before death. Strength before weakness. Journey before destination.",
-    context: "The First Ideal, shared by every Radiant order — The Way of Kings",
+    context: "The First Ideal, shared by every Radiant order",
     source: "wok",
   },
   {
     id: "dalinar-3a",
     characterId: "dalinar",
     text: "I will take responsibility for what I have done.",
-    context: "Bondsmith Third Ideal, confronting Odium in Thaylen City — Oathbringer",
+    context: "Bondsmith Third Ideal, confronting Odium in Thaylen City",
     source: "ob",
   },
   {
     id: "dalinar-3b",
     characterId: "dalinar",
     text: "If I must fall, I will rise each time a better man.",
-    context: "Second half of the same Third Ideal — Oathbringer",
+    context: "Second half of the same Third Ideal",
     source: "ob",
   },
   {
     id: "dalinar-4",
     characterId: "dalinar",
     text: "The most important step a person can take is always the next one.",
-    context: "From Dalinar's own written account, reflecting on his journey — Oathbringer",
+    context: "From Dalinar's own written account, reflecting on his journey",
     source: "ob",
   },
   {
     id: "dalinar-2",
     characterId: "dalinar",
     text: "I will do better.",
-    context: "From the same reflective passage in Dalinar's record — Oathbringer",
+    context: "From the same reflective passage in Dalinar's record",
     source: "ob",
   },
 
@@ -129,7 +131,7 @@ export const QUOTES = [
     id: "navani-1",
     characterId: "navani",
     text: "Journey before destination, you bastard.",
-    context: "Bonding the Sibling, stopping Moash mid-strike — Rhythm of War",
+    context: "Bonding the Sibling, stopping Moash mid-strike",
     source: "row",
   },
 
@@ -137,8 +139,8 @@ export const QUOTES = [
   {
     id: "szeth-1",
     characterId: "szeth",
-    text: "...wore white on the day he was to kill a king.",
-    context: "Opening line of the prologue, before killing King Gavilar — The Way of Kings",
+    text: "Szeth-son-son-Vallano, Truthless of Shinovar, wore white on the day he was to kill a king.",
+    context: "Opening line of the prologue, before killing King Gavilar",
     source: "wok",
   },
 
@@ -147,7 +149,7 @@ export const QUOTES = [
     id: "jasnah-1",
     characterId: "jasnah",
     text: "Atheism is not a disease.",
-    context: "To a king questioning her faith at a feast — The Way of Kings",
+    context: "To a king questioning her faith at a feast",
     source: "wok",
   },
 
@@ -156,14 +158,14 @@ export const QUOTES = [
     id: "lift-1",
     characterId: "lift",
     text: "I don't talk to myself because I'm crazy.",
-    context: "Introducing her own philosophy on talking to herself — Words of Radiance",
+    context: "Introducing her own philosophy on talking to herself",
     source: "wor",
   },
   {
     id: "lift-2",
     characterId: "lift",
     text: "I do it because I'm awesome.",
-    context: "Second half of the same line — Words of Radiance",
+    context: "Second half of the same line",
     source: "wor",
   },
 
@@ -172,7 +174,7 @@ export const QUOTES = [
     id: "rock-1",
     characterId: "rock",
     text: "Airsick lowlanders.",
-    context: "Rock's running dismissal of non-Horneater customs — The Way of Kings",
+    context: "Rock's running dismissal of non-Horneater customs",
     source: "wok",
   },
 
@@ -181,7 +183,7 @@ export const QUOTES = [
     id: "adolin-1",
     characterId: "adolin",
     text: "My father thinks I'm a better man than he is. Unfortunately for you, he's wrong.",
-    context: "Just after killing Sadeas in the alley — Words of Radiance",
+    context: "Just after killing Sadeas in the alley",
     source: "wor",
   },
 
@@ -190,7 +192,7 @@ export const QUOTES = [
     id: "teft-1",
     characterId: "teft",
     text: "I ain't grouchy. I just have a low threshold for stupidity.",
-    context: "Teft's gruff deflection when Kaladin needles him — Words of Radiance",
+    context: "Teft's gruff deflection when Kaladin needles him",
     source: "wor",
   },
 ];
@@ -202,4 +204,15 @@ export const QUOTES = [
  */
 export function quotesByCharacter(characterId) {
   return QUOTES.filter((q) => q.characterId === characterId);
+}
+
+/**
+ * Builds the full quote label with name + quote
+ * @param {string} quoteId
+ * @returns {string}
+ */
+export function fullQuoteLabel(quoteId) {
+  const quote = QUOTES.find((q) => q.id === quoteId);
+  const speaker = CHARACTERS_BY_ID[`${quote?.characterId}`];
+  return `${capitalize(speaker?.name)} - ${quote?.text}`;
 }

@@ -1,0 +1,299 @@
+/* ---------- rungs ---------- */
+.rung {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  column-gap: 20px;
+
+  &.revealed {
+    .rungNode {
+      background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep));
+      border-color: rgba(174, 224, 251, 0.6);
+      box-shadow:
+        0 0 14px rgba(var(--stormlight-rgb), 0.7),
+        inset 0 0 6px rgba(255, 255, 255, 0.4);
+      opacity: 1;
+    }
+
+    .rungOrdinal {
+      color: var(--text-muted);
+    }
+  }
+
+  /* REVEALED — legible but quiet; word lifts to accent when interactive */
+  &.revealed {
+    .rungNode {
+      opacity: 0.85;
+    }
+
+    &.interactive:hover .rungWords {
+      color: var(--accent);
+    }
+  }
+
+  /* HIDDEN — obscured behind Women's script / Order glyph */
+  &.hidden .rungNode {
+    opacity: 0.32;
+  }
+
+  /* the reveal FEELING — script dissolves, words emerge (first mount post-unlock) */
+  &.revealing {
+    .rungScript.overlay,
+    .rungHiddenGlyph.overlay {
+      animation: scriptDissolve 0.9s var(--ease-out) forwards;
+    }
+
+    .rungWords {
+      animation: wordsEmerge 0.9s var(--ease-out) 0.3s both;
+    }
+  }
+
+  &:last-child .rungBody {
+    padding-bottom: 0;
+  }
+}
+
+.rungActions {
+  position: absolute;
+  left: 0;
+  bottom: 2px;
+  margin-bottom: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  opacity: 0;
+  transition: opacity var(--dur-ui);
+}
+.rung.interactive:hover .rungActions,
+.rung.interactive:focus-within .rungActions {
+  opacity: 1;
+}
+@media (hover: none) {
+  .rungActions {
+    opacity: 1;
+  }
+}
+
+.rungRail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rungLine {
+  width: 2px;
+  flex: 1;
+  background: var(--border);
+
+  &.lit {
+    background: linear-gradient(180deg, var(--stormlight-deep), rgba(var(--stormlight-rgb), 0.22));
+  }
+
+  &.top {
+    background: transparent;
+    flex: 0 0 32px;
+  }
+}
+
+.rungNode {
+  width: 18px;
+  height: 18px;
+  transform: rotate(45deg);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin: 4px 0;
+  border: 1px solid var(--border-strong);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(91, 100, 125, 0.18));
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 2px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 60%);
+  }
+}
+
+.rungBody {
+  padding-bottom: 31px;
+  min-width: 0;
+  position: relative;
+}
+
+.rungOrdinal {
+  font-size: var(--fs-overline);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rungReveal {
+  position: relative;
+}
+
+.rungWords {
+  font-family: var(--font-display);
+  font-size: var(--fs-heading);
+  line-height: var(--lh-heading);
+  color: var(--text);
+
+  /* words not yet known even when revealed — italic placeholder */
+  &.unknown {
+    color: var(--text-faint);
+    font-style: italic;
+  }
+}
+
+.rungNote {
+  font-size: var(--fs-body-sm);
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* ---------- Women's-script obscuring on Hidden rungs (+ glyph fallback) ---------- */
+.rungScript {
+  color: rgba(var(--stormlight-rgb), 0.5);
+  opacity: 0.5;
+  max-width: 440px;
+
+  svg {
+    width: auto;
+    height: 38px;
+    max-width: 100%;
+    display: block;
+  }
+}
+
+.rungHiddenGlyph {
+  color: var(--text-faint);
+  opacity: 0.16;
+
+  svg {
+    display: block;
+  }
+}
+
+/* both overlays share the absolute-fill stacking used during the reveal */
+.rungScript.overlay,
+.rungHiddenGlyph.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.rungHiddenHint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-body-sm);
+  color: var(--text-faint);
+  margin-top: 14px;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+}
+
+.rungLink {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-faint);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 0;
+  transition: color var(--dur-ui);
+
+  svg {
+    width: 14px;
+    height: 14px;
+    transition: transform var(--dur-ui);
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--accent);
+    outline: none;
+  }
+
+  &:hover svg,
+  &:focus-visible svg {
+    transform: translateX(2px);
+  }
+}
+
+.rung-link.reflect:hover,
+.rung-link.reflect:focus-visible {
+  color: var(--stormlight);
+}
+
+.rungSpokeMeta {
+  font-size: var(--fs-body-sm);
+  color: var(--text-faint);
+  margin-top: 12px;
+}
+
+.rungUnderstanding {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  letter-spacing: 0.2px;
+  color: var(--text-faint);
+  opacity: 0.5;
+  cursor: default;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* the reveal animation — script dissolves out, words emerge */
+@keyframes scriptDissolve {
+  from {
+    opacity: 0.5;
+    filter: blur(0.2px);
+  }
+  to {
+    opacity: 0;
+    filter: blur(5px);
+  }
+}
+
+@keyframes wordsEmerge {
+  from {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rung.revealing .rungScript.overlay,
+  .rung.revealing .rungHiddenGlyph.overlay {
+    animation: none;
+    opacity: 0;
+  }
+
+  .rung.revealing .rungWords {
+    animation: none;
+  }
+}

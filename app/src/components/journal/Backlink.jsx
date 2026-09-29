@@ -1,6 +1,6 @@
 import styles from "./Backlink.module.css";
 import Flex from "../ui/Flex";
-import { Link, Feather, BookOpen, Hash } from "lucide-react";
+import { Link, Feather, BookOpen, Quote, Hash } from "lucide-react";
 
 const Backlink = ({ type, label }) => {
   const icon =
@@ -10,6 +10,8 @@ const Backlink = ({ type, label }) => {
       <Feather />
     ) : type === "theme" ? (
       <Hash />
+    ) : type === "quote" ? (
+      <Quote />
     ) : (
       <BookOpen />
     );

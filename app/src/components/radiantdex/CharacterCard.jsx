@@ -5,7 +5,7 @@ import Flex from "../ui/Flex";
 import Text from "../ui/Text";
 import styles from "./CharacterCard.module.css";
 
-const CharacterCard = ({ char, onOpen }) => {
+const CharacterCard = ({ char }) => {
   return (
     <Card clickable data-order={char.orderId}>
       <Flex align="center" gap={14}>

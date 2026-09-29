@@ -1,28 +1,45 @@
+/* ---------- gemstone reading progress (infused stormlight — stays blue) ---------- */
 .book {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 11px;
   font-size: 13.5px;
-  padding: 9px 15px;
+  padding: 10px 16px 10px 13px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  color: var(--text-muted);
+  color: var(--text-faint);
+  transition: all 0.18s;
+
+  &:hover {
+    color: var(--text-muted);
+  }
 }
 .book.read {
   color: var(--text);
   border-color: var(--border-strong);
+  background: rgba(var(--stormlight-rgb), 0.04);
 }
-.book.read .gem {
-  background: var(--stormlight);
-  box-shadow: 0 0 9px var(--stormlight);
-}
-.gem {
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
+.gemstone {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
   transform: rotate(45deg);
-  background: var(--text-faint);
+  border-radius: 3px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(91, 100, 125, 0.25));
+  border: 1px solid rgba(var(--stormlight-rgb), 0.18);
+  position: relative;
 }
-.book.locked {
-  opacity: 0.55;
+.gemstone::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 1px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 60%);
+}
+.book.read .gemstone {
+  background: linear-gradient(135deg, #aee0fb, var(--stormlight-deep));
+  border-color: rgba(174, 224, 251, 0.6);
+  box-shadow:
+    0 0 14px rgba(var(--stormlight-rgb), 0.7),
+    inset 0 0 6px rgba(255, 255, 255, 0.4);
 }

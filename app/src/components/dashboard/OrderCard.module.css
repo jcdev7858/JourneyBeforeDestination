@@ -27,3 +27,9 @@
   gap: 14px;
   margin-bottom: 20px;
 }
+.orderTagline {
+  font-family: var(--font-display);
+  font-size: var(--fs-quote);
+  line-height: var(--lh-quote);
+  color: var(--text-muted);
+}

@@ -11,16 +11,16 @@ import Button from "../ui/Button";
 import { Plus, Feather, Archive } from "lucide-react";
 
 const OathEditor = (props) => {
-  const { oath, closeModal } = props;
+  const { oath, seedWords, closeModal } = props;
   const { user, updateOath, addOath, archiveOath } = useAppData();
-  const isNew = !oath;
+  const isNew = oath === undefined;
   const makeEmptyAction = () => ({
     id: crypto.randomUUID(),
     title: "",
     completed: false,
     completedAt: null,
   });
-  const [words, setWords] = useState(isNew ? "" : oath.title);
+  const [words, setWords] = useState(seedWords || oath?.title || "");
   const [actions, setActions] = useState(() => (isNew ? [makeEmptyAction()] : oath.actions));
   const [confirm, setConfirm] = useState(false);
 
@@ -37,6 +37,7 @@ const OathEditor = (props) => {
   };
 
   const handleSave = () => {
+    const realActions = actions.filter((action) => action.title.trim());
     isNew
       ? addOath({
           id: crypto.randomUUID(),
@@ -45,9 +46,9 @@ const OathEditor = (props) => {
           status: "active",
           archivedAt: null,
           createdAt: new Date().toISOString(),
-          actions: actions,
+          actions: realActions,
         })
-      : updateOath(oath.id, { title: words, actions });
+      : updateOath(oath.id, { title: words, actions: realActions });
     closeModal();
   };
 

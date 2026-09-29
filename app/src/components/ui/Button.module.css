@@ -88,3 +88,31 @@
     box-shadow: 0 0 0 1px var(--border-strong);
   }
 }
+
+.btnLink {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  text-transform: capitalize;
+  align-items: center;
+  gap: 7px;
+  margin-top: 15px;
+  font-size: var(--fs-body);
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  svg {
+    transition: transform var(--dur-ui);
+  }
+
+  &:hover {
+    color: var(--accent);
+
+    svg {
+      transform: translateX(2px);
+      transition: transform var(--dur-ui);
+    }
+  }
+}
