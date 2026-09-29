@@ -1,6 +1,7 @@
 import Card from "../ui/Card";
 import Flex from "../ui/Flex";
 import Title from "../ui/Title";
+import Text from "../ui/Text";
 import styles from "./OrderCard.module.css";
 import Pill from "../Pill";
 import OrderGlyph from "../OrderGlyph";
@@ -17,6 +18,7 @@ export default function OrderCard({ order }) {
             <Title level={2} className={styles.orderName}>
               {order.id}
             </Title>
+            <Text className={styles.orderTagline}>{order.tagline}</Text>
           </Flex>
         </Flex>
         <Flex wrap gap={8} style={{ paddingTop: "var(--sp-4)" }}>
@@ -25,12 +27,6 @@ export default function OrderCard({ order }) {
               {v}
             </Pill>
           ))}
-        </Flex>
-        <Flex wrap gap="10px">
-          <Pill>Protection</Pill>
-          <Pill>Leadership</Pill>
-          <Pill>Responsibility</Pill>
-          <Pill>Service</Pill>
         </Flex>
       </Flex>
       <div className="clipLayer">

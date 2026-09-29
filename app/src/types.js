@@ -75,6 +75,7 @@
  * @property {string} spren         // the spren type they bond
  * @property {string[]} herald     // associated Herald(s)
  * @property {string[]} surges      // the two Surges / powers
+ * @property {string} tagline       // short one liner about order
  * @property {string} description   // summary of the order's role/character
  */
 
