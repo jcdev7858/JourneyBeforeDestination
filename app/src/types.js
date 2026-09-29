@@ -20,7 +20,6 @@
  * @property {string} name
  * @property {string|null} orderId        // null if the user skipped Order selection
  * @property {string[]} booksRead         // book slugs
- * @property {string[]} booksWantToRead   // book slugs
  * @property {string} createdAt           // ISO date
  */
 
@@ -52,6 +51,7 @@
  * @property {string[]} [promptIds]
  * @property {string[]} [oathIds]
  * @property {string[]} [idealIds]
+ * @property {string[]} [quoteIds]
  * @property {string} [title]
  * @property {string} body
  * @property {string} createdAt           // ISO date
@@ -75,6 +75,7 @@
  * @property {string} spren         // the spren type they bond
  * @property {string[]} herald     // associated Herald(s)
  * @property {string[]} surges      // the two Surges / powers
+ * @property {string} tagline       // short one liner about order
  * @property {string} description   // summary of the order's role/character
  */
 
@@ -106,6 +107,7 @@
  * @property {string} spoilerLevel  // Book.id — earliest book by which this entry is safe to show fully
  * @property {string[]} tags        // browsable/filterable labels
  * @property {string|null} image    // local path e.g. "/characters/kaladin.jpg", or null → Order-glyph fallback
+ * @property {string|null} imgCaption
  */
 
 /**
@@ -116,7 +118,8 @@
  * @property {string} id            // order-scoped, "<order>-<rank>", e.g. "windrunner-3"
  * @property {string} order         // the OrderRef.id this ideal belongs to
  * @property {number} rank          // 1 = the shared First Ideal, then 2..5
- * @property {string} text          // the canonical oath, or a prompt when wording isn't fixed
+ * @property {string|null} text     // the canonical oath / prompt, or null when genuinely unchronicled (words unknown to the world)
+ * @property {string|null} revealBook  // Book.id gating SIGHT of the words (spoiler gate); null = always visible (rank 1) or no words to reveal
  */
 
 /**

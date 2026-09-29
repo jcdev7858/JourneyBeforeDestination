@@ -1,0 +1,46 @@
+.summaryTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-heading);
+  line-height: var(--lh-heading);
+  color: var(--text);
+  margin-bottom: var(--sp-2);
+  display: block;
+  max-width: 58ch;
+}
+.summaryText {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.75;
+  max-width: 62ch;
+  margin-bottom: var(--sp-4);
+  display: block;
+}
+.coppermindLink {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  transition: all 0.18s;
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.07);
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.13);
+    box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.4);
+    outline: none;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}

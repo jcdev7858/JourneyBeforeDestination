@@ -218,3 +218,18 @@ a {
   bottom: -130px;
   right: -80px;
 }
+
+/* ---------- clip layer for card decorations ----------
+   Clips absolutely-positioned decoration (e.g. the corner OrderGlyph) to the
+   card's edge WITHOUT clipping the card itself — so .glowAccent::before can
+   still bleed outside for depth. Host the decoration inside this element; it
+   also becomes the decoration's positioning context. Requires the card to be
+   position: relative (ui/Card is). */
+.clipLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}

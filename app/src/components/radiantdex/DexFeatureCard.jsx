@@ -5,41 +5,57 @@ import Card from "../ui/Card";
 import Flex from "../ui/Flex";
 import Text from "../ui/Text";
 import styles from "./DexFeatureCard.module.css";
-import { Shield, Star, Zap, Sword, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
-const DexFeatureCard = ({ order, onOpen }) => {
+const DexFeatureCard = ({
+  name,
+  description,
+  orderId,
+  meta,
+  media,
+  caption,
+  eyebrow,
+  belowHeader,
+  navLink,
+  clickable = false,
+  footer,
+}) => {
   const cardClasses = [styles.featured, "glowAccent glowBr"].filter(Boolean).join(" ");
 
-  const metaItems = [
-    { icon: <Shield />, label: "Values", value: order.values.join(", ") },
-    { icon: <Star />, label: "Spren", value: order.spren },
-    { icon: <Zap />, label: "Surges", value: order.surges.join(", ") },
-    { icon: <Sword />, label: "Herald", value: order.herald },
-  ];
-
   return (
-    <Card className={cardClasses} clickable data-order={order.id}>
-      <OrderGlyph order={order.id} h={170} variant="corner" />
+    <Card className={cardClasses} clickable={clickable} data-order={orderId}>
       <Flex align="flex-start" gap={24}>
-        <Flex className={`${styles.orderRing} ${styles.cardRing}`}>
-          <OrderGlyph order={order.id} h={34} variant="block" />
-        </Flex>
-        <Flex vertical align="flex-start">
-          <Flex align="flex-start" vertical>
-            <Eyebrow lead="Your Path" />
-            <Text className={styles.cardName}>{order.name}</Text>
+        <Flex vertical className={styles.cardHeroBody}>
+          <Flex align="flex-start" gap={24}>
+            <Flex className={`${styles.orderRing} ${styles.cardRing}`}>
+              <OrderGlyph order={orderId} h={42} variant="block" />
+            </Flex>
+            <Flex vertical align="flex-start">
+              <Flex align="flex-start" vertical>
+                {eyebrow && <Eyebrow lead={eyebrow} />}
+                <Text className={styles.cardName}>{name}</Text>
+              </Flex>
+              {description && <Text className={styles.cardDesc}>{description}</Text>}
+              {belowHeader && <Text className={styles.dexHeroRole}>{belowHeader}</Text>}
+              {navLink}
+            </Flex>
           </Flex>
-          <Text className={styles.cardDesc}>{order.description}</Text>
+          <Flex className={styles.dexMetaRow}>
+            {meta.map((i) => (
+              <DexMetaItem item={i} key={i.label} />
+            ))}
+          </Flex>
+          {footer && (
+            <Text className={styles.cardLaunch}>
+              {footer} <ArrowRight />
+            </Text>
+          )}
+        </Flex>
+        <Flex className={styles.dexImgCol} vertical gap={5}>
+          {media}
+          {caption}
         </Flex>
       </Flex>
-      <Flex className={styles.dexMetaRow}>
-        {metaItems.map((i) => (
-          <DexMetaItem item={i} />
-        ))}
-      </Flex>
-      <Text className={styles.cardLaunch}>
-        View your order <ArrowRight />
-      </Text>
     </Card>
   );
 };

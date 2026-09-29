@@ -11,7 +11,8 @@ import { idealsForOrder } from "../../data/ideals";
 import { promptsForOrder } from "../../data/prompts";
 import { useAppData } from "../../context/AppDataContext";
 import { useState } from "react";
-import { Feather, Archive, Hash, Link, BookOpen } from "lucide-react";
+import { Feather, Archive, Hash, Link, Quote, BookOpen } from "lucide-react";
+import { QUOTES } from "../../data/quotes";
 
 const SUGGESTED_THEMES = [
   "Family",
@@ -28,9 +29,10 @@ const ATTACHMENT_TYPES = {
   oath: { icon: <Link /> },
   ideal: { icon: <Feather /> },
   prompt: { icon: <BookOpen /> },
+  quote: { icon: <Quote /> },
 };
 
-const ReflectionEditor = ({ entry, closeModal, themes }) => {
+const ReflectionEditor = ({ entry, attached, closeModal, themes }) => {
   const { user, oaths, formatDate, addEntry, updateEntry, archiveEntry, resolveAttachments } =
     useAppData();
   const isNew = !entry;
@@ -58,8 +60,16 @@ const ReflectionEditor = ({ entry, closeModal, themes }) => {
     label: t,
     id: t,
   }));
-  const [attachments, setAttachments] = useState(isNew ? [] : () => resolveAttachments(entry));
+  const quoteGroups = Object.entries(Object.groupBy(QUOTES, (quote) => quote.characterId)).map(
+    ([characterId, quotes]) => ({
+      characterId,
+      quotes,
+    })
+  );
 
+  const [attachments, setAttachments] = useState(
+    isNew ? [...attached] : () => resolveAttachments(entry)
+  );
   const handleAddOption = (o) => {
     setAttachments((prev) => {
       if (prev.some((a) => a.id === o.id)) return prev;
@@ -75,6 +85,7 @@ const ReflectionEditor = ({ entry, closeModal, themes }) => {
     const oathIds = attachments.filter((a) => a.type === "oath").map((a) => a.id);
     const idealIds = attachments.filter((a) => a.type === "ideal").map((a) => a.id);
     const promptIds = attachments.filter((a) => a.type === "prompt").map((a) => a.id);
+    const quoteIds = attachments.filter((a) => a.type === "quote").map((a) => a.id);
     const themes = attachments.filter((a) => a.type === "theme").map((a) => a.id);
 
     isNew
@@ -84,6 +95,7 @@ const ReflectionEditor = ({ entry, closeModal, themes }) => {
           oathIds,
           idealIds,
           promptIds,
+          quoteIds,
           themes,
           title,
           body,
@@ -91,7 +103,7 @@ const ReflectionEditor = ({ entry, closeModal, themes }) => {
           status: "published",
           createdAt: new Date().toISOString(),
         })
-      : updateEntry(entry.id, { title, body, oathIds, idealIds, promptIds, themes, fav });
+      : updateEntry(entry.id, { title, body, oathIds, idealIds, promptIds, quoteIds, themes, fav });
     closeModal();
   };
 
@@ -171,7 +183,9 @@ const ReflectionEditor = ({ entry, closeModal, themes }) => {
             <Flex vertical>
               <div className={modalStyles.modalEyebrow}>
                 <span className={modalStyles.dot}></span>
-                {isNew ? ` ${user.orderId} · Oath` : ` Edit Entry · ${formatDate(entry.createdAt)}`}
+                {isNew
+                  ? ` ${user.orderId} · Entry`
+                  : ` Edit Entry · ${formatDate(entry.createdAt)}`}
               </div>
               <Title level={2} className={modalStyles.modalTitle}>
                 Whatever's on your mind
@@ -196,21 +210,22 @@ const ReflectionEditor = ({ entry, closeModal, themes }) => {
               />
             </Flex>
 
-            <Flex gap={"var(--sp-2)"} align={"center"} wrap>
-              {attachments.length > 0 &&
-                attachments.map((a) => (
+            {attachments.length > 0 && (
+              <Flex gap={"var(--sp-2)"} align={"center"} wrap>
+                {attachments.map((a) => (
                   <AttachChip
                     key={a.id}
-                    icon={ATTACHMENT_TYPES[a.type].icon}
+                    icon={ATTACHMENT_TYPES[a.type]?.icon}
                     label={a.label}
                     onRemove={() => handleRemoveOption(a)}
                   />
                 ))}
-            </Flex>
+              </Flex>
+            )}
 
             <Flex vertical gap={"var(--sp-5)"}>
               <Flex gap={"var(--sp-2)"} align={"center"}>
-                <label className={formStyles.fieldLabel}>Add Context</label>
+                <label className={formStyles.fieldLabel}>Add Inspiration</label>
                 <AttachChip
                   icon={<Hash />}
                   label="Themes"
@@ -235,6 +250,12 @@ const ReflectionEditor = ({ entry, closeModal, themes }) => {
                   icon={<BookOpen />}
                   label="Prompt"
                   options={promptOptions}
+                  onSelect={handleAddOption}
+                />
+                <AttachChip
+                  icon={<Quote />}
+                  label="Quote"
+                  groups={quoteGroups}
                   onSelect={handleAddOption}
                 />
               </Flex>

@@ -4,7 +4,7 @@ const Eyebrow = ({ lead, trail }) => {
   return (
     <div className={styles.eyebrow}>
       <span className={styles.dot}></span>
-      <span>{`${lead} · ${trail}`}</span>
+      <span>{`${lead}${trail ? " · " + trail : ""}`}</span>
     </div>
   );
 };
