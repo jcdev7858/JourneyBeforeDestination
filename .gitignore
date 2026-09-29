@@ -31,3 +31,6 @@ TASKS.md
 Specs/**/*.zip
 Specs/**/*.webloc
 Specs/**/*.csv
+
+# Local agent-guidance doc (Codex counterpart to CLAUDE.md, kept local)
+AGENTS.md
