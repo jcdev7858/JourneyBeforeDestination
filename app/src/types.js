@@ -117,7 +117,8 @@
  * @property {string} id            // order-scoped, "<order>-<rank>", e.g. "windrunner-3"
  * @property {string} order         // the OrderRef.id this ideal belongs to
  * @property {number} rank          // 1 = the shared First Ideal, then 2..5
- * @property {string} text          // the canonical oath, or a prompt when wording isn't fixed
+ * @property {string|null} text     // the canonical oath / prompt, or null when genuinely unchronicled (words unknown to the world)
+ * @property {string|null} revealBook  // Book.id gating SIGHT of the words (spoiler gate); null = always visible (rank 1) or no words to reveal
  */
 
 /**

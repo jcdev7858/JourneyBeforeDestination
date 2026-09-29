@@ -95,7 +95,7 @@
   text-transform: capitalize;
   align-items: center;
   gap: 7px;
-  margin-top: 16px;
+  margin-top: 15px;
   font-size: var(--fs-body);
   color: var(--accent);
   background: none;
@@ -103,7 +103,16 @@
   cursor: pointer;
   padding: 0;
 
+  svg {
+    transition: transform var(--dur-ui);
+  }
+
   &:hover {
-    text-decoration: underline;
+    color: var(--accent);
+
+    svg {
+      transform: translateX(2px);
+      transition: transform var(--dur-ui);
+    }
   }
 }
