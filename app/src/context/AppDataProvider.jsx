@@ -310,6 +310,7 @@ export function AppDataProvider({ children }) {
   };
 
   const formatDate = (date) => {
+    // Returns a string like: January 2026
     if (!date) return "Unknown date"; // TODO: lookup if this is the right error handling for missing date, or if we should throw an error instead
     try {
       const d = new Date(date);
@@ -321,6 +322,7 @@ export function AppDataProvider({ children }) {
   };
 
   const formatDateMDY = (date) => {
+    // Returns a string like: January 31, 20206
     const d = new Date(date);
     const formatter = new Intl.DateTimeFormat("en-US", {
       month: "long",
@@ -331,6 +333,7 @@ export function AppDataProvider({ children }) {
   };
 
   const formatRelativeTime = (date) => {
+    // Returns a string like: 34 weeks ago
     const past = new Date(date).getTime();
     const now = new Date().getTime();
     const daysAgo = Math.floor((now - past) / (1000 * 60 * 60 * 24));

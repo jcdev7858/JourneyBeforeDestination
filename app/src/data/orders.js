@@ -26,6 +26,7 @@ export const ORDERS = {
     spren: "Honorspren",
     herald: ["Jezrien"],
     surges: ["Adhesion", "Gravitation"],
+    tagline: "Those who lead by protecting — drawn to lift the weight others carry.",
     description:
       "Windrunners serve as soldiers, scouts, and transporters, excelling in combat and weapon mastery. They are defined by protecting those who cannot protect themselves.",
   },
@@ -36,6 +37,7 @@ export const ORDERS = {
     spren: "Highspren",
     herald: ["Nale"],
     surges: ["Gravitation", "Division"],
+    tagline: "", //TODO: add taglines for all orders
     description:
       "Tasked with upholding law and ensuring Knights Radiant don't abuse their powers, though they clash with the more liberal orders. Disciplined, exacting, and bound to a code.",
   },
@@ -46,6 +48,7 @@ export const ORDERS = {
     spren: "Ashspren",
     herald: ["Chanarach"],
     surges: ["Division", "Abrasion"],
+    tagline: "",
     description:
       "Engineers and builders who view destructive forces as interconnected with creation. Unique in gaining powers progressively through their ideals; value precision, responsibility, and self-mastery.",
   },
@@ -56,6 +59,7 @@ export const ORDERS = {
     spren: "Cultivationspren",
     herald: ["Vedel"],
     surges: ["Abrasion", "Progression"],
+    tagline: "",
     description:
       "Healers and caregivers who prioritize aiding common folk over combat, often settling in towns to support communities. They remember the ordinary people around them.",
   },
@@ -66,6 +70,7 @@ export const ORDERS = {
     spren: "Mistspren",
     herald: ["Paliah"],
     surges: ["Progression", "Illumination"],
+    tagline: "",
     description:
       "Scholarly academics who investigate truth through knowledge, science, and uncovering abuses of power. They seek the truth and share it.",
   },
@@ -76,6 +81,7 @@ export const ORDERS = {
     spren: "Cryptics",
     herald: ["Shalash"],
     surges: ["Illumination", "Transformation (Soulcasting)"],
+    tagline: "",
     description:
       "Spies and artists using illusions; their ideals center on distinguishing their true selves from their deceptions. They must understand and speak the truths about themselves.",
   },
@@ -86,6 +92,7 @@ export const ORDERS = {
     spren: "Inkspren",
     herald: ["Battar"],
     surges: ["Transformation (Soulcasting)", "Transportation"],
+    tagline: "",
     description:
       "Wise tacticians and leaders focused on reaching their potential, valuable for logistics through Soulcasting and Shadesmar access.",
   },
@@ -96,6 +103,7 @@ export const ORDERS = {
     spren: "Reachers (lightspren)",
     herald: ["Kalak"],
     surges: ["Transportation", "Cohesion"],
+    tagline: "",
     description:
       "Crafters, builders, and radical thinkers opposing tyranny; used militarily to reinforce structures and rescue captives. They value freedom above all.",
   },
@@ -106,6 +114,7 @@ export const ORDERS = {
     spren: "Peakspren",
     herald: ["Talenel"],
     surges: ["Cohesion", "Tension"],
+    tagline: "",
     description:
       "Dependable foot soldiers and team players with enthusiasm, though prone to overcommitment. They are there for others when they are needed.",
   },
@@ -116,6 +125,7 @@ export const ORDERS = {
     spren: "The Stormfather, the Nightwatcher, or the Sibling",
     herald: ["Ishar"],
     surges: ["Tension", "Adhesion"],
+    tagline: "",
     description:
       "Only three Bondsmiths can exist at once, due to their unique spren. Rare and deeply valued leaders among the Radiants, they work to bring about unity.",
   },
