@@ -3,9 +3,12 @@ import { useAppData } from "../context/AppDataContext";
 import { ORDERS } from "../data/orders";
 import { charactersByOrder } from "../data/characters";
 import { useReflection } from "../hooks/useReflection";
+import { useOathEditor } from "../hooks/useOathEditor";
+import { idealById } from "../data/ideals";
 import Flex from "../components/ui/Flex";
 import SectionHead from "../components/SectionHead";
 import ReflectionEditor from "../components/journal/ReflectionEditor";
+import OathEditor from "../components/oaths/OathEditor";
 import DexFeatureCard from "../components/radiantdex/DexFeatureCard";
 import NavigationLink from "../components/NavigationLink";
 import CharacterCard from "../components/radiantdex/CharacterCard";
@@ -19,7 +22,9 @@ const OrderDetail = () => {
   const { themes, user } = useAppData();
   const navigate = useNavigate();
   const { reflecting, attached, startReflection, closeReflection } = useReflection();
+  const { editing, borrowIdeal, closeOathEditor } = useOathEditor();
   const order = ORDERS[orderId];
+  const seedWords = idealById(editing?.fromIdeal)?.text;
 
   // URL param is user-controlled (/dex/anything) — guard before touching char.*
   if (!order) {
@@ -54,6 +59,8 @@ const OrderDetail = () => {
         />
       )}
 
+      {editing && <OathEditor seedWords={seedWords} closeModal={closeOathEditor} />}
+
       <NavigationLink to={`../dex/`} text="Back to RadiantDex" type="muted" icon={<ArrowLeft />} />
       <Flex className="rise" style={{ animationDelay: "100ms" }} vertical>
         <DexFeatureCard
@@ -66,7 +73,12 @@ const OrderDetail = () => {
         />
       </Flex>
       <Flex className="rise" style={{ animationDelay: "200ms" }} vertical>
-        <IdealLadder orderId={orderId} onReflect={startReflection} />
+        <IdealLadder
+          orderId={orderId}
+          onReflect={startReflection}
+          onBorrow={borrowIdeal}
+          hideControls
+        />
       </Flex>
 
       {orderMates.length > 0 && (
