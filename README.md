@@ -99,4 +99,4 @@ This is also a learning build. I'm using it to move from class components and Cr
 
 **This app is not coded by AI.** It's hand-coded by a fan. AI helped with planning, the specs in [`Specs/`](Specs/), and acted as a tutor, but the app's code is written by hand.
 
-*Journey before destination.*
+*Life before death. Strength before weakness. Journey before destination.*
