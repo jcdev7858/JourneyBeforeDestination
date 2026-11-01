@@ -1,0 +1,73 @@
+# Journey Before Destination
+
+A Stormlight Archive–inspired companion app that helps readers turn the Ideals into real-life action.
+
+The whole product serves one loop: **read a prompt → set an oath → take an action → reflect.** You pick a Radiant Order, swear a personal oath, break it into small actions, and journal about how it's going, with a light character reference (the RadiantDex) alongside for Stormlight flavor.
+
+> Unofficial fan project. Not affiliated with or endorsed by Brandon Sanderson or Dragonsteel Entertainment. The Stormlight Archive and its characters belong to their respective owners.
+
+## What's in it
+
+| Area | What it does |
+| --- | --- |
+| **Dashboard** | Today's prompt, your Order card, your active oath and its next actions, and reading progress through the books. |
+| **Oaths** | Create and edit personal oaths, add and check off actions, archive finished ones. Each Order's Ideals form a ladder you can reveal, reflect on, or borrow from. |
+| **Journal** | A feed of prompt responses, free-form entries, and reflections tied to your oaths. |
+| **RadiantDex** | Character list and detail pages, Order detail pages, and links out to the Coppermind wiki. |
+| **Profile** | Your identity card (Order, books read) and a summary of your progress. |
+| **Onboarding** | *(in progress)* A short quiz that suggests an Order, plus book selection and an optional first oath. |
+
+v1 is **local-first**: no accounts and no backend. Your data is a profile saved in the browser's `localStorage`.
+
+## Product principles
+
+A few rules settle most design decisions:
+
+- **Reflection over productivity.** It's a companion, not a habit tracker.
+- **Scaffold, then personalize.** You never start from a blank page. You get a Stormlight-derived starting point and make it your own, the way every Radiant swears the same words and means something personal by them.
+- **Meaningful progression only.** Any progress marker is tied to a commitment you chose. No points, badges, or login streaks for their own sake.
+- **Private by default** and **spoiler-aware.**
+- **Tone:** reflective, calm, slightly epic. No hustle-culture motivation and no fake-therapy language.
+
+## Tech stack
+
+- [React 19](https://react.dev) (function components + hooks) with [Vite](https://vite.dev)
+- [React Router](https://reactrouter.com) for pages
+- State: a small `useLocalStorage` hook plus one `AppDataProvider` context (no Redux or Zustand)
+- Styling: CSS Modules and CSS custom properties for a dark, Stormlight-themed palette, with self-hosted variable webfonts
+- A hand-rolled, zero-dependency UI kit in [`app/src/components/ui/`](app/src/components/ui/) modeled on Ant Design's API
+- JavaScript with JSDoc types (`// @ts-check`). A TypeScript conversion is planned for v1.1.
+
+## Running it locally
+
+The app lives in [`app/`](app/). From there:
+
+```bash
+npm install
+npm run dev       # dev server with hot reload
+npm run build     # production build to dist/
+npm run preview   # serve the production build
+npm run lint      # ESLint
+```
+
+## Repo layout
+
+```
+app/        The Vite + React app
+Specs/      Product specs, research findings, and design handoffs
+Media/      Order glyph SVGs and character art
+```
+
+The current build spec is [`Specs/Claude/JBD_SPEC_v3.md`](Specs/Claude/JBD_SPEC_v3.md), and the reasoning behind it is in [`JBD_RESEARCH_FINDINGS_v3.md`](Specs/Claude/JBD_RESEARCH_FINDINGS_v3.md).
+
+## Roadmap
+
+- **v1:** Dashboard, Oaths, Journal, minimal RadiantDex, Profile, Onboarding
+- **v1.1:** RadiantDex search and filters, per-book spoiler gating, favorites, journal links to oaths and characters, Wit reflection prompts, TypeScript conversion
+- **Later:** real auth and a database, live Coppermind data, Oath wallpapers and themed exports, a Roshar map
+
+## About this project
+
+This is also a learning build. I'm using it to move from class components and Create React App to modern React with hooks, Context, and routing, so the code favors clarity over cleverness.
+
+*Journey before destination.*
