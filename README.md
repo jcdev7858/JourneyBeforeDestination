@@ -6,6 +6,31 @@ The whole product serves one loop: **read a prompt → set an oath → take an a
 
 > Unofficial fan project. Not affiliated with or endorsed by Brandon Sanderson or Dragonsteel Entertainment. The Stormlight Archive and its characters belong to their respective owners.
 
+## Application preview
+
+A look at the current local-first build. These are representative development screens, not a hosted demo.
+
+### Dashboard
+
+![Dashboard showing today's reflection, Radiant Order, active oath, and reading progress](Media/screenshots/jbd-dashboard.webp)
+
+### Oaths and journaling
+
+| Oaths | Journal |
+| --- | --- |
+| ![Personal oaths and ideals](Media/screenshots/jbd-oaths.webp) | ![Journal timeline](Media/screenshots/jbd-journal.webp) |
+
+### RadiantDex
+
+![Character detail view in RadiantDex](Media/screenshots/jbd-dex-kaladin.webp)
+
+<details>
+<summary>View the full RadiantDex directory</summary>
+
+![Full RadiantDex directory](Media/screenshots/jbd-dex-home-full.webp)
+
+</details>
+
 ## What's in it
 
 | Area | What it does |
