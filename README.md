@@ -38,6 +38,8 @@ A few rules settle most design decisions:
 - A hand-rolled, zero-dependency UI kit in [`app/src/components/ui/`](app/src/components/ui/) modeled on Ant Design's API
 - JavaScript with JSDoc types (`// @ts-check`). A TypeScript conversion is planned for v1.1.
 
+**Where it's headed:** the plan is to move the app to [Next.js](https://nextjs.org) with a real database and user accounts, replacing the current browser-only storage.
+
 ## Running it locally
 
 The app lives in [`app/`](app/). From there:
@@ -64,10 +66,12 @@ The current build spec is [`Specs/Claude/JBD_SPEC_v3.md`](Specs/Claude/JBD_SPEC_
 
 - **v1:** Dashboard, Oaths, Journal, minimal RadiantDex, Profile, Onboarding
 - **v1.1:** RadiantDex search and filters, per-book spoiler gating, favorites, journal links to oaths and characters, Wit reflection prompts, TypeScript conversion
-- **Later:** real auth and a database, live Coppermind data, Oath wallpapers and themed exports, a Roshar map
+- **Later:** convert to Next.js with a database and real accounts
 
 ## About this project
 
 This is also a learning build. I'm using it to move from class components and Create React App to modern React with hooks, Context, and routing, so the code favors clarity over cleverness.
+
+**This app is not coded by AI.** It's hand-coded by a fan. AI helped with planning, the specs in [`Specs/`](Specs/), and acted as a tutor, but the app's code is written by hand.
 
 *Journey before destination.*
