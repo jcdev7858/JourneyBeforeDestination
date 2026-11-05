@@ -100,3 +100,6 @@ This is also a learning build. I'm using it to move from class components and Cr
 **This app is not coded by AI.** It's hand-coded by a fan. AI helped with planning, the specs in [`Specs/`](Specs/), and acted as a tutor, but the app's code is written by hand.
 
 *Life before death. Strength before weakness. Journey before destination.*
+
+## License
+All Rights Reserved. This project is publicly available for portfolio and review purposes only. Reuse, modification, or redistribution of the source code is not permitted without prior written authorization.
