@@ -95,9 +95,7 @@ The current build spec is [`Specs/Claude/JBD_SPEC_v3.md`](Specs/Claude/JBD_SPEC_
 
 ## About this project
 
-This is also a learning build. I'm using it to move from class components and Create React App to modern React with hooks, Context, and routing, so the code favors clarity over cleverness.
-
-**This app is not coded by AI.** It's hand-coded by a fan. AI helped with planning, the specs in [`Specs/`](Specs/), and acted as a tutor, but the app's code is written by hand.
+**This app is not coded by AI.** It's hand-coded by a fan. AI helped with planning and specs, but the app's code is written by hand.
 
 *Life before death. Strength before weakness. Journey before destination.*
 
