@@ -43,8 +43,10 @@ export const CHARACTERS = [
     books: ["wok", "wor", "ob", "row", "wat"],
     spoilerLevel: "wok",
     tags: ["bridge four", "windrunner", "soldier", "leader"],
-    image: "/characters/kaladin.jpg",
-    imgCaption: "The Next Ideal, from Call to Adventure: The Stormlight Archive",
+    // image: "/characters/kaladin.jpg",
+    image: null,
+    // imgCaption: "The Next Ideal, from Call to Adventure: The Stormlight Archive",
+    imgCaption: null,
   },
   {
     id: "shallan",
@@ -57,7 +59,8 @@ export const CHARACTERS = [
     books: ["wok", "wor", "ob", "row", "wat"],
     spoilerLevel: "wor",
     tags: ["lightweaver", "scholar", "artist"],
-    image: "/characters/shallan.jpg",
+    // image: "/characters/shallan.jpg",
+    image: null,
     imgCaption: null,
   },
   {
@@ -71,7 +74,8 @@ export const CHARACTERS = [
     books: ["wok", "wor", "ob", "row", "wat"],
     spoilerLevel: "wor",
     tags: ["bondsmith", "highprince", "leader"],
-    image: "/characters/dalinar.jpg",
+    // image: "/characters/dalinar.jpg",
+    image: null,
     imgCaption: null,
   },
   {
@@ -85,7 +89,8 @@ export const CHARACTERS = [
     books: ["wok", "wor", "ob", "row", "wat"],
     spoilerLevel: "wok",
     tags: ["duelist", "kholin", "loyalty"],
-    image: "/characters/adolin.jpg",
+    // image: "/characters/adolin.jpg",
+    image: null,
     imgCaption: null,
   },
   {
@@ -99,7 +104,8 @@ export const CHARACTERS = [
     books: ["wok", "wor", "ob", "row", "wat"],
     spoilerLevel: "wok",
     tags: ["spren", "honorspren", "windrunner"],
-    image: "/characters/syl.jpg",
+    // image: "/characters/syl.jpg",
+    image: null,
     imgCaption: null,
   },
   {
@@ -141,7 +147,8 @@ export const CHARACTERS = [
     books: ["wok", "wor", "ob", "row", "wat"],
     spoilerLevel: "row",
     tags: ["bondsmith", "engineer", "queen"],
-    image: "/characters/navani.jpg",
+    // image: "/characters/navani.jpg",
+    image: null,
     imgCaption: null,
   },
   {
