@@ -24,7 +24,7 @@ export const FIRST_IDEAL =
 
 /** @type {Ideal[]} */
 export const IDEALS = [
-  // Windrunners — reveal-books confirmed by Jeremy: 2nd WoK, 3rd WoR, 4th RoW, 5th WaT.
+  // Windrunners — reveal-books: 2nd WoK, 3rd WoR, 4th RoW, 5th WaT.
   { id: "windrunner-1", order: "windrunner", rank: 1, text: FIRST_IDEAL, revealBook: null },
   {
     id: "windrunner-2",
@@ -80,8 +80,8 @@ export const IDEALS = [
   { id: "edgedancer-4", order: "edgedancer", rank: 4, text: null, revealBook: null },
   { id: "edgedancer-5", order: "edgedancer", rank: 5, text: null, revealBook: null },
 
-  // Truthwatchers — only 2nd known ("seek the truth"). 3rd+ unchronicled (Jeremy
-  // confirmed we don't know these). ⚠️ AUDIT revealBook for the 2nd.
+  // Truthwatchers — only 2nd known ("seek the truth"). 3rd+ unchronicled (not yet
+  // revealed in the books). ⚠️ AUDIT revealBook for the 2nd.
   { id: "truthwatcher-1", order: "truthwatcher", rank: 1, text: FIRST_IDEAL, revealBook: null },
   { id: "truthwatcher-2", order: "truthwatcher", rank: 2, text: "I will seek the truth.", revealBook: "ob" },
   { id: "truthwatcher-3", order: "truthwatcher", rank: 3, text: null, revealBook: null },
