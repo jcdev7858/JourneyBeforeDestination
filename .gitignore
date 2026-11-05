@@ -26,6 +26,9 @@ pnpm-debug.log*
 # Raw downloaded font source (.ttf/zip) — app ships the derived woff2 in app/public/fonts/
 Media/Fonts/
 
+# Third-party character art — kept local, not redistributed
+app/public/characters/
+
 # Raw screenshot captures — README uses the compressed .webp versions
 Media/screenshots/*.png
 

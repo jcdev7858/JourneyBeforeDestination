@@ -60,14 +60,14 @@ A few rules settle most design decisions:
 - [React Router](https://reactrouter.com) for pages
 - State: a small `useLocalStorage` hook plus one `AppDataProvider` context (no Redux or Zustand)
 - Styling: CSS Modules and CSS custom properties for a dark, Stormlight-themed palette, with self-hosted variable webfonts
-- A hand-rolled, zero-dependency UI kit in [`app/src/components/ui/`](app/src/components/ui/) modeled on Ant Design's API
+- A zero-dependency UI kit in [`app/src/components/ui/`](app/src/components/ui/) modeled on Ant Design's API. It started as boilerplate from my brother, and I've extended it for this app.
 - JavaScript with JSDoc types (`// @ts-check`). A TypeScript conversion is planned for v1.1.
 
 **Where it's headed:** the plan is to move the app to [Next.js](https://nextjs.org) with a real database and user accounts, replacing the current browser-only storage.
 
 ## Running it locally
 
-The app lives in [`app/`](app/). From there:
+Requires Node.js 20.19+ or 22.12+. The app lives in [`app/`](app/). From there:
 
 ```bash
 npm install
@@ -81,11 +81,8 @@ npm run lint      # ESLint
 
 ```
 app/        The Vite + React app
-Specs/      Product specs, research findings, and design handoffs
-Media/      Order glyph SVGs and character art
+Media/      Order glyph SVGs and README screenshots
 ```
-
-The current build spec is [`Specs/Claude/JBD_SPEC_v3.md`](Specs/Claude/JBD_SPEC_v3.md), and the reasoning behind it is in [`JBD_RESEARCH_FINDINGS_v3.md`](Specs/Claude/JBD_RESEARCH_FINDINGS_v3.md).
 
 ## Roadmap
 
@@ -95,7 +92,7 @@ The current build spec is [`Specs/Claude/JBD_SPEC_v3.md`](Specs/Claude/JBD_SPEC_
 
 ## About this project
 
-**This app is not coded by AI.** It's hand-coded by a fan. AI helped with planning and specs, but the app's code is written by hand.
+**The app's code is written by hand.** I used AI as a planning partner and dev tutor. It helped draft the product spec and produced design mockups I worked from as visual references. The components, hooks, state and styling in `app/` are my own work, apart from the UI kit's starting boilerplate.
 
 *Life before death. Strength before weakness. Journey before destination.*
 

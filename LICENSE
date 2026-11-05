@@ -7,3 +7,18 @@ No license or permission is granted to use, copy, modify, distribute, sublicense
 Public availability of this repository does not constitute permission to reuse its contents.
 
 All rights not expressly granted are reserved by the copyright holder.
+
+THIRD-PARTY MATERIALS
+
+The notice above covers original work in this repository only. The following
+are not owned by the copyright holder and remain subject to their owners'
+rights and terms:
+
+- The Stormlight Archive and the Cosmere, including character names, the
+  Ideals and other quoted text, and the Radiant Order symbols, belong to
+  Brandon Sanderson and Dragonsteel Entertainment. They are used here in an
+  unofficial, non-commercial fan project.
+- Fonts in app/public/fonts/ are licensed under the SIL Open Font License 1.1.
+  See the OFL-*.txt files in that folder.
+- The base components in app/src/components/ui/ began as boilerplate provided
+  by the author's brother and are used with permission.
